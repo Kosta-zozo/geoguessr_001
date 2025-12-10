@@ -24,6 +24,6 @@ jobs:
           server: ftpupload.net
           username: if0_40163549
           password: TW1ZFenyNTlSFP
-          server-dir: /geoguesser.gamer.gd/htdocs  # For addon domains
+          server-dir: /geoguesser.gamer.gd/htdocs/  # For addon domains
           timeout: 86400000
           log-level: standard

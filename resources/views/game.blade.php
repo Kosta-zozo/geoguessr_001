@@ -12,15 +12,6 @@
             cursor: pointer;
             pointer-events: auto;
         }
-        #selPoint {
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            border: 1px solid black;
-            border-radius: 5px;
-            position: absolute;
-            pointer-events: none;
-        }
         #mapCanvas {
             left: 12px;
             top: 0;
@@ -58,7 +49,6 @@
                             <canvas id="mapCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">
                                 Your browser does not support the HTML canvas tag.
                             </canvas>
-                            <div id="selPoint"></div>
                         </div>
                         <div class="col-6">
                             <img id="placeImage" src="img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
@@ -96,7 +86,6 @@
 
         clearCanvas();
         enableMap();
-        hideSelPoint();
 
         document.getElementById('coordinates').innerHTML = "Coordinates";
         document.getElementById('result').innerHTML = "Result";
@@ -111,8 +100,6 @@
         inputXPerc = Math.floor(inputX/mapWidth*100);
         inputYPerc = Math.floor(inputY/mapHeight*100);
         
-        moveSelPoint(inputX, inputY);
-        // showSelPoint();
         showConfirmButton();
 
         drawCircle(inputX, inputY);
@@ -158,18 +145,6 @@
     }
     function disableMap() {
         document.getElementById("mapImage").style.pointerEvents = "none";
-    }
-
-    function moveSelPoint(x, y) {
-        selPoint = document.getElementById('selPoint');
-        selPoint.style.left = (x - 5 + 12) + "px";
-        selPoint.style.top = (y - 5) + "px";
-    }
-    function showSelPoint() {
-        document.getElementById('selPoint').style.display = "initial";
-    }
-    function hideSelPoint() {
-        document.getElementById('selPoint').style.display = "none";
     }
 
     function resizeMapCanvas(width, height) {

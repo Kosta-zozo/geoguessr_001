@@ -73,16 +73,34 @@
 <script>
     const images = [[68, 26, "image_1.png"], [71, 52, "image_2.png"], [0, 0, "image_3.png"]];
     var currentImage = 0;
+    var inputReceived = false;
+    var inputConfirmed = false;
 
-    mapWidth = document.getElementById('mapImage').width;
-    mapHeight = document.getElementById('mapImage').height;
-    resizeMapCanvas(mapWidth, mapHeight)
+    resizeMapCanvas()
     hideConfirmButton();
+
+    addEventListener("resize", restoreCanvas);
+    function restoreCanvas() {
+        resizeMapCanvas()
+        if (inputReceived) {
+            inputX = mapWidth * inputXPerc / 100;
+            inputY = mapHeight * inputYPerc / 100;
+            drawCircle(inputX, inputY);
+        }
+        if (inputConfirmed) {
+            calcCorrectCoordinates();
+            drawLine(correctX, correctY, inputX, inputY);
+            drawCircle(correctX, correctY, "green");
+        }
+        console.log("Yolo");
+    }
 
     function nextGame() {
         currentImage++;
         if (currentImage == images.length) currentImage = 0;
         document.getElementById("placeImage").src = "img/" + images[currentImage][2];
+        inputReceived = false;
+        inputConfirmed = false;
 
         clearCanvas();
         enableMap();
@@ -99,9 +117,12 @@
         inputY = e.clientY - rect.top;  //y position within the element.
         inputXPerc = Math.floor(inputX/mapWidth*100);
         inputYPerc = Math.floor(inputY/mapHeight*100);
+        inputReceived = true;
         
         showConfirmButton();
 
+        resizeMapCanvas(mapWidth, mapHeight)
+        clearCanvas();
         drawCircle(inputX, inputY);
 
         // console.log(Math.sqrt(Math.pow(56.97240179727096-56.519071402589, 2) + Math.pow(24.20977863696495-27.329895642802956, 2)));
@@ -109,6 +130,9 @@
 
     function confirmInput() {
         calcCorrectCoordinates();
+
+        // confirmed
+        inputConfirmed = true;
 
         // show input data
         document.getElementById('coordinates').innerHTML = 
@@ -120,7 +144,6 @@
         // show message
         document.getElementById('message').innerHTML = "You can view your results and go to next game";
 
-        // resizeMapCanvas(mapWidth, mapHeight)
         drawLine(correctX, correctY, inputX, inputY);
         drawCircle(correctX, correctY, "green");
         
@@ -140,6 +163,10 @@
         correctY = correctYPerc/100 * mapHeight;
     }
 
+    function calcMapSize() {
+        mapWidth = document.getElementById('mapImage').width;
+        mapHeight = document.getElementById('mapImage').height;
+    }
     function enableMap() {
         document.getElementById("mapImage").style.pointerEvents = "auto";
     }
@@ -147,10 +174,11 @@
         document.getElementById("mapImage").style.pointerEvents = "none";
     }
 
-    function resizeMapCanvas(width, height) {
+    function resizeMapCanvas() {
+        calcMapSize();
         mapCanvas = document.getElementById("mapCanvas");
-        mapCanvas.width = width;
-        mapCanvas.height = height;
+        mapCanvas.width = mapWidth;
+        mapCanvas.height = mapHeight;
     }
     function drawLine(startX, startY, endX, endY) {
         var c = document.getElementById("mapCanvas");

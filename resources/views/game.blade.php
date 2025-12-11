@@ -103,6 +103,7 @@
         inputConfirmed = false;
 
         clearCanvas();
+        hideConfirmButton();
         enableMap();
 
         document.getElementById('coordinates').innerHTML = "Coordinates";

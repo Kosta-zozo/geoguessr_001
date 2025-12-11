@@ -45,13 +45,13 @@
                 <div class="container">
                     <div class="row align-items-start">
                         <div class="col-6" style="position: relative;">
-                            <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;">
+                            <img id="mapImage" src="public/img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;">
                             <canvas id="mapCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">
                                 Your browser does not support the HTML canvas tag.
                             </canvas>
                         </div>
                         <div class="col-6">
-                            <img id="placeImage" src="img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                            <img id="placeImage" src="public/img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                         </div>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
     function nextGame() {
         currentImage++;
         if (currentImage == images.length) currentImage = 0;
-        document.getElementById("placeImage").src = "img/" + images[currentImage][2];
+        document.getElementById("placeImage").src = "public/img/" + images[currentImage][2];
         inputReceived = false;
         inputConfirmed = false;
 

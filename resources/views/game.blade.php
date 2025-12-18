@@ -7,12 +7,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
-        #mapImage {
+        #mapHolder {
             border: 1px solid black;
+            height: 350px;
+            position: relative;
             cursor: pointer;
             pointer-events: auto;
         }
         #mapCanvas {
+            /* border:1px solid #d3d3d3; */
             left: 12px;
             top: 0;
             /* width: calc(100% - 24px);
@@ -22,6 +25,71 @@
         }
         #placeImage {
             border: 1px solid black;
+        }
+        #buttonHolder {
+            height: 350px;
+            width: calc(100% - 24px);
+            position: absolute;
+            top: 0;
+            pointer-events: none;"
+        }
+        #leftScrollButton {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 30px;
+            padding: 5px;
+            border-radius: 6px 0 0 6px;
+            pointer-events: auto;
+        }
+        #rightScrollButton {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 30px;
+            padding: 5px;
+            border-radius: 0 6px 6px 0;
+            pointer-events: auto;
+        }
+        #upScrollButton {
+            position: absolute;
+            top: 0;
+            left: 30px;
+            height: 30px;
+            width: calc(100% - 60px);
+            padding: 0;
+            border-radius: 0;
+            pointer-events: auto;
+        }
+        #downScrollButton {
+            position: absolute;
+            bottom: 0;
+            left: 30px;
+            height: 30px;
+            width: calc(100% - 60px);
+            padding: 0;
+            border-radius: 0;
+            pointer-events: auto;
+        }
+        #zoomInButton {
+            position: absolute;
+            bottom: 65px;
+            right: 35px;
+            height: 25px;
+            width: 100px;
+            padding: 0;
+            pointer-events: auto;
+        }
+        #zoomOutButton {
+            position: absolute;
+            bottom: 35px;
+            right: 35px;
+            height: 25px;
+            width: 100px;
+            padding: 0;
+            pointer-events: auto;
         }
     </style>
 </head>
@@ -45,10 +113,19 @@
                 <div class="container">
                     <div class="row align-items-start">
                         <div class="col-6" style="position: relative;">
-                            <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;">
-                            <canvas id="mapCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">
+                            <!-- <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;"> -->
+                            <div id="mapHolder" class="rounded-3"></div>
+                            <canvas id="mapCanvas" width="200" height="100">
                                 Your browser does not support the HTML canvas tag.
                             </canvas>
+                            <div id="buttonHolder" class="rounded-3">
+                                <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
+                                <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
+                                <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
+                                <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
+                                <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
+                                <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
+                            </div>
                         </div>
                         <div class="col-6">
                             <img id="placeImage" src="img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
@@ -76,23 +153,146 @@
     var inputReceived = false;
     var inputConfirmed = false;
 
+    var scrollAmount = 5;
+    var zoomAmount = .04;
+    var mapPosX = 0;
+    var mapPosY = 0;
+    var zoom = 1;
+    var zoomIn = false;
+    var zoomOut = false;
+    var leftScroll = false;
+    var rightScroll = false;
+    var upScroll = false;
+    var downScroll = false;
+
+    addEventListener("resize", hangleResizing);
+    document.getElementById("mapHolder").style.backgroundImage = "url('img/map.png')";
+    calcMapHolderSize();
+    resetMapSize();
+    calcMapSize();
+
     resizeMapCanvas()
     hideConfirmButton();
 
-    addEventListener("resize", restoreCanvas);
+    requestAnimationFrame(Repeat);
+    
+    function hangleResizing() {
+        restoreCanvas();
+
+        calcMapHolderSize();
+        calcMapSize();
+        applyMapSize();
+        correctMapPos();
+        applyMapPos();
+    }
+
+    // TOGGLES
+    function zoomInActivate() {
+        zoomIn = true;
+    }
+    function zoomInDeactivate() {
+        zoomIn = false;
+    }
+    function zoomOutActivate() {
+        zoomOut = true;
+    }
+    function zoomOutDeactivate() {
+        zoomOut = false;
+    }
+    function leftScrollActivate() {
+        leftScroll = true;
+    }
+    function leftScrollDeactivate() {
+        leftScroll = false;
+    }
+    function rightScrollActivate() {
+        rightScroll = true;
+    }
+    function rightScrollDeactivate() {
+        rightScroll = false;
+    }
+    function upScrollActivate() {
+        upScroll = true;
+    }
+    function upScrollDeactivate() {
+        upScroll = false;
+    }
+    function downScrollActivate() {
+        downScroll = true;
+    }
+    function downScrollDeactivate() {
+        downScroll = false;
+    }
+
+    // REPEATER
+    function Repeat() {
+        if (leftScroll){
+            mapPosX += scrollAmount;
+            correctMapPosLeft();
+            applyMapPosX(mapPosX);
+            restoreCanvas();
+        }
+        else if (rightScroll){
+            mapPosX -= scrollAmount;
+            correctMapPosRight();
+            applyMapPosX(mapPosX);
+            restoreCanvas();
+        }
+        else if (upScroll){
+            mapPosY += scrollAmount;
+            correctMapPosUp();
+            applyMapPosY(mapPosY);
+            restoreCanvas();
+        }
+        else if (downScroll){
+            mapPosY -= scrollAmount;
+            correctMapPosDown();
+            applyMapPosY(mapPosY);
+            restoreCanvas();
+        }
+        if (zoomIn || zoomOut){
+            calcMapCenterPosPerc();
+            if (zoomIn) {
+                zoom += zoomAmount;
+                if (zoom > 10) zoom = 10;
+            }
+            else if (zoomOut) {
+                zoom -= zoomAmount;
+                if (zoom < 1) zoom = 1;
+            }
+            calcMapSize();
+            applyMapSize();
+
+            mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * .5));
+            mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * .5));
+
+            if (zoomOut) {
+                correctMapPos();
+            }
+
+            applyMapPos();
+            restoreCanvas();
+
+        }
+        requestAnimationFrame(Repeat);
+    }
+
     function restoreCanvas() {
         resizeMapCanvas()
         if (inputReceived) {
-            inputX = mapWidth * inputXPerc / 100;
-            inputY = mapHeight * inputYPerc / 100;
-            drawCircle(inputX, inputY);
+            mapInputX = mapInputXPerc * mapWidth;
+            mapInputY = mapInputYPerc * mapHeight;
+
+            mapHolderInputX = mapInputX + mapPosX;
+            mapHolderInputY = mapInputY + mapPosY;
+
+            drawCircle(mapHolderInputX, mapHolderInputY);
         }
         if (inputConfirmed) {
             calcCorrectCoordinates();
-            drawLine(correctX, correctY, inputX, inputY);
-            drawCircle(correctX, correctY, "green");
+            drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
+            drawCircle(correctMapHolderX, correctMapHolderY, "green");
         }
-        console.log("Yolo");
     }
 
     function nextGame() {
@@ -111,22 +311,24 @@
         document.getElementById('message').innerHTML = "Choose the point on the map";
     }
 
-    document.getElementById('mapImage').onclick = function(e) {
+    document.getElementById('mapHolder').onclick = function(e) {
         // e = Mouse click event.
-        var rect = e.target.getBoundingClientRect();
-        inputX = e.clientX - rect.left; //x position within the element.
-        inputY = e.clientY - rect.top;  //y position within the element.
-        inputXPerc = Math.floor(inputX/mapWidth*100);
-        inputYPerc = Math.floor(inputY/mapHeight*100);
+        var rect = document.getElementById("mapHolder").getBoundingClientRect();
+        mapHolderInputX = e.clientX - rect.left; //x position within the element.
+        mapHolderInputY = e.clientY - rect.top;  //y position within the element.
+        mapHolderInputXPerc = Math.floor(mapHolderInputX / mapHolderWidth);
+        mapHolderInputYPerc = Math.floor(mapHolderInputY / mapHolderHeight);
+        mapInputX = Math.abs(mapPosX) + mapHolderInputX;
+        mapInputY = Math.abs(mapPosY) + mapHolderInputY;
+        mapInputXPerc = mapInputX / mapWidth;
+        mapInputYPerc = mapInputY / mapHeight;
         inputReceived = true;
         
         showConfirmButton();
 
-        resizeMapCanvas(mapWidth, mapHeight)
+        resizeMapCanvas()
         clearCanvas();
-        drawCircle(inputX, inputY);
-
-        // console.log(Math.sqrt(Math.pow(56.97240179727096-56.519071402589, 2) + Math.pow(24.20977863696495-27.329895642802956, 2)));
+        drawCircle(mapHolderInputX, mapHolderInputY);
     }
 
     function confirmInput() {
@@ -137,49 +339,68 @@
 
         // show input data
         document.getElementById('coordinates').innerHTML = 
-            "Left: " + inputX + "|" + inputXPerc + "%" +
-            " ; Top: " + inputY + "|" + inputYPerc + "%" +
-            " ; Width: "+ document.getElementById('mapImage').width;
+            "Left: " + Math.trunc(mapInputXPerc * 1000) / 100 + "%" +
+            " ; Top: " + Math.trunc(mapInputYPerc * 1000) / 100 + "%";
         // show results
-        document.getElementById('result').innerHTML = calcHypotenuse(Math.abs(correctX - inputX), Math.abs(correctY - inputY));
+        document.getElementById('result').innerHTML = "You were " + Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100 + "% close";
         // show message
         document.getElementById('message').innerHTML = "You can view your results and go to next game";
 
-        drawLine(correctX, correctY, inputX, inputY);
-        drawCircle(correctX, correctY, "green");
+        drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
+        drawCircle(correctMapHolderX, correctMapHolderY, "green");
         
         hideConfirmButton();
         disableMap();
     }
 
-    function calcCorrectCoordinates() {
-        // correct input data
-        correctXPerc = images[currentImage][0];
-        correctYPerc = images[currentImage][1];
-        // var correctXPerc = 68; // 70
-        // var correctYPerc = 26; // 52
-
-        // percentage to px
-        correctX = correctXPerc/100 * mapWidth;
-        correctY = correctYPerc/100 * mapHeight;
+    // MAP POSITION AND SIZE
+    function applyMapPos() {
+        applyMapPosX();
+        applyMapPosY();
     }
-
-    function calcMapSize() {
-        mapWidth = document.getElementById('mapImage').width;
-        mapHeight = document.getElementById('mapImage').height;
+    function applyMapPosX() {
+        document.getElementById("mapHolder").style.backgroundPositionX = mapPosX + "px";
+    }
+    function applyMapPosY() {
+        document.getElementById("mapHolder").style.backgroundPositionY = mapPosY + "px";
+    }
+    function correctMapPos() {
+        correctMapPosLeft();
+        correctMapPosRight();
+        correctMapPosUp();
+        correctMapPosDown();
+    }
+    function correctMapPosLeft() {
+        if (mapPosX > 0) mapPosX = 0;
+    }
+    function correctMapPosRight() {
+        if (mapPosX < (mapWidth - mapHolderWidth) * -1) mapPosX = (mapWidth - mapHolderWidth) * -1;
+    }
+    function correctMapPosUp() {
+        if (mapPosY > 0) mapPosY = 0;
+    }
+    function correctMapPosDown() {
+        if (mapPosY < (mapHeight - mapHolderHeight) * -1) mapPosY = (mapHeight - mapHolderHeight) * -1;
+    }
+    function resetMapSize() {
+        document.getElementById("mapHolder").style.backgroundSize = "100% 100%";
+    }
+    function applyMapSize() {
+        document.getElementById("mapHolder").style.backgroundSize = mapWidth + "px " + mapHeight + "px";
     }
     function enableMap() {
-        document.getElementById("mapImage").style.pointerEvents = "auto";
+        document.getElementById("mapHolder").style.pointerEvents = "auto";
     }
     function disableMap() {
-        document.getElementById("mapImage").style.pointerEvents = "none";
+        document.getElementById("mapHolder").style.pointerEvents = "none";
     }
 
+    // CANVAS
     function resizeMapCanvas() {
-        calcMapSize();
+        calcMapHolderSize();
         mapCanvas = document.getElementById("mapCanvas");
-        mapCanvas.width = mapWidth;
-        mapCanvas.height = mapHeight;
+        mapCanvas.width = mapHolderWidth;
+        mapCanvas.height = mapHolderHeight;
     }
     function drawLine(startX, startY, endX, endY) {
         var c = document.getElementById("mapCanvas");
@@ -189,9 +410,6 @@
         ctx.lineWidth = 2;
         ctx.stroke();    
     }
-    // function drawCircle(x, y) {
-    //     drawCircle(x, y, "red");
-    // }
     function drawCircle(centerX, centerY, color="red") {
         var c = document.getElementById("mapCanvas");
         var ctx = c.getContext("2d");
@@ -208,6 +426,7 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    // CONFIRM BUTTON
     function showConfirmButton() {
         document.getElementById("confirmButton").style.display = "initial";
     }
@@ -215,6 +434,32 @@
         document.getElementById("confirmButton").style.display = "none";
     }
 
+    // CALCULATIONS
+    function calcMapSize() {
+        mapWidth = mapHolderWidth * zoom;
+        mapHeight = mapHolderHeight * zoom;
+    }
+    function calcMapCenterPosPerc() {
+        mapCenterPosXPerc = (Math.abs(mapPosX) + (mapHolderWidth * .5)) / mapWidth;
+        mapCenterPosYPerc = (Math.abs(mapPosY) + (mapHolderHeight * .5)) / mapHeight;
+    }
+    function calcMapHolderSize() {
+        mapHolderWidth = document.getElementById("mapHolder").clientWidth;
+        mapHolderHeight = document.getElementById("mapHolder").clientHeight;
+    }
+    function calcCorrectCoordinates() {
+        // correct input data
+        correctXPerc = images[currentImage][0] / 100;
+        correctYPerc = images[currentImage][1] / 100;
+
+        // percentage to px
+        correctX = correctXPerc * mapWidth;
+        correctY = correctYPerc * mapHeight;
+
+        // percentage to mapHolder px
+        correctMapHolderX = mapWidth * correctXPerc + mapPosX;
+        correctMapHolderY = mapHeight * correctYPerc + mapPosY;
+    }
     function calcHypotenuse(a, b) {
         return Math.sqrt(a * a + b * b);
     }

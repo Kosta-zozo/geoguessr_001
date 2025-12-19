@@ -304,6 +304,8 @@
 
         clearCanvas();
         hideConfirmButton();
+        resetMapSize();
+        resetMapPos();
         enableMap();
 
         document.getElementById('coordinates').innerHTML = "Coordinates";
@@ -354,6 +356,11 @@
     }
 
     // MAP POSITION AND SIZE
+    function resetMapPos() {
+        mapPosX = 0;
+        mapPosY = 0;
+        applyMapPos();
+    }
     function applyMapPos() {
         applyMapPosX();
         applyMapPosY();
@@ -383,6 +390,8 @@
         if (mapPosY < (mapHeight - mapHolderHeight) * -1) mapPosY = (mapHeight - mapHolderHeight) * -1;
     }
     function resetMapSize() {
+        zoom = 1;
+        calcMapSize()
         document.getElementById("mapHolder").style.backgroundSize = "100% 100%";
     }
     function applyMapSize() {

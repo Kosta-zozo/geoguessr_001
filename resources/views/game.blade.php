@@ -148,7 +148,11 @@
 </html>
 
 <script>
-    const images = [[68, 26, "image_1.png"], [71, 52, "image_2.png"], [0, 0, "image_3.png"]];
+    const images = [
+    @foreach ($data as $place)
+    [{{ $place["pos_X_perc"] }}, {{ $place["pos_Y_perc"] }}, "{{ $place["image_name"] }}"], 
+    @endforeach
+    ];
     var currentImage = 0;
     var inputReceived = false;
     var inputConfirmed = false;
@@ -341,8 +345,8 @@
 
         // show input data
         document.getElementById('coordinates').innerHTML = 
-            "Left: " + Math.trunc(mapInputXPerc * 1000) / 100 + "%" +
-            " ; Top: " + Math.trunc(mapInputYPerc * 1000) / 100 + "%";
+            "Left: " + Math.trunc(mapInputXPerc * 10000) / 100 + "%" +
+            " ; Top: " + Math.trunc(mapInputYPerc * 10000) / 100 + "%";
         // show results
         document.getElementById('result').innerHTML = "You were " + Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100 + "% close";
         // show message

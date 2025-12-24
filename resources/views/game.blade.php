@@ -1,159 +1,170 @@
-<!DOCTYPE html>
-<html>
+@extends ('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <style>
-        #mapHolder {
-            border: 1px solid black;
-            height: 350px;
-            position: relative;
-            cursor: pointer;
-            pointer-events: auto;
-        }
-        #mapCanvas {
-            /* border:1px solid #d3d3d3; */
-            left: 12px;
-            top: 0;
-            /* width: calc(100% - 24px);
-            height: 100%; */
-            position: absolute;
-            pointer-events: none;
-        }
-        #placeImage {
-            border: 1px solid black;
-        }
-        #buttonHolder {
-            height: 350px;
-            width: calc(100% - 24px);
-            position: absolute;
-            top: 0;
-            pointer-events: none;"
-        }
-        #leftScrollButton {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 30px;
-            padding: 5px;
-            border-radius: 6px 0 0 6px;
-            pointer-events: auto;
-        }
-        #rightScrollButton {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 30px;
-            padding: 5px;
-            border-radius: 0 6px 6px 0;
-            pointer-events: auto;
-        }
-        #upScrollButton {
-            position: absolute;
-            top: 0;
-            left: 30px;
-            height: 30px;
-            width: calc(100% - 60px);
-            padding: 0;
-            border-radius: 0;
-            pointer-events: auto;
-        }
-        #downScrollButton {
-            position: absolute;
-            bottom: 0;
-            left: 30px;
-            height: 30px;
-            width: calc(100% - 60px);
-            padding: 0;
-            border-radius: 0;
-            pointer-events: auto;
-        }
-        #zoomInButton {
-            position: absolute;
-            bottom: 65px;
-            right: 35px;
-            height: 25px;
-            width: 100px;
-            padding: 0;
-            pointer-events: auto;
-        }
-        #zoomOutButton {
-            position: absolute;
-            bottom: 35px;
-            right: 35px;
-            height: 25px;
-            width: 100px;
-            padding: 0;
-            pointer-events: auto;
-        }
-    </style>
-</head>
+@section ('content')
 
-<body>
-    @include('includes.header')
-    
-    <div class="px-4 py-3 my-2 text-center">
-        <h1 class="display-5 fw-bold text-body-emphasis my-2">Geolocation guesser</h1>
-        <hr class="mx-5">
-        <div class="row align-items-start">
-            <div class="col-3 p-3">
-                <div class="border rounded-3 mx-5">
-                    Records:
-                </div>
-            </div>
-            <div class="col-6 border rounded-3">
-                <br>
-                <button onclick="nextGame()" class="btn btn-primary">Next game</button>
-                <h3 id="message">Choose the point on the map</h3>
-                <div class="container">
-                    <div class="row align-items-start">
-                        <div class="col-6" style="position: relative;">
-                            <!-- <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;"> -->
-                            <div id="mapHolder" class="rounded-3"></div>
-                            <canvas id="mapCanvas" width="200" height="100">
-                                Your browser does not support the HTML canvas tag.
-                            </canvas>
-                            <div id="buttonHolder" class="rounded-3">
-                                <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
-                                <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
-                                <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
-                                <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
-                                <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
-                                <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <img id="placeImage" src="img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
-                <hr>
-                <h4>You clicked on:</h4>
-                <p id="coordinates">Coordinates</p>
-                <h4>Result:</h4>
-                <p id="result">Result</p>
+<style>
+    #mapHolder {
+        border: 1px solid black;
+        height: 350px;
+        position: relative;
+        cursor: pointer;
+        pointer-events: auto;
+    }
+    #mapCanvas {
+        /* border:1px solid #d3d3d3; */
+        left: 12px;
+        top: 0;
+        /* width: calc(100% - 24px);
+        height: 100%; */
+        position: absolute;
+        pointer-events: none;
+    }
+    #placeImage {
+        border: 1px solid black;
+    }
+    #buttonHolder {
+        height: 350px;
+        width: calc(100% - 24px);
+        position: absolute;
+        top: 0;
+        pointer-events: none;"
+    }
+    #leftScrollButton {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 30px;
+        padding: 5px;
+        border-radius: 6px 0 0 6px;
+        pointer-events: auto;
+    }
+    #rightScrollButton {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 30px;
+        padding: 5px;
+        border-radius: 0 6px 6px 0;
+        pointer-events: auto;
+    }
+    #upScrollButton {
+        position: absolute;
+        top: 0;
+        left: 30px;
+        height: 30px;
+        width: calc(100% - 60px);
+        padding: 0;
+        border-radius: 0;
+        pointer-events: auto;
+    }
+    #downScrollButton {
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        height: 30px;
+        width: calc(100% - 60px);
+        padding: 0;
+        border-radius: 0;
+        pointer-events: auto;
+    }
+    #zoomInButton {
+        position: absolute;
+        bottom: 65px;
+        right: 35px;
+        height: 25px;
+        width: 100px;
+        padding: 0;
+        pointer-events: auto;
+    }
+    #zoomOutButton {
+        position: absolute;
+        bottom: 35px;
+        right: 35px;
+        height: 25px;
+        width: 100px;
+        padding: 0;
+        pointer-events: auto;
+    }
+    #finishButton {
+        display: none;
+    }
+</style>
+<div class="px-4 py-3 my-2 text-center">
+    <h1 class="display-5 fw-bold text-body-emphasis my-2">Geolocation guesser</h1>
+    <hr class="mx-5">
+    <div class="row align-items-start">
+        <div class="col-3 p-3">
+            <div class="border rounded-3 mx-5">
+                <h5>Current place records:</h5>
+                <ol id="recordList"></ol>
             </div>
         </div>
+        <div class="col-6 border rounded-3">
+            <br>
+                <!-- <button onclick="nextGame()" class="btn btn-primary">Next game</button>
+                <button onclick="selectNewRandomGame()" class="btn btn-primary">Random game</button> -->
+            <h3 id="message">Choose the point on the map</h3>
+            <div class="container">
+                <div class="row align-items-start">
+                    <div class="col-6" style="position: relative;">
+                        <!-- <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;"> -->
+                        <div id="mapHolder" class="rounded-3"></div>
+                        <canvas id="mapCanvas" width="200" height="100">
+                            Your browser does not support the HTML canvas tag.
+                        </canvas>
+                        <div id="buttonHolder" class="rounded-3">
+                            <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
+                            <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
+                            <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
+                            <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
+                            <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
+                            <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <img id="placeImage" src="img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <form action="/submitResult" method="post">
+                @csrf
+                <input type="hidden" id="result_place_id" name="place_id" value="1">
+                <input type="hidden" id="result_user_id" name="user_id" value="1">
+                <input type="hidden" id="result_result" name="result" value="0.4">
+                <input type="hidden" id="result_wasted_time" name="wasted_time" value="00:01:11">
+                <input type="hidden" id="result_created_date" name="created_date" value="2000-01-01">
+                <input type="hidden" id="result_mapInputXPerc" name="mapInputXPerc">
+                <input type="hidden" id="result_mapInputYPerc" name="mapInputYPerc">
+                <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
+            </form>
+            <a id="finishButton" href="/home" class="btn btn-success">Finish</a>
+            <hr>
+            <h4>You clicked on:</h4>
+            <p id="coordinates">Coordinates</p>
+            <h4>Result:</h4>
+            <p id="result">Result</p>
+        </div>
     </div>
-    
-</body>
-
-</html>
+</div>
 
 <script>
+    // DATA EXTRACTION
     const images = [
-    @foreach ($data as $place)
-    [{{ $place["pos_X_perc"] }}, {{ $place["pos_Y_perc"] }}, "{{ $place["image_name"] }}"], 
+    @foreach ($data["places"] as $place)
+        [{{ $place["pos_X_perc"] }}, {{ $place["pos_Y_perc"] }}, "{{ $place["image_name"] }}", "{{ $place["id"] }}"], 
     @endforeach
     ];
-    var currentImage = 0;
+    const records = [
+    @foreach ($data["results"] as $record)
+        [{{ $record["place_id"] }}, "{{ $record["name"] }}", "{{ $record["result"] }}"], 
+    @endforeach
+    ];
+    
+    var startTime = new Date();
+    var currentImageArrayId = 0;
     var inputReceived = false;
     var inputConfirmed = false;
 
@@ -174,20 +185,36 @@
     calcMapHolderSize();
     resetMapSize();
     calcMapSize();
+    updateRecordList();
 
     resizeMapCanvas()
     hideConfirmButton();
 
+    @if ($resultView)
+        mapInputXPerc = {{ $data["mapInputXPerc"] }};
+        mapInputYPerc = {{ $data["mapInputYPerc"] }};
+        inputReceived = true;
+        
+        
+        restoreCanvas();
+        selectGameByImageId({{ $data['place_id'] }});
+        inputReceived = true;
+        confirmInput();
+        restoreCanvas();
+    @else
+        selectRandomGame();
+    @endif
+
     requestAnimationFrame(Repeat);
     
     function hangleResizing() {
-        restoreCanvas();
-
         calcMapHolderSize();
         calcMapSize();
         applyMapSize();
         correctMapPos();
         applyMapPos();
+
+        restoreCanvas();
     }
 
     // TOGGLES
@@ -299,10 +326,24 @@
         }
     }
 
+    // GAME SELECTOR
     function nextGame() {
-        currentImage++;
-        if (currentImage == images.length) currentImage = 0;
-        document.getElementById("placeImage").src = "img/" + images[currentImage][2];
+        currentImageArrayId++;
+        if (currentImageArrayId == images.length) currentImageArrayId = 0;
+        selectGame(currentImageArrayId);
+    }
+    function selectNewRandomGame() {
+        selectGame(newRandomImageArrayId());
+    }
+    function selectRandomGame() {
+        selectGame(randomImageArrayId());
+    }
+    function selectGameByImageId(id) {
+        selectGame(getImageArrayIdFromImageId(id));
+    }
+    function selectGame(imageArrayId){
+        currentImageArrayId = imageArrayId;
+        document.getElementById("placeImage").src = "img/" + images[imageArrayId][2];
         inputReceived = false;
         inputConfirmed = false;
 
@@ -312,11 +353,13 @@
         resetMapPos();
         enableMap();
 
+        updateRecordList();
         document.getElementById('coordinates').innerHTML = "Coordinates";
         document.getElementById('result').innerHTML = "Result";
         document.getElementById('message').innerHTML = "Choose the point on the map";
     }
 
+    // INPUT
     document.getElementById('mapHolder').onclick = function(e) {
         // e = Mouse click event.
         var rect = document.getElementById("mapHolder").getBoundingClientRect();
@@ -352,11 +395,52 @@
         // show message
         document.getElementById('message').innerHTML = "You can view your results and go to next game";
 
+        currentDate = new Date();
+        finishTime = new Date();
+        document.getElementById('result_place_id').value = images[currentImageArrayId][3];
+        document.getElementById('result_user_id').value = {{ Auth::user()->id }};
+        document.getElementById('result_result').value = Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100;
+        document.getElementById('result_wasted_time').value = secondsToTime((finishTime - startTime) / 1000);
+        document.getElementById('result_created_date').value = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
+        document.getElementById('result_mapInputXPerc').value = mapInputXPerc;
+        document.getElementById('result_mapInputYPerc').value = mapInputYPerc;
+
         drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
         drawCircle(correctMapHolderX, correctMapHolderY, "green");
         
         hideConfirmButton();
         disableMap();
+
+        document.getElementById('finishButton').style.display = "initial";
+    }
+
+    // RECORDS
+    function updateRecordList() {
+        recordListHtml = "";
+        let recordArray = [];
+        j = 0;
+        for (let i = 0; i < records.length; i++) {
+            if (records[i][0] == images[currentImageArrayId][3]) {
+                let exists = false;
+                for (let k = 0; k < recordArray.length; k++) {
+                    if (recordArray[k][0] == records[i][1]) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    recordArray[j] = [];
+                    recordArray[j][0] = records[i][1];
+                    recordArray[j][1] = records[i][2];
+                    j++;
+                    if (j > 4) break;
+                }
+            }
+        }
+        for (let i = 0; i < recordArray.length; i++) {
+            recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
+        }
+        document.getElementById('recordList').innerHTML = recordListHtml;
     }
 
     // MAP POSITION AND SIZE
@@ -448,6 +532,23 @@
     }
 
     // CALCULATIONS
+    function getImageArrayIdFromImageId(id) {
+        for (let i = 0; i < images.length; i++) {
+            if (images[i][3] == id) {
+                return i;
+            }
+        }
+    }
+    function randomImageArrayId() {
+        return Math.floor(Math.random() * images.length);
+    }
+    function newRandomImageArrayId() {
+        do {
+            newRandomImage = randomImageArrayId();
+        }
+        while (newRandomImage == currentImageArrayId);
+        return newRandomImage;
+    }
     function calcMapSize() {
         mapWidth = mapHolderWidth * zoom;
         mapHeight = mapHolderHeight * zoom;
@@ -462,8 +563,8 @@
     }
     function calcCorrectCoordinates() {
         // correct input data
-        correctXPerc = images[currentImage][0] / 100;
-        correctYPerc = images[currentImage][1] / 100;
+        correctXPerc = images[currentImageArrayId][0] / 100;
+        correctYPerc = images[currentImageArrayId][1] / 100;
 
         // percentage to px
         correctX = correctXPerc * mapWidth;
@@ -476,4 +577,14 @@
     function calcHypotenuse(a, b) {
         return Math.sqrt(a * a + b * b);
     }
+    function secondsToTime(seconds) {
+        if (seconds < 60)
+            return seconds;
+        else if (seconds < 3600)
+            return "00:" + Math.floor(seconds / 60) + ":" + (seconds % 60);
+        else
+            return Math.floor(Math.floor(seconds / 60) / 60) + ":" + (Math.floor(seconds / 60) % 60) + ":" + (seconds % 60);
+    }
 </script>
+
+@endsection

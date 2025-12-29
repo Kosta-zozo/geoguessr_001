@@ -400,7 +400,7 @@
         clearCanvas();
         drawCircle(mapHolderInputX, mapHolderInputY);
 
-        console.log(mapInputXPerc + " - " + mapInputYPerc);
+        // console.log(mapInputXPerc + " - " + mapInputYPerc);
     }
 
     function confirmInput() {

@@ -214,6 +214,7 @@
     requestAnimationFrame(Repeat);
     
     function hangleResizing() {
+        rect = document.getElementById("mapHolder").getBoundingClientRect();
         calcMapHolderSize();
         calcMapSize();
         applyMapSize();

@@ -170,6 +170,9 @@
 
     
     var rect = document.getElementById("mapHolder").getBoundingClientRect();
+    var inputX = 0;
+    var inputY = 0;
+    onmousemove = function(e){inputX = e.clientX; inputY =  e.clientY;}
     var scrollAmount = 5;
     var zoomAmount = .04;
     var mapPosX = 0;
@@ -181,6 +184,7 @@
     var rightScroll = false;
     var upScroll = false;
     var downScroll = false;
+    var dragging = false;
 
     addEventListener("resize", hangleResizing);
     document.getElementById("mapHolder").style.backgroundImage = "url('public/img/map.png')";
@@ -259,6 +263,7 @@
 
     // REPEATER
     function Repeat() {
+        // SCROLL
         if (leftScroll){
             mapPosX += scrollAmount;
             correctMapPosLeft();
@@ -283,6 +288,7 @@
             applyMapPosY(mapPosY);
             restoreCanvas();
         }
+        // ZOOM
         if (zoomIn || zoomOut){
             calcMapCenterPosPerc();
             if (zoomIn) {
@@ -305,15 +311,32 @@
 
             applyMapPos();
             restoreCanvas();
-
         }
+        // DRAG
+        if (dragging) {
+            dragAmountX = savedDragAmountX - (dragStartX - Math.floor(inputX - rect.left));
+            mapPosX += dragAmountX;
+            savedDragAmountX = dragStartX - Math.floor(inputX - rect.left);
+            dragAmountX = 0;
+
+            dragAmountY = savedDragAmountY - (dragStartY - Math.floor(inputY - rect.left));
+            mapPosY += dragAmountY;
+            savedDragAmountY = dragStartY - Math.floor(inputY - rect.left);
+            dragAmountY = 0;
+
+            correctMapPos();
+            applyMapPosX(mapPosX);
+            applyMapPosY(mapPosY);
+            restoreCanvas();
+        }
+
         requestAnimationFrame(Repeat);
     }
 
     // ZOOM
     document.getElementById("mapHolder").addEventListener("wheel", event => {
-        zoomPosXPerc = Math.floor((event.clientX - rect.left)) / mapHolderWidth;
-        zoomPosYPerc = Math.floor((event.clientY - rect.top)) / mapHolderHeight;
+        zoomPosXPerc = Math.floor(event.clientX - rect.left) / mapHolderWidth;
+        zoomPosYPerc = Math.floor(event.clientY - rect.top) / mapHolderHeight;
         calcMapPosPercFrom(zoomPosXPerc, zoomPosYPerc);
         zoom -= event.deltaY / 500;
         if (zoom > 10) zoom = 10;
@@ -328,6 +351,21 @@
 
         applyMapPos();
         restoreCanvas();
+    });
+
+    // DRAG
+    document.getElementById("mapHolder").addEventListener("mousedown", event => {
+        dragging = true;
+        dragStartX = Math.floor(event.clientX - rect.left);
+        dragStartY = Math.floor(event.clientY - rect.left);
+        savedDragAmountX = dragStartX - Math.floor(inputX - rect.left);
+        savedDragAmountY = dragStartY - Math.floor(inputY - rect.left);
+    });
+    document.getElementById("mapHolder").addEventListener("mouseup", event => {
+        dragging = false;
+    });
+    document.getElementById("mapHolder").addEventListener("mouseleave", event => {
+        dragging = false;
     });
 
     function restoreCanvas() {

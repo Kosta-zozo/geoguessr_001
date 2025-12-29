@@ -168,6 +168,8 @@
     var inputReceived = false;
     var inputConfirmed = false;
 
+    
+    var rect = document.getElementById("mapHolder").getBoundingClientRect();
     var scrollAmount = 5;
     var zoomAmount = .04;
     var mapPosX = 0;
@@ -308,6 +310,26 @@
         requestAnimationFrame(Repeat);
     }
 
+    // ZOOM
+    document.getElementById("mapHolder").addEventListener("wheel", event => {
+        zoomPosXPerc = Math.floor((event.clientX - rect.left)) / mapHolderWidth;
+        zoomPosYPerc = Math.floor((event.clientY - rect.top)) / mapHolderHeight;
+        calcMapPosPercFrom(zoomPosXPerc, zoomPosYPerc);
+        zoom -= event.deltaY / 500;
+        if (zoom > 10) zoom = 10;
+        else if (zoom < 1) zoom = 1;
+        calcMapSize();
+        applyMapSize();
+
+        mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * (zoomPosXPerc)));
+        mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * (zoomPosYPerc)));
+
+        correctMapPos();
+
+        applyMapPos();
+        restoreCanvas();
+    });
+
     function restoreCanvas() {
         resizeMapCanvas()
         if (inputReceived) {
@@ -362,7 +384,6 @@
     // INPUT
     document.getElementById('mapHolder').onclick = function(e) {
         // e = Mouse click event.
-        var rect = document.getElementById("mapHolder").getBoundingClientRect();
         mapHolderInputX = e.clientX - rect.left; //x position within the element.
         mapHolderInputY = e.clientY - rect.top;  //y position within the element.
         mapHolderInputXPerc = Math.floor(mapHolderInputX / mapHolderWidth);
@@ -378,6 +399,8 @@
         resizeMapCanvas()
         clearCanvas();
         drawCircle(mapHolderInputX, mapHolderInputY);
+
+        console.log(mapInputXPerc + " - " + mapInputYPerc);
     }
 
     function confirmInput() {
@@ -553,9 +576,12 @@
         mapWidth = mapHolderWidth * zoom;
         mapHeight = mapHolderHeight * zoom;
     }
+    function calcMapPosPercFrom(inputXPerc, inputYPerc) {
+        mapCenterPosXPerc = (Math.abs(mapPosX) + (mapHolderWidth * inputXPerc)) / mapWidth;
+        mapCenterPosYPerc = (Math.abs(mapPosY) + (mapHolderHeight * inputYPerc)) / mapHeight;
+    }
     function calcMapCenterPosPerc() {
-        mapCenterPosXPerc = (Math.abs(mapPosX) + (mapHolderWidth * .5)) / mapWidth;
-        mapCenterPosYPerc = (Math.abs(mapPosY) + (mapHolderHeight * .5)) / mapHeight;
+        calcMapPosPercFrom(.5, .5);
     }
     function calcMapHolderSize() {
         mapHolderWidth = document.getElementById("mapHolder").clientWidth;

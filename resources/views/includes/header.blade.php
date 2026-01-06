@@ -18,11 +18,3 @@
         </ul>
     </header>
 </div>
-
-<script>
-    @if (Request::is('game'))
-    console.log("yes");
-    @else
-    console.log("no");
-    @endif
-</script>

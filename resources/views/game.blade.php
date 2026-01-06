@@ -140,7 +140,7 @@
                 <input type="hidden" id="result_mapInputYPerc" name="mapInputYPerc">
                 <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
             </form>
-            <a id="finishButton" href="/home" class="btn btn-success">Finish</a>
+            <a id="finishButton" href="/game" class="btn btn-success">Start a new game</a>
             <hr>
             <h4>You clicked on:</h4>
             <p id="coordinates">Coordinates</p>
@@ -352,6 +352,17 @@
 
         applyMapPos();
         restoreCanvas();
+
+        return false;
+    });
+
+    // SCROLL DISABLE
+    document.getElementById("mapHolder").addEventListener("mouseenter", event => {
+        document.getElementById("body").style = "overflow: hidden;";
+    });
+
+    document.getElementById("mapHolder").addEventListener("mouseleave", event => {
+        document.getElementById("body").style = "overflow: auto;";
     });
 
     // DRAG

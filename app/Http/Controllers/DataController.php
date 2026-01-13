@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\places;
 use App\Models\results;
@@ -34,5 +35,19 @@ class DataController extends Controller
         // return view('home', ['data' => $data->get()]);
         // return redirect()->to('/resultPreview');
         return view('game', ['data' => $data, 'resultView' => true]);
+    }
+    public function addPlace(request $request) {
+        $request->validate([
+            'image' => ['image'],
+        ]);
+        $path = $request->file('image')->store('public');
+        return $path;
+        $avatar = $request->file('image')->store('public');
+        // $avatar = Storage::disk('public')->put('/',$request->file('image'));
+
+        // if(!Storage::disk('public_uploads')->put('image.txt', $data['image'])) {
+        //     return false;
+        // }
+        // return redirect()->to('/adminpanel');
     }
 }

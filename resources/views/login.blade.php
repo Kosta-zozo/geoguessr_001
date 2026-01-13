@@ -22,19 +22,7 @@
                 	<input type="password" class="form-control" name="password"><br>
                 	<input type="submit" class="btn btn-outline-primary" value="Login">
                 </form>
-            </div>
-
-            <br>
-            <div class="p-3 border">
-                <h3>Register</h3>
-                <form action="/register" method="post">
-                    @csrf
-                	<label for="name">Enter login:</label><br>
-                	<input type="text" class="form-control" id="name" name="name"><br>
-                	<label for="password">Enter password:</label><br>
-                	<input type="password" class="form-control" id="password" name="password"><br>
-                	<input type="submit" class="btn btn-outline-primary" value="Register">
-                </form>
+                <a href="/registerform">You don't have an account?</a>
             </div>
         </div>
     </div>

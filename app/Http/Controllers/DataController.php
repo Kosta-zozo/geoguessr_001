@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\places;
 use App\Models\results;
+use App\Models\categories;
+use App\Models\countries;
 use App\Models\User;
 
 class DataController extends Controller
@@ -36,18 +38,33 @@ class DataController extends Controller
         // return redirect()->to('/resultPreview');
         return view('game', ['data' => $data, 'resultView' => true]);
     }
-    public function addPlace(request $request) {
-        $request->validate([
-            'image' => ['image'],
+    public function adminPanel() {
+        $countries = (new countries())->get();
+        $categories = (new categories())->get();
+        return view('/adminpanel', ['countries' => $countries, 'categories' => $categories]);
+    }
+    public function addPlace(request $data) {
+        
+    
+        $validated = $data->validate([
+            'image' => 'required',
+            'posx' => 'required|gt:0|lt:100',
+            'posy' => 'required|gt:0|lt:100',
+            'country' => 'required',
+            'category' => 'required',
+            'difficulty' => 'required',
         ]);
-        $path = $request->file('image')->store('public');
-        return $path;
-        $avatar = $request->file('image')->store('public');
-        // $avatar = Storage::disk('public')->put('/',$request->file('image'));
+        $path = Storage::disk('public_uploads')->put('img', $data['image']);
+        $imageName = basename($path);
 
-        // if(!Storage::disk('public_uploads')->put('image.txt', $data['image'])) {
-        //     return false;
-        // }
-        // return redirect()->to('/adminpanel');
+        places::insert([
+        'image_name' => $imageName,
+        'pos_X_perc' => $data['posx'],
+        'pos_Y_perc' => $data['posy'],
+        'country_id' => $data['country'],
+        'category_id' => $data['category'],
+        'difficulty' => $data['difficulty']
+        ]);
+        return redirect()->to('/adminPanel')->with('message','New place added successfully!');
     }
 }

@@ -11,8 +11,8 @@
             @if(!Auth::user())
                 <li class="nav-item"><a href="/loginform" class="nav-link @if (Request::is('loginform') || Request::is('registerform')) active @endif">Login</a></li>
             @else
-                <li class="nav-item"><a href="/game" class="nav-link @if (Request::is('game')) active @endif">Game</a></li>
-                <li class="nav-item"><a href="/adminpanel" class="nav-link fst-italic @if (Request::is('adminpanel')) active @endif">{{ Auth::user()->name }}</a></li>
+                <li class="nav-item"><a href="/game" class="nav-link @if (Request::is('game') || Request::is('submitResult')) active @endif">Game</a></li>
+                <li class="nav-item"><a href="/adminPanel" class="nav-link fst-italic @if (Request::is('adminPanel')) active @endif">{{ Auth::user()->name }}</a></li>
                 <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
             @endif
         </ul>

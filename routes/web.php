@@ -33,7 +33,5 @@ Route::get('/game', 'App\Http\Controllers\DataController@game')->middleware('aut
 Route::get('/resultPreview', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::post('/submitResult', 'App\Http\Controllers\DataController@submitResult')->middleware('auth');
 
-Route::get('/adminpanel', function () {
-    return view('adminpanel');
-})->middleware('auth');
+Route::get('/adminPanel', 'App\Http\Controllers\DataController@adminPanel')->middleware('auth');
 Route::post('/addPlace', 'App\Http\Controllers\DataController@addPlace')->middleware('auth');

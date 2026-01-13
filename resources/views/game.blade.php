@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <img id="placeImage" src="img/image_1.png" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                     </div>
                 </div>
             </div>
@@ -434,8 +434,8 @@
     // INPUT
     document.getElementById('mapHolder').onclick = function(e) {
         // e = Mouse click event.
-        mapHolderInputX = e.clientX - rect.left; //x position within the element.
-        mapHolderInputY = e.clientY - rect.top;  //y position within the element.
+        mapHolderInputX = e.offsetX; //x position within the element.
+        mapHolderInputY = e.offsetY;  //y position within the element.
         mapHolderInputXPerc = Math.floor(mapHolderInputX / mapHolderWidth);
         mapHolderInputYPerc = Math.floor(mapHolderInputY / mapHolderHeight);
         mapInputX = Math.abs(mapPosX) + mapHolderInputX;

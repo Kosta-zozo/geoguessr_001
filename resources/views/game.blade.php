@@ -97,7 +97,7 @@
     <div class="row align-items-start">
         <div class="col-3 p-3">
             <div class="border rounded-3 mx-5">
-                <h5>Current place records:</h5>
+                <button onclick="switchRecordListMode()" class="btn btn-outline-dark"><b id="recordListLabel">Global current place records:</b></button>
                 <ol id="recordList"></ol>
             </div>
         </div>
@@ -167,7 +167,7 @@
     var currentImageArrayId = 0;
     var inputReceived = false;
     var inputConfirmed = false;
-
+    var resultsShownGlobal = true;
     
     var rect = document.getElementById("mapHolder").getBoundingClientRect();
     var inputX = 0;
@@ -461,10 +461,10 @@
 
         // show input data
         document.getElementById('coordinates').innerHTML = 
-            "Left: " + Math.trunc(mapInputXPerc * 10000) / 100 + "%" +
-            " ; Top: " + Math.trunc(mapInputYPerc * 10000) / 100 + "%";
+            "Left: " + Math.trunc(mapInputXPerc * 10000) / 100 + "% (" + Math.trunc(mapInputX * 100) / 100 +
+            "px) ; Top: " + Math.trunc(mapInputYPerc * 10000) / 100 + "% (" + Math.trunc(mapInputY * 100) / 100 + "px)";
         // show results
-        document.getElementById('result').innerHTML = "You were " + Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100 + "% close";
+        document.getElementById('result').innerHTML = "You were " + Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100 + "% (" + Math.trunc(calcHypotenuse(Math.abs(correctX - mapInputX), Math.abs(correctY - mapInputY)) * 100) / 100 + "px) close";
         // show message
         document.getElementById('message').innerHTML = "You can view your results and go to next game";
 
@@ -488,30 +488,61 @@
     }
 
     // RECORDS
+    function switchRecordListMode() {
+        if (resultsShownGlobal)
+            document.getElementById("recordListLabel").innerHTML = "Your current place records:";
+        else
+            document.getElementById("recordListLabel").innerHTML = "Global current place records:";
+        resultsShownGlobal = !resultsShownGlobal;
+        updateRecordList();
+    }
     function updateRecordList() {
         recordListHtml = "";
         let recordArray = [];
-        j = 0;
-        for (let i = 0; i < records.length; i++) {
-            if (records[i][0] == images[currentImageArrayId][3]) {
-                let exists = false;
-                for (let k = 0; k < recordArray.length; k++) {
-                    if (recordArray[k][0] == records[i][1]) {
-                        exists = true;
-                        break;
+        if (resultsShownGlobal) {
+            j = 0;
+            for (let i = 0; i < records.length; i++) {
+                if (records[i][0] == images[currentImageArrayId][3]) {
+                    let exists = false;
+                    for (let k = 0; k < recordArray.length; k++) {
+                        if (recordArray[k][0] == records[i][1]) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        recordArray[j] = [];
+                        recordArray[j][0] = records[i][1];
+                        recordArray[j][1] = records[i][2];
+                        j++;
+                        if (j >= 10) break;
                     }
                 }
-                if (!exists) {
+            }
+            for (let i = 0; i < recordArray.length; i++) {
+                recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
+            }
+            for (let i = 0; i < (10 - recordArray.length); i++) {
+                recordListHtml += "<li> - </li>";
+            }
+        }
+        else {
+            j = 0;
+            for (let i = 0; i < records.length; i++) {
+                if (records[i][0] == images[currentImageArrayId][3] && records[i][1] == "{{ Auth::user()->name }}") {
                     recordArray[j] = [];
                     recordArray[j][0] = records[i][1];
                     recordArray[j][1] = records[i][2];
                     j++;
-                    if (j > 4) break;
+                    if (j >= 10) break;
                 }
             }
-        }
-        for (let i = 0; i < recordArray.length; i++) {
-            recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
+            for (let i = 0; i < recordArray.length; i++) {
+                recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
+            }
+            for (let i = 0; i < (10 - recordArray.length); i++) {
+                recordListHtml += "<li> - </li>";
+            }
         }
         document.getElementById('recordList').innerHTML = recordListHtml;
     }

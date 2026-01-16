@@ -18,7 +18,7 @@ class DataController extends Controller
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
                                           ->orderBy('results.result', 'asc')
                                           ->get();
-        return view('game', ['data' => $data, 'resultView' => false]);
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => false]);
     }
     public function submitResult(request $data) {
         results::insert([
@@ -36,12 +36,65 @@ class DataController extends Controller
                                           ->get();
         // return view('home', ['data' => $data->get()]);
         // return redirect()->to('/resultPreview');
-        return view('game', ['data' => $data, 'resultView' => true]);
+        return view('game', ['data' => $data, 'resultView' => true, 'gameSerie' => false]);
     }
-    public function adminPanel() {
+    public function gameStartSerie() {
+        $data['places'] = (new places())->get();
+        $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
+                                        //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
+                                          ->orderBy('results.result', 'asc')
+                                          ->get();
+        $usedIdArray = [];
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => 'random']);
+    }
+    public function gameStartSerieEasy() {
+        return $this->gameStartSerieDiff('easy');
+    }
+    public function gameStartSerieMedium() {
+        return $this->gameStartSerieDiff('medium');
+    }
+    public function gameStartSerieHard() {
+        return $this->gameStartSerieDiff('hard');
+    }
+    public function gameStartSerieDiff($difficulty) {
+        $data['places'] = (new places())->where('difficulty','=',$difficulty)->get();
+        $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
+                                        //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
+                                          ->orderBy('results.result', 'asc')
+                                          ->get();
+        $usedIdArray = [];
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => $difficulty]);
+    }
+    public function gameContinueSerie(Request $data) {
+        results::insert([
+        'place_id' => $data['place_id'],
+        'user_id' => $data['user_id'],
+        'result' => $data['result'],
+        'wasted_time' => $data['wasted_time'],
+        'created_date' => $data['created_date']
+        ]);
+
+        if ($data['difficulty'] == 'random')
+            $data['places'] = (new places())->get();
+        else
+            $data['places'] = (new places())->where('difficulty','=',$data['difficulty'])->get();
+        $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
+                                        //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
+                                          ->orderBy('results.result', 'asc')
+                                          ->get();
+
+        $serieCount = $data['serieCount'] - 1;
+        if ($data['usedIdArray'] != 'none') $usedIdArray = explode(",",$data['usedIdArray']);
+        $usedIdArray[] = $data['place_id'];
+        if ($serieCount <= 0)
+            return redirect()->to('/home');
+        else
+            return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty']]);
+    }
+    public function addNewPlace() {
         $countries = (new countries())->get();
         $categories = (new categories())->get();
-        return view('/adminpanel', ['countries' => $countries, 'categories' => $categories]);
+        return view('/addnewplace', ['countries' => $countries, 'categories' => $categories]);
     }
     public function addPlace(request $data) {
         
@@ -65,6 +118,6 @@ class DataController extends Controller
         'category_id' => $data['category'],
         'difficulty' => $data['difficulty']
         ]);
-        return redirect()->to('/adminPanel')->with('message','New place added successfully!');
+        return redirect()->to('/addNewPlace')->with('message','New place added successfully!');
     }
 }

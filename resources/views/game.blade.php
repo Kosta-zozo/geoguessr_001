@@ -129,7 +129,7 @@
                 </div>
             </div>
             <br>
-            <form id="result_form" action="/submitResult" method="post">
+            <form action="/submitResult" method="post">
                 @csrf
                 <input type="hidden" id="result_place_id" name="place_id" value="1">
                 <input type="hidden" id="result_user_id" name="user_id" value="1">
@@ -138,9 +138,6 @@
                 <input type="hidden" id="result_created_date" name="created_date" value="2000-01-01">
                 <input type="hidden" id="result_mapInputXPerc" name="mapInputXPerc">
                 <input type="hidden" id="result_mapInputYPerc" name="mapInputYPerc">
-                <input type="hidden" id="result_serieCount" name="serieCount" value="0">
-                <input type="hidden" id="result_usedIdArray" name="usedIdArray">
-                @if ($gameSerie) <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}"> @endif
                 <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
             </form>
             <a id="finishButton" href="/game" class="btn btn-success">Start a new game</a>
@@ -165,13 +162,6 @@
         [{{ $record["place_id"] }}, "{{ $record["name"] }}", "{{ $record["result"] }}"], 
     @endforeach
     ];
-    @if ($gameSerie)
-    const usedIdArray = [
-    @foreach ($usedIdArray as $id)
-        "{{ $id }}",
-    @endforeach
-    ];
-    @endif
     
     var startTime = new Date();
     var currentImageArrayId = 0;
@@ -218,11 +208,7 @@
         confirmInput();
         restoreCanvas();
     @else
-        @if ($gameSerie)
-            selectNewRandomGame();
-        @else
-            selectRandomGame();
-        @endif
+        selectRandomGame();
     @endif
 
     requestAnimationFrame(Repeat);
@@ -499,12 +485,6 @@
         disableMap();
 
         document.getElementById('finishButton').style.display = "initial";
-
-        @if ($gameSerie)
-        result_serieCount.value = {{ $serieCount }};
-        result_usedIdArray.value = usedIdArray.length != 0 ? usedIdArray : "none";
-        result_form.action = '/gameContinueSerie';
-        @endif
     }
 
     // RECORDS
@@ -670,18 +650,8 @@
         do {
             newRandomImage = randomImageArrayId();
         }
-        while (!isImageBeenUsed(newRandomImage));
+        while (newRandomImage == currentImageArrayId);
         return newRandomImage;
-    }
-    function isImageBeenUsed(imageId) {
-        valid = true;
-        usedIdArray.forEach(id => {
-            if (imageId == getImageArrayIdFromImageId(id)){
-                valid = false;
-                return false;
-            }
-        });
-        return valid;
     }
     function calcMapSize() {
         mapWidth = mapHolderWidth * zoom;

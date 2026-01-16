@@ -197,7 +197,7 @@
     var dragging = false;
 
     addEventListener("resize", hangleResizing);
-    document.getElementById("mapHolder").style.backgroundImage = "url('img/map.png')";
+    document.getElementById("mapHolder").style.backgroundImage = "url('public/img/map.png')";
     calcMapHolderSize();
     resetMapSize();
     calcMapSize();
@@ -429,7 +429,7 @@
     }
     function selectGame(imageArrayId){
         currentImageArrayId = imageArrayId;
-        document.getElementById("placeImage").src = "img/" + images[imageArrayId][2];
+        document.getElementById("placeImage").src = "public/img/" + images[imageArrayId][2];
         inputReceived = false;
         inputConfirmed = false;
 

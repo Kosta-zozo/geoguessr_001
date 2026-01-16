@@ -1,7 +1,5 @@
 @extends ('layouts.app')
-
 @section ('content')
-
 <style>
     #mapHolder {
         border: 1px solid black;
@@ -87,98 +85,76 @@
         padding: 0;
         pointer-events: auto;
     }
-    #finishButton {
-        display: none;
-    }
 </style>
-<div class="px-4 py-3 my-2 text-center">
-    <h1 class="display-5 fw-bold text-body-emphasis my-2">Geolocation guesser</h1>
-    <hr class="mx-5">
-    <div class="row align-items-start">
-        <div class="col-3 p-3">
-            <div class="border rounded-3 mx-5">
-                <button onclick="switchRecordListMode()" class="btn btn-outline-dark"><b id="recordListLabel">Global current place records:</b></button>
-                <ol id="recordList"></ol>
-            </div>
-        </div>
-        <div class="col-6 border rounded-3">
-            <br>
-                <!-- <button onclick="nextGame()" class="btn btn-primary">Next game</button>
-                <button onclick="selectNewRandomGame()" class="btn btn-primary">Random game</button> -->
-            <h3 id="message">Choose the point on the map</h3>
-            <div class="container">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+@if(session('message'))
+<div class="alert alert-info">
+    {{session('message')}}
+</div>
+@endif
+<div class="px-4 py-5 my-5 text-center">
+    <div class="col-lg-6 mx-auto">
+        <h3>Add a new place</h3>
+        <div class="row align-items-start">
+            <div class="col" style="position: relative;">
+                <div id="mapHolder" class="rounded-3"></div>
+                <canvas id="mapCanvas" width="200" height="100">
+                    Your browser does not support the HTML canvas tag.
+                </canvas>
+                <form action="/addPlace" method="post" enctype="multipart/form-data">@csrf
                 <div class="row align-items-start">
-                    <div class="col-6" style="position: relative;">
-                        <!-- <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;"> -->
-                        <div id="mapHolder" class="rounded-3"></div>
-                        <canvas id="mapCanvas" width="200" height="100">
-                            Your browser does not support the HTML canvas tag.
-                        </canvas>
-                        <div id="buttonHolder" class="rounded-3">
-                            <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
-                            <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
-                            <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
-                            <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
-                            <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
-                            <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
-                        </div>
+                    <div class="col">
+                        <label for="posx">Enter X position in percentages</label>
+                        <input id="posx" name="posx" type="number" class="form-control" step=".01" min="0" max="100" onchange="synchronizeInput()"><br>
                     </div>
-                    <div class="col-6">
-                        <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                    <div class="col">
+                        <label for="posy">Enter Y position in percentages</label>
+                        <input id="posy" name="posy" type="number" class="form-control" step=".01" min="0" max="100" onchange="synchronizeInput()"><br>
                     </div>
                 </div>
             </div>
-            <br>
-            <form id="result_form" action="/submitResult" method="post">
-                @csrf
-                <input type="hidden" id="result_place_id" name="place_id" value="1">
-                <input type="hidden" id="result_user_id" name="user_id" value="1">
-                <input type="hidden" id="result_result" name="result" value="0.4">
-                <input type="hidden" id="result_wasted_time" name="wasted_time" value="00:01:11">
-                <input type="hidden" id="result_created_date" name="created_date" value="2000-01-01">
-                <input type="hidden" id="result_mapInputXPerc" name="mapInputXPerc">
-                <input type="hidden" id="result_mapInputYPerc" name="mapInputYPerc">
-                <input type="hidden" id="result_serieCount" name="serieCount" value="0">
-                <input type="hidden" id="result_usedIdArray" name="usedIdArray">
-                @if ($gameSerie) <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}"> @endif
-                <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
-            </form>
-            <a id="finishButton" href="/game" class="btn btn-success">Start a new game</a>
-            <hr>
-            <h4>You clicked on:</h4>
-            <p id="coordinates">Coordinates</p>
-            <h4>Result:</h4>
-            <p id="result">Result</p>
+            <div class="col">
+                <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                <label for="imageFile">Upload your image</label>
+                <input id="imageFile" name="image" type="file" class="form-control"><br>
+            </div>
         </div>
+        <div class="col-lg-6 mx-auto">
+            <label for="form-country">Choose country</label>
+            <select name="country" id="form-country" class="form-control">
+                @foreach ($countries as $country)
+                <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
+                @endforeach
+            </select><br>
+            <label for="form-category">Choose category</label>
+            <select name="category" id="form-category" class="form-control">
+                @foreach ($categories as $category)
+                <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                @endforeach
+            </select><br>
+            <label for="form-difficulty">Choose difficulty</label>
+            <select name="difficulty" id="form-difficulty" class="form-control">
+                <option value="easy">easy</option>
+                <option value="medium">medium</option>
+                <option value="hard">hard</option>
+            </select><br>
+        </div>
+        <input type="submit" value="Submit new place" class="btn btn-primary">
+        </form>
     </div>
 </div>
 
 <script>
-    // DATA EXTRACTION
-    const images = [
-    @foreach ($data["places"] as $place)
-        [{{ $place["pos_X_perc"] }}, {{ $place["pos_Y_perc"] }}, "{{ $place["image_name"] }}", "{{ $place["id"] }}"], 
-    @endforeach
-    ];
-    const records = [
-    @foreach ($data["results"] as $record)
-        [{{ $record["place_id"] }}, "{{ $record["name"] }}", "{{ $record["result"] }}"], 
-    @endforeach
-    ];
-    @if ($gameSerie)
-    const usedIdArray = [
-    @foreach ($usedIdArray as $id)
-        "{{ $id }}",
-    @endforeach
-    ];
-    @endif
-    
-    var startTime = new Date();
-    var currentImageArrayId = 0;
+    // MAP HOLDER
     var inputReceived = false;
-    var inputConfirmed = false;
-    var resultsShownGlobal = true;
-    
     var rect = document.getElementById("mapHolder").getBoundingClientRect();
     var inputX = 0;
     var inputY = 0;
@@ -201,29 +177,8 @@
     calcMapHolderSize();
     resetMapSize();
     calcMapSize();
-    updateRecordList();
 
     resizeMapCanvas()
-    hideConfirmButton();
-
-    @if ($resultView)
-        mapInputXPerc = {{ $data["mapInputXPerc"] }};
-        mapInputYPerc = {{ $data["mapInputYPerc"] }};
-        inputReceived = true;
-        
-        
-        restoreCanvas();
-        selectGameByImageId({{ $data['place_id'] }});
-        inputReceived = true;
-        confirmInput();
-        restoreCanvas();
-    @else
-        @if ($gameSerie)
-            selectNewRandomGame();
-        @else
-            selectRandomGame();
-        @endif
-    @endif
 
     requestAnimationFrame(Repeat);
     
@@ -405,44 +360,6 @@
 
             drawCircle(mapHolderInputX, mapHolderInputY);
         }
-        if (inputConfirmed) {
-            calcCorrectCoordinates();
-            drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
-            drawCircle(correctMapHolderX, correctMapHolderY, "green");
-        }
-    }
-
-    // GAME SELECTOR
-    function nextGame() {
-        currentImageArrayId++;
-        if (currentImageArrayId == images.length) currentImageArrayId = 0;
-        selectGame(currentImageArrayId);
-    }
-    function selectNewRandomGame() {
-        selectGame(newRandomImageArrayId());
-    }
-    function selectRandomGame() {
-        selectGame(randomImageArrayId());
-    }
-    function selectGameByImageId(id) {
-        selectGame(getImageArrayIdFromImageId(id));
-    }
-    function selectGame(imageArrayId){
-        currentImageArrayId = imageArrayId;
-        document.getElementById("placeImage").src = "img/" + images[imageArrayId][2];
-        inputReceived = false;
-        inputConfirmed = false;
-
-        clearCanvas();
-        hideConfirmButton();
-        resetMapSize();
-        resetMapPos();
-        enableMap();
-
-        updateRecordList();
-        document.getElementById('coordinates').innerHTML = "Coordinates";
-        document.getElementById('result').innerHTML = "Result";
-        document.getElementById('message').innerHTML = "Choose the point on the map";
     }
 
     // INPUT
@@ -457,114 +374,31 @@
         mapInputXPerc = mapInputX / mapWidth;
         mapInputYPerc = mapInputY / mapHeight;
         inputReceived = true;
-        
-        showConfirmButton();
 
         resizeMapCanvas()
         clearCanvas();
         drawCircle(mapHolderInputX, mapHolderInputY);
 
-        // console.log(mapInputXPerc + " - " + mapInputYPerc);
+        posx.value = Math.trunc(mapInputXPerc * 10000) / 100;
+        posy.value = Math.trunc(mapInputYPerc * 10000) / 100;
     }
+    function synchronizeInput() {
+        mapInputXPerc = posx.value / 100;
+        mapInputYPerc = posy.value / 100;
+        mapInputX = mapInputXPerc * mapWidth;
+        mapInputY = mapInputYPerc * mapHeight;
+        mapHolderInputX = mapInputX - Math.abs(mapPosX);
+        mapHolderInputY = mapInputY - Math.abs(mapPosY);
+        mapHolderInputXPerc = Math.floor(mapHolderInputX / mapHolderWidth);
+        mapHolderInputYPerc = Math.floor(mapHolderInputY / mapHolderHeight);
+        inputReceived = true;
 
-    function confirmInput() {
-        calcCorrectCoordinates();
+        resizeMapCanvas()
+        clearCanvas();
+        drawCircle(mapHolderInputX, mapHolderInputY);
 
-        // confirmed
-        inputConfirmed = true;
-
-        // show input data
-        document.getElementById('coordinates').innerHTML = 
-            "Left: " + Math.trunc(mapInputXPerc * 10000) / 100 + "% (" + Math.trunc(mapInputX * 100) / 100 +
-            "px) ; Top: " + Math.trunc(mapInputYPerc * 10000) / 100 + "% (" + Math.trunc(mapInputY * 100) / 100 + "px)";
-        // show results
-        document.getElementById('result').innerHTML = "You were " + Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100 + "% (" + Math.trunc(calcHypotenuse(Math.abs(correctX - mapInputX), Math.abs(correctY - mapInputY)) * 100) / 100 + "px) close";
-        // show message
-        document.getElementById('message').innerHTML = "You can view your results and go to next game";
-
-        currentDate = new Date();
-        finishTime = new Date();
-        document.getElementById('result_place_id').value = images[currentImageArrayId][3];
-        document.getElementById('result_user_id').value = {{ Auth::user()->id }};
-        document.getElementById('result_result').value = Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100;
-        document.getElementById('result_wasted_time').value = secondsToTime((finishTime - startTime) / 1000);
-        document.getElementById('result_created_date').value = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
-        document.getElementById('result_mapInputXPerc').value = mapInputXPerc;
-        document.getElementById('result_mapInputYPerc').value = mapInputYPerc;
-
-        drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
-        drawCircle(correctMapHolderX, correctMapHolderY, "green");
-        
-        hideConfirmButton();
-        disableMap();
-
-        document.getElementById('finishButton').style.display = "initial";
-
-        @if ($gameSerie)
-        result_serieCount.value = {{ $serieCount }};
-        result_usedIdArray.value = usedIdArray.length != 0 ? usedIdArray : "none";
-        result_form.action = '/gameContinueSerie';
-        @endif
-    }
-
-    // RECORDS
-    function switchRecordListMode() {
-        if (resultsShownGlobal)
-            document.getElementById("recordListLabel").innerHTML = "Your current place records:";
-        else
-            document.getElementById("recordListLabel").innerHTML = "Global current place records:";
-        resultsShownGlobal = !resultsShownGlobal;
-        updateRecordList();
-    }
-    function updateRecordList() {
-        recordListHtml = "";
-        let recordArray = [];
-        if (resultsShownGlobal) {
-            j = 0;
-            for (let i = 0; i < records.length; i++) {
-                if (records[i][0] == images[currentImageArrayId][3]) {
-                    let exists = false;
-                    for (let k = 0; k < recordArray.length; k++) {
-                        if (recordArray[k][0] == records[i][1]) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        recordArray[j] = [];
-                        recordArray[j][0] = records[i][1];
-                        recordArray[j][1] = records[i][2];
-                        j++;
-                        if (j >= 10) break;
-                    }
-                }
-            }
-            for (let i = 0; i < recordArray.length; i++) {
-                recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
-            }
-            for (let i = 0; i < (10 - recordArray.length); i++) {
-                recordListHtml += "<li> - </li>";
-            }
-        }
-        else {
-            j = 0;
-            for (let i = 0; i < records.length; i++) {
-                if (records[i][0] == images[currentImageArrayId][3] && records[i][1] == "{{ Auth::user()->name }}") {
-                    recordArray[j] = [];
-                    recordArray[j][0] = records[i][1];
-                    recordArray[j][1] = records[i][2];
-                    j++;
-                    if (j >= 10) break;
-                }
-            }
-            for (let i = 0; i < recordArray.length; i++) {
-                recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
-            }
-            for (let i = 0; i < (10 - recordArray.length); i++) {
-                recordListHtml += "<li> - </li>";
-            }
-        }
-        document.getElementById('recordList').innerHTML = recordListHtml;
+        posx.value = Math.trunc(mapInputXPerc * 10000) / 100;
+        posy.value = Math.trunc(mapInputYPerc * 10000) / 100;
     }
 
     // MAP POSITION AND SIZE
@@ -647,42 +481,7 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // CONFIRM BUTTON
-    function showConfirmButton() {
-        document.getElementById("confirmButton").style.display = "initial";
-    }
-    function hideConfirmButton() {
-        document.getElementById("confirmButton").style.display = "none";
-    }
-
     // CALCULATIONS
-    function getImageArrayIdFromImageId(id) {
-        for (let i = 0; i < images.length; i++) {
-            if (images[i][3] == id) {
-                return i;
-            }
-        }
-    }
-    function randomImageArrayId() {
-        return Math.floor(Math.random() * images.length);
-    }
-    function newRandomImageArrayId() {
-        do {
-            newRandomImage = randomImageArrayId();
-        }
-        while (!isImageBeenUsed(newRandomImage));
-        return newRandomImage;
-    }
-    function isImageBeenUsed(imageId) {
-        valid = true;
-        usedIdArray.forEach(id => {
-            if (imageId == getImageArrayIdFromImageId(id)){
-                valid = false;
-                return false;
-            }
-        });
-        return valid;
-    }
     function calcMapSize() {
         mapWidth = mapHolderWidth * zoom;
         mapHeight = mapHolderHeight * zoom;
@@ -722,6 +521,13 @@
         else
             return Math.floor(Math.floor(seconds / 60) / 60) + ":" + (Math.floor(seconds / 60) % 60) + ":" + (seconds % 60);
     }
-</script>
 
+    // IMAGE PREVIEW
+    imageFile.onchange = evt => {
+    const [file] = imageFile.files
+    if (file) {
+        placeImage.src = URL.createObjectURL(file)
+    }
+    }
+</script>
 @endsection

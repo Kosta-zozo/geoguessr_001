@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <img id="placeImage" src="public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                     </div>
                 </div>
             </div>

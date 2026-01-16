@@ -29,9 +29,21 @@ Route::get('/logout', function () {
 //     return view('game');
 // });
 
+Route::get('/gameHub', function () {
+    return view('gamehub');
+});
 Route::get('/game', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::get('/resultPreview', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::post('/submitResult', 'App\Http\Controllers\DataController@submitResult')->middleware('auth');
 
-Route::get('/adminPanel', 'App\Http\Controllers\DataController@adminPanel')->middleware('auth');
+Route::get('/gameStartSerie', 'App\Http\Controllers\DataController@gameStartSerie')->middleware('auth');
+Route::get('/gameStartSerieEasy', 'App\Http\Controllers\DataController@gameStartSerieEasy')->middleware('auth');
+Route::get('/gameStartSerieMedium', 'App\Http\Controllers\DataController@gameStartSerieMedium')->middleware('auth');
+Route::get('/gameStartSerieHard', 'App\Http\Controllers\DataController@gameStartSerieHard')->middleware('auth');
+Route::post('/gameContinueSerie', 'App\Http\Controllers\DataController@gameContinueSerie')->middleware('auth');
+
+Route::get('/adminPanel', function () {
+    return view('adminpanel');
+})->middleware('auth');
+Route::get('/addNewPlace', 'App\Http\Controllers\DataController@addNewPlace')->middleware('auth');
 Route::post('/addPlace', 'App\Http\Controllers\DataController@addPlace')->middleware('auth');

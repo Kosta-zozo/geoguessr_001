@@ -45,7 +45,8 @@ class DataController extends Controller
                                           ->orderBy('results.result', 'asc')
                                           ->get();
         $usedIdArray = [];
-        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => 'random']);
+        $resultArray = [];
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => 'random', 'resultArray' => $resultArray]);
     }
     public function gameStartSerieEasy() {
         return $this->gameStartSerieDiff('easy');
@@ -63,7 +64,8 @@ class DataController extends Controller
                                           ->orderBy('results.result', 'asc')
                                           ->get();
         $usedIdArray = [];
-        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => $difficulty]);
+        $resultArray = [];
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => $difficulty, 'resultArray' => $resultArray]);
     }
     public function gameContinueSerie(Request $data) {
         results::insert([
@@ -86,10 +88,21 @@ class DataController extends Controller
         $serieCount = $data['serieCount'] - 1;
         if ($data['usedIdArray'] != 'none') $usedIdArray = explode(",",$data['usedIdArray']);
         $usedIdArray[] = $data['place_id'];
+        if ($data['resultArray'] != 'none')
+        {
+            $tempArray = explode(",",$data['resultArray']);
+            $i = true;
+            foreach ($tempArray as $result)
+            {
+                if ($i) {$tempResult = $result; $i = false;}
+                else {$resultArray[] = [$tempResult, $result]; $i = true;}
+            }
+        }
+        $resultArray[] = [$data['result'], $data['wasted_time']];
         if ($serieCount <= 0)
-            return redirect()->to('/home');
+            dd($resultArray);// return redirect()->to('/home');
         else
-            return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty']]);
+            return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty'], 'resultArray' => $resultArray]);
     }
     public function addNewPlace() {
         $countries = (new countries())->get();

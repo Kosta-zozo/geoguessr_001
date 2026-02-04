@@ -140,6 +140,7 @@
                 <input type="hidden" id="result_mapInputYPerc" name="mapInputYPerc">
                 <input type="hidden" id="result_serieCount" name="serieCount" value="0">
                 <input type="hidden" id="result_usedIdArray" name="usedIdArray">
+                <input type="hidden" id="result_resultArray" name="resultArray">
                 @if ($gameSerie) <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}"> @endif
                 <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
             </form>
@@ -169,6 +170,15 @@
     const usedIdArray = [
     @foreach ($usedIdArray as $id)
         "{{ $id }}",
+    @endforeach
+    ];
+    const resultArray = [
+    @foreach ($resultArray as $result)
+        [
+        @foreach ($result as $resultPart)
+            "{{ $resultPart }}",
+        @endforeach
+        ],
     @endforeach
     ];
     @endif
@@ -503,6 +513,7 @@
         @if ($gameSerie)
         result_serieCount.value = {{ $serieCount }};
         result_usedIdArray.value = usedIdArray.length != 0 ? usedIdArray : "none";
+        result_resultArray.value = resultArray.length != 0 ? resultArray : "none";
         result_form.action = '/gameContinueSerie';
         @endif
     }

@@ -100,7 +100,7 @@ class DataController extends Controller
         }
         $resultArray[] = [$data['result'], $data['wasted_time']];
         if ($serieCount <= 0)
-            dd($resultArray);// return redirect()->to('/home');
+            return view('results', ['resultArray' => $resultArray]);
         else
             return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty'], 'resultArray' => $resultArray]);
     }

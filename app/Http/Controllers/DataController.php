@@ -9,6 +9,7 @@ use App\Models\results;
 use App\Models\categories;
 use App\Models\countries;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class DataController extends Controller
 {
@@ -132,5 +133,20 @@ class DataController extends Controller
         'difficulty' => $data['difficulty']
         ]);
         return redirect()->to('/addNewPlace')->with('message','New place added successfully!');
+    }
+    public function placelist() {
+        $places = places::join('countries', 'countries.id', '=', 'places.country_id')
+                        ->orderBy('places.id')
+                        ->select('places.id as place_id', 'image_name', 'countries.name', 'difficulty')
+                        ->get();
+        return view('/placelist', ['places' => $places]);
+    }
+    public function deleteplace($id) {
+        if (!Auth::user()->admin)
+            return redirect()->to('placelist')->withErrors('You have no permission to delete this data!');
+
+        results::where('place_id', '=', $id)->delete();
+        places::where('id', '=', $id)->delete();
+        return redirect()->to('placelist');
     }
 }

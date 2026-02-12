@@ -47,3 +47,5 @@ Route::get('/adminPanel', function () {
 })->middleware('auth');
 Route::get('/addNewPlace', 'App\Http\Controllers\DataController@addNewPlace')->middleware('auth');
 Route::post('/addPlace', 'App\Http\Controllers\DataController@addPlace')->middleware('auth');
+Route::get('/placelist', 'App\Http\Controllers\DataController@placelist')->middleware('auth');
+Route::get('/{id}/deleteplace', 'App\Http\Controllers\DataController@deleteplace')->middleware('auth');

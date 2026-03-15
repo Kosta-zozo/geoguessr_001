@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px; filter: blur(@if($difficulty=='easy') 0 @elseif($difficulty=='medium') 2px @else 5px @endif);">
                     </div>
                 </div>
             </div>
@@ -141,6 +141,7 @@
                 <input type="hidden" id="result_serieCount" name="serieCount" value="0">
                 <input type="hidden" id="result_usedIdArray" name="usedIdArray">
                 <input type="hidden" id="result_resultArray" name="resultArray">
+                @if ($gameSerie) <input type="hidden" id="result_category" name="category" value="{{ $category }}"> @endif
                 @if ($gameSerie) <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}"> @endif
                 <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
             </form>

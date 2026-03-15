@@ -36,7 +36,7 @@ Route::get('/game', 'App\Http\Controllers\DataController@game')->middleware('aut
 Route::get('/resultPreview', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::post('/submitResult', 'App\Http\Controllers\DataController@submitResult')->middleware('auth');
 
-Route::get('/gameStartSerie', 'App\Http\Controllers\DataController@gameStartSerie')->middleware('auth');
+Route::get('/{category}/{difficulty}/gameStartSerie', 'App\Http\Controllers\DataController@gameStartSerieDiff')->middleware('auth');
 Route::get('/gameStartSerieEasy', 'App\Http\Controllers\DataController@gameStartSerieEasy')->middleware('auth');
 Route::get('/gameStartSerieMedium', 'App\Http\Controllers\DataController@gameStartSerieMedium')->middleware('auth');
 Route::get('/gameStartSerieHard', 'App\Http\Controllers\DataController@gameStartSerieHard')->middleware('auth');

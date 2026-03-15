@@ -47,26 +47,26 @@ class DataController extends Controller
                                           ->get();
         $usedIdArray = [];
         $resultArray = [];
-        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => 'random', 'resultArray' => $resultArray]);
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 5, 'usedIdArray' => $usedIdArray, 'category' => 'random', 'resultArray' => $resultArray]);
     }
-    public function gameStartSerieEasy() {
-        return $this->gameStartSerieDiff('easy');
-    }
-    public function gameStartSerieMedium() {
-        return $this->gameStartSerieDiff('medium');
-    }
-    public function gameStartSerieHard() {
-        return $this->gameStartSerieDiff('hard');
-    }
-    public function gameStartSerieDiff($difficulty) {
-        $data['places'] = (new places())->where('difficulty','=',$difficulty)->get();
+    // public function gameStartSerieEasy() {
+    //     return $this->gameStartSerieDiff('easy');
+    // }
+    // public function gameStartSerieMedium() {
+    //     return $this->gameStartSerieDiff('medium');
+    // }
+    // public function gameStartSerieHard() {
+    //     return $this->gameStartSerieDiff('hard');
+    // }
+    public function gameStartSerieDiff($category, $difficulty) {
+        $data['places'] = (new places())->where('category_id','=',$category)->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
                                           ->orderBy('results.result', 'asc')
                                           ->get();
         $usedIdArray = [];
         $resultArray = [];
-        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 3, 'usedIdArray' => $usedIdArray, 'difficulty' => $difficulty, 'resultArray' => $resultArray]);
+        return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => 5, 'usedIdArray' => $usedIdArray, 'difficulty' => $difficulty, 'category' => $category, 'resultArray' => $resultArray]);
     }
     public function gameContinueSerie(Request $data) {
         results::insert([
@@ -77,10 +77,10 @@ class DataController extends Controller
         'created_date' => $data['created_date']
         ]);
 
-        if ($data['difficulty'] == 'random')
+        if ($data['category'] == 'random')
             $data['places'] = (new places())->get();
         else
-            $data['places'] = (new places())->where('difficulty','=',$data['difficulty'])->get();
+            $data['places'] = (new places())->where('category_id','=',$data['category'])->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
                                           ->orderBy('results.result', 'asc')
@@ -103,7 +103,7 @@ class DataController extends Controller
         if ($serieCount <= 0)
             return view('results', ['resultArray' => $resultArray]);
         else
-            return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty'], 'resultArray' => $resultArray]);
+            return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty'], 'category' => $data['category'], 'resultArray' => $resultArray]);
     }
     public function addNewPlace() {
         $countries = (new countries())->get();

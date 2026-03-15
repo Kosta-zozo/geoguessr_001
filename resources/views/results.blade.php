@@ -12,6 +12,7 @@
             </li>
             @endforeach
         </ol>
+        <a href="/gameHub" class="btn btn-primary">Return to game hub</a>
     </div>
 </div>
 

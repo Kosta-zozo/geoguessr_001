@@ -19,7 +19,7 @@
         <button class="btn btn-secondary border-dark rounded-0 m-1" onclick="filterPlaces('easy')">Easy</button>
         <button class="btn btn-secondary border-dark rounded-0 m-1" onclick="filterPlaces('medium')">Medium</button>
         <button class="btn btn-secondary border-dark rounded-0 m-1" onclick="filterPlaces('hard')">Hard</button>
-        <p id="test">test</p>
+        <!-- <p id="test">test</p> -->
         @foreach ($places as $place)
             <div class="placeCard row align-content-start border border-2 border-dark m-2 p-2">
                 <input type="hidden" value="{{ $place['difficulty'] }}"> <!-- for filtering -->

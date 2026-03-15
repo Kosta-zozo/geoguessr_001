@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <img id="placeImage" src="public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                     </div>
                 </div>
             </div>
@@ -207,7 +207,7 @@
     var dragging = false;
 
     addEventListener("resize", hangleResizing);
-    document.getElementById("mapHolder").style.backgroundImage = "url('public/img/map.png')";
+    document.getElementById("mapHolder").style.backgroundImage = "url('/public/img/map.png')";
     calcMapHolderSize();
     resetMapSize();
     calcMapSize();
@@ -439,7 +439,7 @@
     }
     function selectGame(imageArrayId){
         currentImageArrayId = imageArrayId;
-        document.getElementById("placeImage").src = "public/img/" + images[imageArrayId][2];
+        document.getElementById("placeImage").src = "/public/img/" + images[imageArrayId][2];
         inputReceived = false;
         inputConfirmed = false;
 

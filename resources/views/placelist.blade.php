@@ -24,7 +24,7 @@
             <div class="placeCard row align-content-start border border-2 border-dark m-2 p-2">
                 <input type="hidden" value="{{ $place['difficulty'] }}"> <!-- for filtering -->
                 <div class="col-3">
-                    <img src="img/{{ $place['image_name'] }}" alt="No image found" class="w-100 h-100 border border-1 border-dark">
+                    <img src="public/img/{{ $place['image_name'] }}" alt="No image found" class="w-100 h-100 border border-1 border-dark">
                 </div>
                 <div class="col">
                     <p>Image name: {{ $place['image_name'] }}</p>

@@ -1,7 +1,7 @@
 @extends ('layouts.app')
 @section ('content')    
 <div class="px-4 py-5 my-5 text-center">
-    <h3 class="display-5 fw-bold text-body-emphasis">Choose your game</h3>
+    <h3 class="display-5 fw-bold text-body-emphasis">Choose your challenge</h3>
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">Here you can pick game mode of your choice.</p>
         <button class="btn btn-primary" onclick="showEasyMode()">Easy</button>

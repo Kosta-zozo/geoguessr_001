@@ -49,3 +49,10 @@ Route::get('/addNewPlace', 'App\Http\Controllers\DataController@addNewPlace')->m
 Route::post('/addPlace', 'App\Http\Controllers\DataController@addPlace')->middleware('auth');
 Route::get('/placelist', 'App\Http\Controllers\DataController@placelist')->middleware('auth');
 Route::get('/{id}/deleteplace', 'App\Http\Controllers\DataController@deleteplace')->middleware('auth');
+
+Route::get('addNewCategory', function () {
+    return view('addnewcategory');
+})->middleware('auth');
+Route::post('/addCategory', 'App\Http\Controllers\DataController@addCategory')->middleware('auth');
+Route::get('/categorylist', 'App\Http\Controllers\DataController@categorylist')->middleware('auth');
+Route::get('/{id}/deletecategory', 'App\Http\Controllers\DataController@deletecategory')->middleware('auth');

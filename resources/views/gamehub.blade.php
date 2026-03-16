@@ -5,7 +5,7 @@
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">Here you can pick game mode of your choice.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a href="/game" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start a single game</a>
+            <!-- <a href="/game" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start a single game</a> -->
             <!-- <a href="/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start game serie of 3</a> -->
             <a href="/1/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start game serie of 5 (Historical places)</a>
             <a href="/2/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start game serie of 5 (Water bodies)</a>

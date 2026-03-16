@@ -77,6 +77,8 @@ class DataController extends Controller
         'created_date' => $data['created_date']
         ]);
 
+        $this->cutTail($data['user_id'], $data['place_id']);
+
         if ($data['category'] == 'random')
             $data['places'] = (new places())->get();
         else
@@ -104,6 +106,16 @@ class DataController extends Controller
             return view('results', ['resultArray' => $resultArray]);
         else
             return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty'], 'category' => $data['category'], 'resultArray' => $resultArray]);
+    }
+    public function cutTail(int $userId, int $placeId) {
+        $count = results::count();
+        results::where('place_id', '=', $placeId)
+            ->where('user_id', '=', $userId)
+            ->orderBy('result', 'asc')
+            ->take($count)
+            ->skip(10)
+            ->get()
+            ->each(function($row){ $row->delete(); });
     }
     public function addNewPlace() {
         $countries = (new countries())->get();

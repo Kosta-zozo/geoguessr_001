@@ -4,8 +4,10 @@
     <div class="col-lg-6 mx-auto">
         @if(Auth::user()->admin)
             <a href="/addNewPlace" class="btn btn-primary">Add a new place</a>
+            <a href="/addNewCategory" class="btn btn-primary">Add a new category</a>
         @endif
         <a href="/placelist" class="btn btn-primary">View all places</a>
+        <a href="/categorylist" class="btn btn-primary">View all categories</a>
     </div>
 </div>
 @endsection

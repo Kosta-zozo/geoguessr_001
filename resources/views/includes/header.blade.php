@@ -12,7 +12,7 @@
                 <li class="nav-item"><a href="/loginform" class="nav-link @if (Request::is('loginform') || Request::is('registerform')) active @endif">Login</a></li>
             @else
                 <li class="nav-item"><a href="/gameHub" class="nav-link @if (Request::is('gameHub') || Request::is('game') || Request::is('submitResult') || Request::is('gameStartSerie') || Request::is('gameContinueSerie')) active @endif">Game</a></li>
-                <li class="nav-item"><a href="/adminPanel" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist')) active @endif">{{ Auth::user()->name }}</a></li>
+                <li class="nav-item"><a href="/adminPanel" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('addNewCategory')) active @endif">{{ Auth::user()->name }}</a></li>
                 <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
             @endif
         </ul>

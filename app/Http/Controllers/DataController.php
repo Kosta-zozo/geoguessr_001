@@ -161,4 +161,29 @@ class DataController extends Controller
         places::where('id', '=', $id)->delete();
         return redirect()->to('placelist');
     }
+
+    public function addCategory(request $data) {
+        $validated = $data->validate([
+            'name' => 'required'
+        ]);
+
+        categories::insert([
+        'name' => $data['name']
+        ]);
+        return redirect()->to('/adminPanel')->with('message','New category added successfully!');
+    }
+    public function categorylist() {
+        return view('/categorylist', ['categories' => (new categories())->get()]);
+    }
+    public function deletecategory($id) {
+        if (!Auth::user()->admin)
+            return redirect()->to('categorylist')->withErrors('You have no permission to delete this data!');
+
+        results::join('places', 'places.id', '=', 'results.place_id')
+            ->where('category_id', '=', $id)
+            ->delete();
+        places::where('category_id', '=', $id)->delete();
+        categories::where('id', '=', $id)->delete();
+        return redirect()->to('categorylist');
+    }
 }

@@ -90,6 +90,15 @@
     #finishButton {
         display: none;
     }
+    #countdownline {
+        position: absolute;
+        background-color: red;
+        border: 2px black solid;
+        border-radius: 5px 0px 0px 0px;
+        width: calc(100% - 24px);
+        height: 10px;
+        top: 0;
+    }
 </style>
 <div class="px-4 py-3 my-2 text-center">
     <h1 class="display-5 fw-bold text-body-emphasis my-2">Geolocation guesser</h1>
@@ -102,9 +111,9 @@
             </div>
         </div>
         <div class="col-6 border rounded-3">
-            <br>
                 <!-- <button onclick="nextGame()" class="btn btn-primary">Next game</button>
                 <button onclick="selectNewRandomGame()" class="btn btn-primary">Random game</button> -->
+            <h5 id="timer">Timer</h5>
             <h3 id="message">Choose the point on the map</h3>
             <div class="container">
                 <div class="row align-items-start">
@@ -114,17 +123,21 @@
                         <canvas id="mapCanvas" width="200" height="100">
                             Your browser does not support the HTML canvas tag.
                         </canvas>
-                        <div id="buttonHolder" class="rounded-3">
-                            <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
-                            <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
-                            <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
-                            <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
-                            <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
-                            <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
-                        </div>
+                        @if($difficulty == 'easy')
+                            <div id="buttonHolder" class="rounded-3">
+                                <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
+                                <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
+                                <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
+                                <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
+                                <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
+                                <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
+                            </div>
+                        @endif
                     </div>
-                    <div class="col-6">
-                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px; filter: blur(@if($difficulty=='easy') 0 @elseif($difficulty=='medium') 2px @else 5px @endif);">
+                    <div class="col-6"  style="position: relative;">
+                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <h3 id="countdown" style="position: absolute; top: 5px; left: 15px; color: red;">Countdown</h3>
+                        <div id="countdownline"></div>
                     </div>
                 </div>
             </div>
@@ -184,6 +197,12 @@
     ];
     @endif
     
+    @if($difficulty != 'hard')
+        countdown.remove();
+        countdownline.remove();
+    @endif
+
+
     var startTime = new Date();
     var currentImageArrayId = 0;
     var inputReceived = false;
@@ -289,97 +308,118 @@
 
     // REPEATER
     function Repeat() {
-        // SCROLL
-        if (leftScroll){
-            mapPosX += scrollAmount;
-            correctMapPosLeft();
-            applyMapPosX(mapPosX);
-            restoreCanvas();
-        }
-        else if (rightScroll){
-            mapPosX -= scrollAmount;
-            correctMapPosRight();
-            applyMapPosX(mapPosX);
-            restoreCanvas();
-        }
-        else if (upScroll){
-            mapPosY += scrollAmount;
-            correctMapPosUp();
-            applyMapPosY(mapPosY);
-            restoreCanvas();
-        }
-        else if (downScroll){
-            mapPosY -= scrollAmount;
-            correctMapPosDown();
-            applyMapPosY(mapPosY);
-            restoreCanvas();
-        }
-        // ZOOM
-        if (zoomIn || zoomOut){
-            calcMapCenterPosPerc();
-            if (zoomIn) {
-                zoom += zoomAmount;
-                if (zoom > 10) zoom = 10;
+        @if($difficulty == 'easy')
+            // SCROLL
+            if (leftScroll){
+                mapPosX += scrollAmount;
+                correctMapPosLeft();
+                applyMapPosX(mapPosX);
+                restoreCanvas();
             }
-            else if (zoomOut) {
-                zoom -= zoomAmount;
-                if (zoom < 1) zoom = 1;
+            else if (rightScroll){
+                mapPosX -= scrollAmount;
+                correctMapPosRight();
+                applyMapPosX(mapPosX);
+                restoreCanvas();
             }
-            calcMapSize();
-            applyMapSize();
+            else if (upScroll){
+                mapPosY += scrollAmount;
+                correctMapPosUp();
+                applyMapPosY(mapPosY);
+                restoreCanvas();
+            }
+            else if (downScroll){
+                mapPosY -= scrollAmount;
+                correctMapPosDown();
+                applyMapPosY(mapPosY);
+                restoreCanvas();
+            }
+            // ZOOM
+            if (zoomIn || zoomOut){
+                calcMapCenterPosPerc();
+                if (zoomIn) {
+                    zoom += zoomAmount;
+                    if (zoom > 10) zoom = 10;
+                }
+                else if (zoomOut) {
+                    zoom -= zoomAmount;
+                    if (zoom < 1) zoom = 1;
+                }
+                calcMapSize();
+                applyMapSize();
 
-            mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * .5));
-            mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * .5));
+                mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * .5));
+                mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * .5));
 
-            if (zoomOut) {
+                if (zoomOut) {
+                    correctMapPos();
+                }
+
+                applyMapPos();
+                restoreCanvas();
+            }
+            // DRAG
+            if (dragging) {
+                dragAmountX = savedDragAmountX - (dragStartX - Math.floor(inputX - rect.left));
+                mapPosX += dragAmountX;
+                savedDragAmountX = dragStartX - Math.floor(inputX - rect.left);
+                dragAmountX = 0;
+
+                dragAmountY = savedDragAmountY - (dragStartY - Math.floor(inputY - rect.left));
+                mapPosY += dragAmountY;
+                savedDragAmountY = dragStartY - Math.floor(inputY - rect.left);
+                dragAmountY = 0;
+
                 correctMapPos();
+                applyMapPosX(mapPosX);
+                applyMapPosY(mapPosY);
+                restoreCanvas();
             }
-
-            applyMapPos();
-            restoreCanvas();
-        }
-        // DRAG
-        if (dragging) {
-            dragAmountX = savedDragAmountX - (dragStartX - Math.floor(inputX - rect.left));
-            mapPosX += dragAmountX;
-            savedDragAmountX = dragStartX - Math.floor(inputX - rect.left);
-            dragAmountX = 0;
-
-            dragAmountY = savedDragAmountY - (dragStartY - Math.floor(inputY - rect.left));
-            mapPosY += dragAmountY;
-            savedDragAmountY = dragStartY - Math.floor(inputY - rect.left);
-            dragAmountY = 0;
-
-            correctMapPos();
-            applyMapPosX(mapPosX);
-            applyMapPosY(mapPosY);
-            restoreCanvas();
-        }
-
+        @endif
+        // TIMER
+        timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
+        @if($difficulty == 'hard')
+            if (document.getElementById('countdown') !== null)
+            {
+                if (timer.innerHTML >= 5)
+                {
+                    placeImage.src = "/public/img/restricted.png";
+                    countdown.remove();
+                    countdownline.remove();
+                }
+                else
+                {
+                    countdown.innerHTML = (5 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
+                    countdownline.style.width = "calc(" + ((5 - (new Date() - startTime) / 100 / 10).toFixed(2) / 5 * 100) + "% - 24px)";
+                } 
+            }
+        @endif
         requestAnimationFrame(Repeat);
     }
 
-    // ZOOM
-    document.getElementById("mapHolder").addEventListener("wheel", event => {
-        zoomPosXPerc = Math.floor(event.clientX - rect.left) / mapHolderWidth;
-        zoomPosYPerc = Math.floor(event.clientY - rect.top) / mapHolderHeight;
-        calcMapPosPercFrom(zoomPosXPerc, zoomPosYPerc);
-        zoom -= event.deltaY / 500;
-        if (zoom > 10) zoom = 10;
-        else if (zoom < 1) zoom = 1;
-        calcMapSize();
-        applyMapSize();
+    @if($difficulty == 'easy')
+        // ZOOM
+        document.getElementById("mapHolder").addEventListener("wheel", event => {
+            zoomPosXPerc = Math.floor(event.clientX - rect.left) / mapHolderWidth;
+            zoomPosYPerc = Math.floor(event.clientY - rect.top) / mapHolderHeight;
+            calcMapPosPercFrom(zoomPosXPerc, zoomPosYPerc);
+            zoom -= event.deltaY / 500;
+            if (zoom > 10) zoom = 10;
+            else if (zoom < 1) zoom = 1;
+            calcMapSize();
+            applyMapSize();
 
-        mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * (zoomPosXPerc)));
-        mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * (zoomPosYPerc)));
+            mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * (zoomPosXPerc)));
+            mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * (zoomPosYPerc)));
 
-        correctMapPos();
+            correctMapPos();
 
-        applyMapPos();
-        restoreCanvas();
+            applyMapPos();
+            restoreCanvas();
 
-        return false;
-    });
+            return false;
+        });
+        @endif
 
     // SCROLL DISABLE
     document.getElementById("mapHolder").addEventListener("mouseenter", event => {
@@ -730,9 +770,9 @@
         if (seconds < 60)
             return seconds;
         else if (seconds < 3600)
-            return "00:" + Math.floor(seconds / 60) + ":" + (seconds % 60);
+            return "00:" + Math.floor(seconds / 60) + ":" + ((seconds % 60).toFixed(1));
         else
-            return Math.floor(Math.floor(seconds / 60) / 60) + ":" + (Math.floor(seconds / 60) % 60) + ":" + (seconds % 60);
+            return Math.floor(Math.floor(seconds / 60) / 60) + ":" + (Math.floor(seconds / 60) % 60) + ":" + ((seconds % 60).toFised(1));
     }
 </script>
 

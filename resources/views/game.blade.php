@@ -90,6 +90,15 @@
     #finishButton {
         display: none;
     }
+    #countdownline {
+        position: absolute;
+        background-color: red;
+        border: 2px black solid;
+        border-radius: 5px 0px 0px 0px;
+        width: calc(100% - 24px);
+        height: 10px;
+        top: 0;
+    }
 </style>
 <div class="px-4 py-3 my-2 text-center">
     <h1 class="display-5 fw-bold text-body-emphasis my-2">Geolocation guesser</h1>
@@ -128,6 +137,7 @@
                     <div class="col-6"  style="position: relative;">
                         <img id="placeImage" src="/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                         <h3 id="countdown" style="position: absolute; top: 5px; left: 15px; color: red;">Countdown</h3>
+                        <div id="countdownline"></div>
                     </div>
                 </div>
             </div>
@@ -187,6 +197,12 @@
     ];
     @endif
     
+    @if($difficulty != 'hard')
+        countdown.remove();
+        countdownline.remove();
+    @endif
+
+
     var startTime = new Date();
     var currentImageArrayId = 0;
     var inputReceived = false;
@@ -363,11 +379,19 @@
         // TIMER
         timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
         @if($difficulty == 'hard')
-            countdown.innerHTML = (5 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
-            if (timer.innerHTML >= 5)
+            if (document.getElementById('countdown') !== null)
             {
-                placeImage.src = "/img/placeholder.jpg";
-                countdown.remove();
+                if (timer.innerHTML >= 5)
+                {
+                    placeImage.src = "/img/restricted.png";
+                    countdown.remove();
+                    countdownline.remove();
+                }
+                else
+                {
+                    countdown.innerHTML = (5 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
+                    countdownline.style.width = "calc(" + ((5 - (new Date() - startTime) / 100 / 10).toFixed(2) / 5 * 100) + "% - 24px)";
+                } 
             }
         @endif
         requestAnimationFrame(Repeat);

@@ -135,7 +135,7 @@
                         @endif
                     </div>
                     <div class="col-6"  style="position: relative;">
-                        <img id="placeImage" src="/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                         <h3 id="countdown" style="position: absolute; top: 5px; left: 15px; color: red;">Countdown</h3>
                         <div id="countdownline"></div>
                     </div>
@@ -227,7 +227,7 @@
     var dragging = false;
 
     addEventListener("resize", hangleResizing);
-    document.getElementById("mapHolder").style.backgroundImage = "url('/img/map.png')";
+    document.getElementById("mapHolder").style.backgroundImage = "url('/public/img/map.png')";
     calcMapHolderSize();
     resetMapSize();
     calcMapSize();
@@ -383,7 +383,7 @@
             {
                 if (timer.innerHTML >= 5)
                 {
-                    placeImage.src = "/img/restricted.png";
+                    placeImage.src = "/public/img/restricted.png";
                     countdown.remove();
                     countdownline.remove();
                 }
@@ -480,7 +480,7 @@
     }
     function selectGame(imageArrayId){
         currentImageArrayId = imageArrayId;
-        document.getElementById("placeImage").src = "/img/" + images[imageArrayId][2];
+        document.getElementById("placeImage").src = "/public/img/" + images[imageArrayId][2];
         inputReceived = false;
         inputConfirmed = false;
 

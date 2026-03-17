@@ -21,7 +21,8 @@
                     <p class="m-0 d-flex justify-content-between">
                         Category name: {{ $category['name'] }}
                         @if(Auth::user()->admin)
-                            <a href="/{{ $category['id'] }}/deletecategory" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</a>
+                            <button onclick="openDeleteWindow({{ $category['id'] }})" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</button>
+                            <!-- <a href="/{{ $category['id'] }}/deletecategory" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</a> -->
                         @endif
                     </p>
                 </div>
@@ -29,4 +30,25 @@
         @endforeach
     </div>
 </div>
+
+<div id="deleteConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+    <h4 id="deleteHeader">Are you sure you want to delete that?</h4>
+    <p>(it will delete all connected places and records)</p>
+    <a id="deleteButton" href="/VALUE/deletecategory" class="btn btn-danger border-dark rounded-0">Delete</a>
+    <button onclick="hideDeleteWindow()" class="btn btn-primary border-dark rounded-0">Cancel</button>
+</div>
+
+<script>
+    hideDeleteWindow();
+
+    function openDeleteWindow(id)
+    {
+        deleteButton.href = "/" + id + "/deletecategory";
+        deleteConfirmation.style.display = "initial";
+    }
+    function hideDeleteWindow()
+    {
+        deleteConfirmation.style.display = "none";
+    }
+</script>
 @endsection

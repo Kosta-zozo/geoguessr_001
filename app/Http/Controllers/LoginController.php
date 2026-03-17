@@ -21,7 +21,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/game');
+            return redirect()->intended('/gameHub');
         }
 
         return back()->withErrors([

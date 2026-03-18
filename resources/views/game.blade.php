@@ -208,6 +208,8 @@
     var inputReceived = false;
     var inputConfirmed = false;
     var resultsShownGlobal = true;
+
+    var pageIsLoaded = false;
     
     var rect = document.getElementById("mapHolder").getBoundingClientRect();
     var inputX = 0;
@@ -235,6 +237,12 @@
 
     resizeMapCanvas()
     hideConfirmButton();
+
+    addEventListener("load", function() {
+        console.log("bruh");
+        startTime = new Date();
+        pageIsLoaded= true;
+    });
 
     @if ($resultView)
         mapInputXPerc = {{ $data["mapInputXPerc"] }};
@@ -379,7 +387,7 @@
         // TIMER
         timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
         @if($difficulty == 'hard')
-            if (document.getElementById('countdown') !== null)
+            if (document.getElementById('countdown') !== null && pageIsLoaded)
             {
                 if (timer.innerHTML >= 5)
                 {

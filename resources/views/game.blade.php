@@ -101,12 +101,18 @@
     }
 </style>
 <div class="px-4 py-3 my-2 text-center">
-    <h1 class="display-5 fw-bold text-body-emphasis my-2">Geolocation guesser</h1>
+    <h1 class="display-5 fw-bold text-body-emphasis my-2">
+        <span lang="en">Geolocation guesser</span>
+        <span lang="lv">Geolokacijas minetajs</span>
+    </h1>
     <hr class="mx-5">
     <div class="row align-items-start">
         <div class="col-3 p-3">
             <div class="border rounded-3 mx-5">
-                <button onclick="switchRecordListMode()" class="btn btn-outline-dark"><b id="recordListLabel">Global current place records:</b></button>
+                <button onclick="switchRecordListMode()" class="btn btn-outline-dark"><b id="recordListLabel">
+                    <span lang="en">Global current place records:</span>
+                    <span lang="lv">Globalie rezultati:</span>
+                </b></button>
                 <ol id="recordList"></ol>
             </div>
         </div>
@@ -114,14 +120,18 @@
                 <!-- <button onclick="nextGame()" class="btn btn-primary">Next game</button>
                 <button onclick="selectNewRandomGame()" class="btn btn-primary">Random game</button> -->
             <h5 id="timer">Timer</h5>
-            <h3 id="message">Choose the point on the map</h3>
+            <h3 id="message">
+                <span lang="en">Choose the point on the map</span>
+                <span lang="lv">Izvelies punktu mapē</span>
+            </h3>
             <div class="container">
                 <div class="row align-items-start">
                     <div class="col-6" style="position: relative;">
                         <!-- <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;"> -->
                         <div id="mapHolder" class="rounded-3"></div>
                         <canvas id="mapCanvas" width="200" height="100">
-                            Your browser does not support the HTML canvas tag.
+                            <span lang="en">Your browser does not support the HTML canvas tag.</span>
+                            <span lang="lv">Šis parlukprogramma ir slikta, izmanto citu.</span>
                         </canvas>
                         @if($difficulty == 'easy')
                             <div id="buttonHolder" class="rounded-3">
@@ -129,14 +139,19 @@
                                 <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
                                 <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
                                 <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
-                                <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">Zoom in</button>
-                                <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">Zoom out</button>
+                                <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">
+                                    <span lang="en">Zoom in</span>
+                                    <span lang="lv">Pietuvinat</span>
+                                </button>
+                                <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">
+                                    <span lang="en">Zoom out</span>
+                                    <span lang="lv">Attalinat</span>
+                                </button>
                             </div>
                         @endif
                     </div>
                     <div class="col-6"  style="position: relative;">
                         <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
-                        <h3 id="countdown" style="position: absolute; top: 5px; left: 15px; color: red;">Countdown</h3>
                         <div id="countdownline"></div>
                     </div>
                 </div>
@@ -156,14 +171,32 @@
                 <input type="hidden" id="result_resultArray" name="resultArray">
                 @if ($gameSerie) <input type="hidden" id="result_category" name="category" value="{{ $category }}"> @endif
                 @if ($gameSerie) <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}"> @endif
-                <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">Confirm</button>
+                <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">
+                    <span lang="en">Confirm</span>
+                    <span lang="lv">Apstiprinat</span>
+                </button>
             </form>
-            <a id="finishButton" href="/game" class="btn btn-success">Start a new game</a>
+            <a id="finishButton" href="/game" class="btn btn-success">
+                <span lang="en">Start a new game</span>
+                <span lang="lv">Uzsakt jaunu speli</span>
+            </a>
             <hr>
-            <h4>You clicked on:</h4>
-            <p id="coordinates">Coordinates</p>
-            <h4>Result:</h4>
-            <p id="result">Result</p>
+            <h4>
+                <span lang="en">You clicked on:</span>
+                <span lang="lv">Jus piespiedat:</span>
+            </h4>
+            <p id="coordinates">
+                <span lang="en">Coordinates</span>
+                <span lang="lv">Koordinati</span>
+            </p>
+            <h4>
+                <span lang="en">Result:</span>
+                <span lang="lv">Rezultats:</span>
+            </h4>
+            <p id="result">
+                <span lang="en">Result</span>
+                <span lang="lv">Rezultats</span>
+            </p>
         </div>
     </div>
 </div>
@@ -198,7 +231,6 @@
     @endif
     
     @if($difficulty != 'hard')
-        countdown.remove();
         countdownline.remove();
     @endif
 
@@ -387,17 +419,16 @@
         // TIMER
         timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
         @if($difficulty == 'hard')
-            if (document.getElementById('countdown') !== null && pageIsLoaded)
+            if (document.getElementById('countdownline') !== null && pageIsLoaded)
             {
                 if (timer.innerHTML >= 5)
                 {
                     placeImage.src = "/public/img/restricted.png";
-                    countdown.remove();
                     countdownline.remove();
                 }
                 else
                 {
-                    countdown.innerHTML = (5 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
+                    // countdown.innerHTML = (5 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
                     countdownline.style.width = "calc(" + ((5 - (new Date() - startTime) / 100 / 10).toFixed(2) / 5 * 100) + "% - 24px)";
                 } 
             }
@@ -499,9 +530,15 @@
         enableMap();
 
         updateRecordList();
-        document.getElementById('coordinates').innerHTML = "Coordinates";
-        document.getElementById('result').innerHTML = "Result";
-        document.getElementById('message').innerHTML = "Choose the point on the map";
+        document.getElementById('coordinates').innerHTML = 
+        '<span lang="en">Coordinates</span>'+
+        '<span lang="lv">Koordinati</span>';
+        document.getElementById('result').innerHTML = 
+        '<span lang="en">Result</span>'+
+        '<span lang="lv">Rezultats</span>';
+        document.getElementById('message').innerHTML = 
+        '<span lang="en">Choose the point on the map</span>'+
+        '<span lang="lv">Izvelies punktu mapē</span>';
     }
 
     // INPUT
@@ -570,9 +607,14 @@
     // RECORDS
     function switchRecordListMode() {
         if (resultsShownGlobal)
-            document.getElementById("recordListLabel").innerHTML = "Your current place records:";
+            
+            document.getElementById("recordListLabel").innerHTML = 
+            '<span lang="en">Your current place records:</span>'+
+            '<span lang="lv">Jusu rezultati:</span>';
         else
-            document.getElementById("recordListLabel").innerHTML = "Global current place records:";
+            document.getElementById("recordListLabel").innerHTML = 
+            '<span lang="en">Global current place records:</span>'+
+            '<span lang="lv">Globalie rezultati:</span>';
         resultsShownGlobal = !resultsShownGlobal;
         updateRecordList();
     }

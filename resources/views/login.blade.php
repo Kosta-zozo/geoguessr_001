@@ -13,16 +13,28 @@
 
             <br>
             <div class="p-3 border border-secondary">
-                <h3>Login</h3>
+                <h3>
+                    <span lang="en">Login</span>
+                    <span lang="lv">Ielogošana</span>
+                </h3>
                 <form action="/login" method="post">
                     @csrf
-                	<label for="name">Enter login:</label><br>
+                	<label for="name">
+                        <span lang="en">Enter login:</span>
+                        <span lang="lv">Ievadi loginu:</span>
+                    </label><br>
                 	<input type="text" class="form-control" name="name"><br>
-                	<label for="password">Enter password:</label><br>
+                	<label for="password">
+                        <span lang="en">Enter password:</span>
+                        <span lang="lv">Ievadi paroli:</span>
+                    </label><br>
                 	<input type="password" class="form-control" name="password"><br>
                 	<input type="submit" class="btn btn-outline-primary" value="Login">
                 </form>
-                <a href="/registerform">You don't have an account?</a>
+                <a href="/registerform">
+                    <span lang="en">You don't have an account?</span>
+                    <span lang="lv">Jums nav konta?</span>
+                </a>
             </div>
         </div>
     </div>

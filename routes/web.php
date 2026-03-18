@@ -29,9 +29,10 @@ Route::get('/logout', function () {
 //     return view('game');
 // });
 
-Route::get('/gameHub', function () {
-    return view('gamehub');
-})->middleware('auth');
+// Route::get('/gameHub', function () {
+//     return view('gamehub');
+// })->middleware('auth');
+Route::get('/gameHub', 'App\Http\Controllers\DataController@gameHub')->middleware('auth');
 Route::get('/game', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::get('/resultPreview', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::post('/submitResult', 'App\Http\Controllers\DataController@submitResult')->middleware('auth');
@@ -56,3 +57,5 @@ Route::get('addNewCategory', function () {
 Route::post('/addCategory', 'App\Http\Controllers\DataController@addCategory')->middleware('auth');
 Route::get('/categorylist', 'App\Http\Controllers\DataController@categorylist')->middleware('auth');
 Route::get('/{id}/deletecategory', 'App\Http\Controllers\DataController@deletecategory')->middleware('auth');
+Route::get('/{id}/editcategory', 'App\Http\Controllers\DataController@openEditorCategory')->middleware('auth');
+Route::post('/editCategory', 'App\Http\Controllers\DataController@editCategory')->middleware('auth');

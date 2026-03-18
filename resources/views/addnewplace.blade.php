@@ -102,33 +102,50 @@
 @endif
 <div class="px-4 py-5 my-5 text-center">
     <div class="col-lg-6 mx-auto">
-        <h3>Add a new place</h3>
+        <h3>
+            <span lang="en">Add a new place</span>
+            <span lang="lv">Izveidot jaunu lokaciju</span>
+        </h3>
         <div class="row align-items-start">
             <div class="col" style="position: relative;">
                 <div id="mapHolder" class="rounded-3"></div>
                 <canvas id="mapCanvas" width="200" height="100">
-                    Your browser does not support the HTML canvas tag.
+                    <span lang="en">Your browser does not support the HTML canvas tag.</span>
+                    <span lang="lv">Jusu parlukprogramma ir slikta, izmanto citu.</span>
+                    
                 </canvas>
                 <form action="/addPlace" method="post" enctype="multipart/form-data">@csrf
                 <div class="row align-items-start">
                     <div class="col">
-                        <label for="posx">Enter X position in percentages</label>
+                        <label for="posx">
+                            <span lang="en">Enter X position in percentages</span>
+                            <span lang="lv">Ievadi poziciju X procentos</span>
+                        </label>
                         <input id="posx" name="posx" type="number" class="form-control" step=".01" min="0" max="100" onchange="synchronizeInput()"><br>
                     </div>
                     <div class="col">
-                        <label for="posy">Enter Y position in percentages</label>
+                        <label for="posy">
+                            <span lang="en">Enter Y position in percentages</span>
+                            <span lang="lv">Ievadi poziciju Y procentos</span>
+                        </label>
                         <input id="posy" name="posy" type="number" class="form-control" step=".01" min="0" max="100" onchange="synchronizeInput()"><br>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <img id="placeImage" src="public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
-                <label for="imageFile">Upload your image</label>
+                <label for="imageFile">
+                    <span lang="en">Upload your image</span>
+                    <span lang="lv">Augšupielādējiet savu attēlu</span>
+                </label>
                 <input id="imageFile" name="image" type="file" class="form-control"><br>
             </div>
         </div>
         <div class="col-lg-6 mx-auto">
-            <label for="form-country">Choose country</label>
+            <label for="form-country">
+                    <span lang="en">Choose country</span>
+                    <span lang="lv">Izvelies valsti</span>
+            </label>
             <select name="country" id="form-country" class="form-control">
                 @foreach ($countries as $country)
                 <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
@@ -140,14 +157,29 @@
                 <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
                 @endforeach
             </select><br>
-            <label for="form-difficulty">Choose difficulty</label>
+            <label for="form-difficulty">
+                <span lang="en">Choose difficulty</span>
+                <span lang="lv">Izvelies grutibu</span>
+            </label>
             <select name="difficulty" id="form-difficulty" class="form-control">
-                <option value="easy">easy</option>
-                <option value="medium">medium</option>
-                <option value="hard">hard</option>
+                <option value="easy">
+                    <span lang="en">easy</span>
+                    <span lang="lv">viegli</span>
+                </option>
+                <option value="medium">
+                    <span lang="en">medium</span>
+                    <span lang="lv">videji</span>
+                </option>
+                <option value="hard">
+                    <span lang="en">hard</span>
+                    <span lang="lv">gruti</span>
+                </option>
             </select><br>
         </div>
-        <input type="submit" value="Submit new place" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">
+                <span lang="en">Submit new place</span>
+                <span lang="lv">Izveidot jaunu lokaciju</span>
+        </button>
         </form>
     </div>
 </div>

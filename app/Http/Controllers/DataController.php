@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Auth;
 
 class DataController extends Controller
 {
+    public function gameHub() {
+        $categories = categories::join('places', 'category_id', '=', 'categories.id')
+            ->groupBy('category_id')
+            ->havingRaw('COUNT(category_id) >= 5')
+            ->select('category_id', 'categories.name')
+            ->get();
+        return view('gamehub', ['categories' => $categories]);
+    }
     public function game() {
         $data['places'] = (new places())->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
@@ -157,8 +165,10 @@ class DataController extends Controller
         if (!Auth::user()->admin)
             return redirect()->to('placelist')->withErrors('You have no permission to delete this data!');
 
+        places::where('id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
         results::where('place_id', '=', $id)->delete();
         places::where('id', '=', $id)->delete();
+
         return redirect()->to('placelist');
     }
 
@@ -185,5 +195,12 @@ class DataController extends Controller
         places::where('category_id', '=', $id)->delete();
         categories::where('id', '=', $id)->delete();
         return redirect()->to('categorylist');
+    }
+    public function openEditorCategory($id) {
+        return view('/editcategory', ['id' => $id, 'name' => (categories::where('id', '=', $id)->first())->name]);
+    }
+    public function editCategory(request $data) {
+        categories::where('id', '=', $data['id'])->update(['name' => $data['name']]);
+        return redirect()->to('/categorylist');
     }
 }

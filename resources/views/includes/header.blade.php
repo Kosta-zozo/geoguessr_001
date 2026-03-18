@@ -38,7 +38,11 @@
 </div>
 
 <script>
+
+    if (sessionStorage.getItem("language") == null) 
+        sessionStorage.setItem("language", langSelector.value);
     document.documentElement.setAttribute('lang', sessionStorage.getItem("language"));
+
     langSelector.value = sessionStorage.getItem("language");
     function switchLanguage(){
         document.documentElement.setAttribute('lang', langSelector.value);

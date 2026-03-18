@@ -10,6 +10,12 @@
     </div>
 @endif
 
+@if(session('message'))
+<div class="alert alert-info">
+    {{session('message')}}
+</div>
+@endif
+
 <div class="row justify-content-center">
     <div class="col-6">
         @if(Auth::user()->admin)
@@ -18,7 +24,7 @@
                 <span lang="lv">Izveidot jaunu lokaciju</span>
             </a> <br>
         @endif
-        <button class="btn btn-secondary border-dark rounded-0 m-1" onclick="filterPlaces('all')">
+        <!-- <button class="btn btn-secondary border-dark rounded-0 m-1" onclick="filterPlaces('all')">
             <span lang="en">All</span>
             <span lang="lv">Visi</span>
         </button>
@@ -33,7 +39,7 @@
         <button class="btn btn-secondary border-dark rounded-0 m-1" onclick="filterPlaces('hard')">
             <span lang="en">Hard</span>
             <span lang="lv">Gruti</span>
-        </button>
+        </button> -->
         <!-- <p id="test">test</p> -->
         @foreach ($places as $place)
             <div class="placeCard row align-content-start border border-2 border-dark m-2 p-2">
@@ -71,20 +77,20 @@
 
 <script>
     let placeCards = document.getElementsByClassName('placeCard');
-    function filterPlaces(difficulty) {
-        if (difficulty != "all")
-            for (let index = 0; index < placeCards.length; index++) {
-                if (placeCards[index].firstElementChild.value == difficulty)
-                    placeCards[index].style.display = "flex";
-                else
-                    placeCards[index].style.display = "none";
+    // function filterPlaces(difficulty) {
+    //     if (difficulty != "all")
+    //         for (let index = 0; index < placeCards.length; index++) {
+    //             if (placeCards[index].firstElementChild.value == difficulty)
+    //                 placeCards[index].style.display = "flex";
+    //             else
+    //                 placeCards[index].style.display = "none";
 
-            }
-        else
-            for (let index = 0; index < placeCards.length; index++) {
-                placeCards[index].style.display = "flex";
-            }
-    }
+    //         }
+    //     else
+    //         for (let index = 0; index < placeCards.length; index++) {
+    //             placeCards[index].style.display = "flex";
+    //         }
+    // }
 </script>
 
 @endsection

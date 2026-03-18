@@ -180,7 +180,7 @@ class DataController extends Controller
         categories::insert([
         'name' => $data['name']
         ]);
-        return redirect()->to('/adminPanel')->with('message','New category added successfully!');
+        return redirect()->to('/categorylist')->with('message','New category added successfully!');
     }
     public function categorylist() {
         return view('/categorylist', ['categories' => (new categories())->get()]);

@@ -10,6 +10,12 @@
     </div>
 @endif
 
+@if(session('message'))
+<div class="alert alert-info">
+    {{session('message')}}
+</div>
+@endif
+
 <div class="row justify-content-center">
     <div class="col-6">
         @if(Auth::user()->admin)
@@ -23,8 +29,10 @@
                 <div class="col">
                     <div class="m-0 d-flex justify-content-between">
                         <p class="m-0">
-                            <span lang="en">Category name: </span>
-                            <span lang="lv">Kategorijas nosaukums: </span>
+                            <b>
+                                <span lang="en">Category name: </span>
+                                <span lang="lv">Kategorijas nosaukums: </span>
+                            </b>
                             <i>{{ $category['name'] }}</i>
                         </p>
                         @if(Auth::user()->admin)

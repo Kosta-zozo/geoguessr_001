@@ -142,11 +142,11 @@
             </div>
         </div>
         <div class="col-lg-6 mx-auto">
-            <label for="form-country">
+            <!-- <label for="form-country">
                     <span lang="en">Choose country</span>
                     <span lang="lv">Izvelies valsti</span>
-            </label>
-            <select name="country" id="form-country" class="form-control">
+            </label> -->
+            <select name="country" id="form-country" class="form-control" style="display:none;">
                 @foreach ($countries as $country)
                 <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
                 @endforeach
@@ -161,7 +161,7 @@
                 <span lang="en">Choose difficulty</span>
                 <span lang="lv">Izvelies grutibu</span>
             </label>
-            <select name="difficulty" id="form-difficulty" class="form-control">
+            <select name="difficulty" id="form-difficulty" class="form-control" style="display:none;">
                 <option value="easy">
                     <span lang="en">easy</span>
                     <span lang="lv">viegli</span>

@@ -7,12 +7,23 @@
         <ol>
             @foreach ($resultArray as $result)
             <li>
-                <p>Result: {{ $result[0] }}</p>
-                <p>Time spent: {{ $result[1] }}</p>
+                <p>
+                    <span lang="en">Result: </span>
+                    <span lang="lv">Rezultats: </span>
+                    {{ $result[0] }}
+                </p>
+                <p>
+                    <span lang="en">Time spent: </span>
+                    <span lang="en">Pateretais laiks: </span>
+                    {{ $result[1] }}
+                </p>
             </li>
             @endforeach
         </ol>
-        <a href="/gameHub" class="btn btn-primary">Return to game hub</a>
+        <a href="/gameHub" class="btn btn-primary">
+            <span lang="en">Return to game hub</span>
+            <span lang="lv">Atgriezties spēļu centrā</span>
+        </a>
     </div>
 </div>
 

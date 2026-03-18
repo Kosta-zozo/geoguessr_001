@@ -13,16 +13,31 @@
 
             <br>
             <div class="p-3 border">
-                <h3>Register</h3>
+                <h3>
+                    <span lang="en">Registration</span>
+                    <span lang="lv">Registracija</span>
+                </h3>
                 <form action="/register" method="post" onsubmit="return checkForm()">
                     @csrf
-                	<label for="name">Enter login:</label><br>
+                	<label for="name">
+                        <span lang="en">Enter login:</span>
+                        <span lang="lv">Ievadi loginu:</span>
+                    </label><br>
                 	<input type="text" class="form-control" id="name" name="name"><br>
-                	<label for="password">Enter password:</label><br>
+                	<label for="password">
+                        <span lang="en">Enter password:</span>
+                        <span lang="lv">Ievadi paroli:</span>
+                    </label><br>
                 	<input type="password" class="form-control" id="password" name="password"><br>
-                	<label for="password">Enter same password:</label><br>
+                	<label for="password">
+                        <span lang="en">Enter same password:</span>
+                        <span lang="en">Ievadi to pašu paroli:</span>
+                    </label><br>
                 	<input type="password" class="form-control" id="repassword" name="repassword">
-                    <p id="alertWrongPassword" class="text-danger" style="display: none;">The password is not the same!</p><br>
+                    <p id="alertWrongPassword" class="text-danger" style="display: none;">
+                        <span lang="en">The password is not the same!</span>
+                        <span lang="en">Paroles nav vienadas</span>
+                    </p><br>
                 	<input type="submit" class="btn btn-outline-primary" value="Register">
                 </form>
             </div>

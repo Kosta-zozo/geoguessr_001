@@ -11,10 +11,16 @@
     <div class="col-lg-6 mx-auto" style='max-width: 300px;'>
         <form action="/addCategory" method="post">
             @csrf
-            <label for="name">Enter new category name:</label>
+            <label for="name">
+                <span lang="en">Enter new category name:</span>
+                <span lang="lv">Ievadi jaunas kategorijas nosaukumu:</span>
+            </label>
             <input id="name" name="name" type="text" class="form-control" maxlength="25">
             <br>
-            <input type="submit" value="Submit new category" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">
+                <span lang="en">Submit new category</span>
+                <span lang="lv">Izveidot jaunu kategoriju</span>
+            </button>
         </form>
     </div>
 </div>

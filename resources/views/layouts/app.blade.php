@@ -1,5 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+<style>
+    [lang=en] [lang=lv],
+    [lang=lv] [lang=en]
+    {
+        display: none !important;
+    }
+</style>
 
 <head>
     <meta charset="utf-8">

@@ -188,4 +188,11 @@ class DataController extends Controller
         categories::where('id', '=', $id)->delete();
         return redirect()->to('categorylist');
     }
+    public function openEditorCategory($id) {
+        return view('/editcategory', ['id' => $id, 'name' => (categories::where('id', '=', $id)->first())->name]);
+    }
+    public function editCategory(request $data) {
+        categories::where('id', '=', $data['id'])->update(['name' => $data['name']]);
+        return redirect()->to('/categorylist');
+    }
 }

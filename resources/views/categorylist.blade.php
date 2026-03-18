@@ -18,13 +18,18 @@
         @foreach ($categories as $category)
             <div class="placeCard row align-content-start border border-2 border-dark m-2 p-2">
                 <div class="col">
-                    <p class="m-0 d-flex justify-content-between">
-                        Category name: {{ $category['name'] }}
+                    <div class="m-0 d-flex justify-content-between">
+                        <p class="m-0">
+                            Category name: <i>{{ $category['name'] }}</i>
+                        </p>
                         @if(Auth::user()->admin)
-                            <button onclick="openDeleteWindow({{ $category['id'] }})" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</button>
-                            <!-- <a href="/{{ $category['id'] }}/deletecategory" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</a> -->
+                            <div>
+                                <a href="/{{ $category['id'] }}/editcategory" class="btn btn-primary border-dark rounded-0">Edit</a>
+                                <button onclick="openDeleteWindow({{ $category['id'] }})" class="btn btn-danger border-dark rounded-0">Delete</button>
+                                <!-- <a href="/{{ $category['id'] }}/deletecategory" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</a> -->
+                            </div>
                         @endif
-                    </p>
+                    </div>
                 </div>
             </div>
         @endforeach

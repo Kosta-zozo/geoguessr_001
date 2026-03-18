@@ -56,3 +56,5 @@ Route::get('addNewCategory', function () {
 Route::post('/addCategory', 'App\Http\Controllers\DataController@addCategory')->middleware('auth');
 Route::get('/categorylist', 'App\Http\Controllers\DataController@categorylist')->middleware('auth');
 Route::get('/{id}/deletecategory', 'App\Http\Controllers\DataController@deletecategory')->middleware('auth');
+Route::get('/{id}/editcategory', 'App\Http\Controllers\DataController@openEditorCategory')->middleware('auth');
+Route::post('/editCategory', 'App\Http\Controllers\DataController@editCategory')->middleware('auth');

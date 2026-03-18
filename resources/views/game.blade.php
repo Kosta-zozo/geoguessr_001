@@ -271,7 +271,6 @@
     hideConfirmButton();
 
     addEventListener("load", function() {
-        console.log("bruh");
         startTime = new Date();
         pageIsLoaded= true;
     });

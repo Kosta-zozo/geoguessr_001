@@ -157,8 +157,10 @@ class DataController extends Controller
         if (!Auth::user()->admin)
             return redirect()->to('placelist')->withErrors('You have no permission to delete this data!');
 
+        places::where('id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
         results::where('place_id', '=', $id)->delete();
         places::where('id', '=', $id)->delete();
+
         return redirect()->to('placelist');
     }
 

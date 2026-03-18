@@ -29,10 +29,10 @@
                     <span lang="lv">Izlogoties</span>
                 </a></li>
             @endif
-            <!-- <select id="langSelector" onchange="switchLanguage()" class="form-select form-select-sm" style="width:auto; background: none; padding:10px;">
+            <select id="langSelector" onchange="switchLanguage()" class="form-select form-select-sm" style="width:auto; background: none; padding:10px;">
                 <option value="en" selected>EN</option>
                 <option value="lv">LV</option>
-            </select> -->
+            </select>
         </ul>
     </header>
 </div>

@@ -29,9 +29,10 @@ Route::get('/logout', function () {
 //     return view('game');
 // });
 
-Route::get('/gameHub', function () {
-    return view('gamehub');
-})->middleware('auth');
+// Route::get('/gameHub', function () {
+//     return view('gamehub');
+// })->middleware('auth');
+Route::get('/gameHub', 'App\Http\Controllers\DataController@gameHub')->middleware('auth');
 Route::get('/game', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::get('/resultPreview', 'App\Http\Controllers\DataController@game')->middleware('auth');
 Route::post('/submitResult', 'App\Http\Controllers\DataController@submitResult')->middleware('auth');

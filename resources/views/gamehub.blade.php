@@ -27,72 +27,31 @@
         <div id="easymode" class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <!-- <a href="/game" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start a single game</a> -->
             <!-- <a href="/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start game serie of 3</a> -->
-            <a href="/1/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Historical places)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Vestures vietas)</span>
-            </a>
-            <a href="/2/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Water bodies)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Udens ķermeni)</span>
-            </a>
-            <a href="/3/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Monuments)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Monumenti)</span>
-            </a>
-            <a href="/4/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Main streets)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Galvasielas)</span>
-            </a>
-            <a href="/6/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (City names)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Pilsetas nosaukumi)</span>
-            </a>
+
+            @foreach($categories as $category)
+                <a href="/{{$category['category_id']}}/easy/gameStartSerie" type="button" class="btn btn-primary btn-lg px-4 gap-3">
+                    <span lang="en">Start game serie of 5 ({{$category['name']}})</span>
+                    <span lang="lv">Uzsakt speles seriju no 5 raundiem ({{$category['name']}})</span>
+                </a>
+            @endforeach
         </div>
         <div>
         <div id="mediummode" class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a href="/1/medium/gameStartSerie" type="button" class="btn btn-warning btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Historical places)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Vestures vietas)</span>
-            </a>
-            <a href="/2/medium/gameStartSerie" type="button" class="btn btn-warning btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Water bodies)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Udens ķermeni)</span>
-            </a>
-            <a href="/3/medium/gameStartSerie" type="button" class="btn btn-warning btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Monuments)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Monumenti)</span>
-            </a>
-            <a href="/4/medium/gameStartSerie" type="button" class="btn btn-warning btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Main streets)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Galvasielas)</span>
-            </a>
-            <a href="/6/medium/gameStartSerie" type="button" class="btn btn-warning btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (City names)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Pilsetas nosaukumi)</span>
-            </a>
+            @foreach($categories as $category)
+                <a href="/{{$category['category_id']}}/medium/gameStartSerie" type="button" class="btn btn-warning btn-lg px-4 gap-3">
+                    <span lang="en">Start game serie of 5 ({{$category['name']}})</span>
+                    <span lang="lv">Uzsakt speles seriju no 5 raundiem ({{$category['name']}})</span>
+                </a>
+            @endforeach
         </div>
         </div>
         <div id="hardmode" class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a href="/1/hard/gameStartSerie" type="button" class="btn btn-danger btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Historical places)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Vestures vietas)</span>
-            </a>
-            <a href="/2/hard/gameStartSerie" type="button" class="btn btn-danger btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Water bodies)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Udens ķermeni)</span>
-            </a>
-            <a href="/3/hard/gameStartSerie" type="button" class="btn btn-danger btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Monuments)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Monumenti)</span>
-            </a>
-            <a href="/4/hard/gameStartSerie" type="button" class="btn btn-danger btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (Main streets)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Galvasielas)</span>
-            </a>
-            <a href="/6/hard/gameStartSerie" type="button" class="btn btn-danger btn-lg px-4 gap-3">
-                <span lang="en">Start game serie of 5 (City names)</span>
-                <span lang="lv">Uzsakt speles seriju no 5 raundiem (Pilsetas nosaukumi)</span>
-            </a>
+            @foreach($categories as $category)
+                <a href="/{{$category['category_id']}}/hard/gameStartSerie" type="button" class="btn btn-danger btn-lg px-4 gap-3">
+                    <span lang="en">Start game serie of 5 ({{$category['name']}})</span>
+                    <span lang="lv">Uzsakt speles seriju no 5 raundiem ({{$category['name']}})</span>
+                </a>
+            @endforeach
         </div>
     </div>
 </div>

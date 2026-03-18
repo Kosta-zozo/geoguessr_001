@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Auth;
 
 class DataController extends Controller
 {
+    public function gameHub() {
+        $categories = categories::join('places', 'category_id', '=', 'categories.id')
+            ->groupBy('category_id')
+            ->havingRaw('COUNT(category_id) >= 5')
+            ->select('category_id', 'categories.name')
+            ->get();
+        return view('gamehub', ['categories' => $categories]);
+    }
     public function game() {
         $data['places'] = (new places())->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values

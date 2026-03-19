@@ -153,14 +153,15 @@
             </select><br>
             <label for="form-category">Choose category</label>
             <select name="category" id="form-category" class="form-control">
+                <option value=NULL>-</option>
                 @foreach ($categories as $category)
                 <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
                 @endforeach
             </select><br>
-            <label for="form-difficulty">
+            <!-- <label for="form-difficulty">
                 <span lang="en">Choose difficulty</span>
                 <span lang="lv">Izvelies grutibu</span>
-            </label>
+            </label> -->
             <select name="difficulty" id="form-difficulty" class="form-control" style="display:none;">
                 <option value="easy">
                     <span lang="en">easy</span>

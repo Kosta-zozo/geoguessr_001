@@ -31,12 +31,12 @@
                 	<input type="password" class="form-control" id="password" name="password"><br>
                 	<label for="password">
                         <span lang="en">Enter same password:</span>
-                        <span lang="en">Ievadi to pašu paroli:</span>
+                        <span lang="lv">Ievadi to pašu paroli:</span>
                     </label><br>
                 	<input type="password" class="form-control" id="repassword" name="repassword">
                     <p id="alertWrongPassword" class="text-danger" style="display: none;">
                         <span lang="en">The password is not the same!</span>
-                        <span lang="en">Paroles nav vienadas</span>
+                        <span lang="lv">Paroles nav vienadas</span>
                     </p><br>
                 	<input type="submit" class="btn btn-outline-primary" value="Register">
                 </form>

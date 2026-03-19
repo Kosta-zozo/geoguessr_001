@@ -8,7 +8,7 @@
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">
             <span lang="en">Here you can pick game mode of your choice.</span>
-            <span lang="lv">Šeit tu vari izveleties speles režimu</span>
+            <span lang="lv">Šeit tu vari izveleties speles temu</span>
         </p>
         <button class="btn btn-primary" onclick="showEasyMode()">
             <span lang="en">Easy</span>

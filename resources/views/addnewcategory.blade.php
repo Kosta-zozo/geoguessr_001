@@ -21,6 +21,10 @@
                 <span lang="en">Submit new category</span>
                 <span lang="lv">Izveidot jaunu kategoriju</span>
             </button>
+            <a href="/categorylist" class="btn btn-secondary">
+                <span lang="en">Cancel</span>
+                <span lang="lv">Atcelt</span>
+            </a>
         </form>
     </div>
 </div>

@@ -149,7 +149,7 @@ class DataController extends Controller
         'pos_X_perc' => $data['posx'],
         'pos_Y_perc' => $data['posy'],
         'country_id' => $data['country'],
-        'category_id' => $data['category'],
+        'category_id' => $data['category'] == 'NULL' ? null : $data['category'],
         'difficulty' => $data['difficulty']
         ]);
         return redirect()->to('/addNewPlace')->with('message','New place added successfully!');
@@ -183,7 +183,7 @@ class DataController extends Controller
         return redirect()->to('/categorylist')->with('message','New category added successfully!');
     }
     public function categorylist() {
-        return view('/categorylist', ['categories' => (new categories())->get()]);
+        return view('/categorylist', ['categories' => (new categories())->get(), 'places' => (new places())->leftJoin('categories', 'categories.id', '=', 'category_id')->select('places.*', 'categories.name')->get()]);
     }
     public function deletecategory($id) {
         if (!Auth::user()->admin)
@@ -202,5 +202,14 @@ class DataController extends Controller
     public function editCategory(request $data) {
         categories::where('id', '=', $data['id'])->update(['name' => $data['name']]);
         return redirect()->to('/categorylist');
+    }
+
+    public function detachPlace($id){
+        places::where('id', '=', $id)->update(['category_id' => null]);
+        return response()->json(['success' => true]);
+    }
+    public function attachPlace($id, $category){
+        places::where('id', '=', $id)->update(['category_id' => categories::where('name', '=', $category)->first()->id]);
+        return response()->json(['success' => true]);
     }
 }

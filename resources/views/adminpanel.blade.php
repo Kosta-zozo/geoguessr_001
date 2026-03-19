@@ -13,12 +13,12 @@
             </a> -->
         @endif
         <a href="/placelist" class="btn btn-primary">
-            <span lang="en">View all places</span>
-            <span lang="lv">Atradit visas lokacijas</span>
+            <span lang="en">Place list</span>
+            <span lang="lv">Lokaciju saraksts</span>
         </a>
         <a href="/categorylist" class="btn btn-primary">
-            <span lang="en">View all categories</span>
-            <span lang="lv">Atradit visas kategorijas</span>
+            <span lang="en">Category list</span>
+            <span lang="lv">Temu saraksts</span>
         </a>
     </div>
 </div>

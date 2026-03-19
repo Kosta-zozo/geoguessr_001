@@ -23,7 +23,7 @@
                     <span lang="en">Game</span>
                     <span lang="lv">Spele</span>
                 </a></li>
-                <li class="nav-item"><a href="/adminPanel" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('addNewCategory')) active @endif">{{ Auth::user()->name }}</a></li>
+                <li class="nav-item"><a href="/adminPanel" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">{{ Auth::user()->name }}</a></li>
                 <li class="nav-item"><a href="/logout" class="nav-link">
                     <span lang="en">Logout</span>
                     <span lang="lv">Izlogoties</span>

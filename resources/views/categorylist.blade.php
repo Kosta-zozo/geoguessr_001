@@ -83,52 +83,54 @@
             </button>
         </div>
         <div class="overflow-auto" style="height: 680px;">
-        @foreach ($places as $place)
-        <div id="placeCard_{{ $place['id'] }}" placeid="{{ $place['id'] }}" class="placeCard">
-            <input type="hidden" value="{{ $place['name'] }}"> <!-- for filtering -->
-            <div class="border border-2 border-dark m-2 p-2 ">
-                <!-- <div class="col-3">
-                    {{ $place['name'] }}
-                </div> -->
-                <div class="w-100">
-                    <div class="row">
-                    <div class="col-6 pe-0">
-                        <img src="/public/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
-                    </div>
-                    <div class="col-6 ps-0 position-relative">
-                        <img src="/public/img/map.png" alt="image not found" class="img-fluid border border-2 border-dark h-100">
-                        <div class="position-relative h-100" style="transform: translate(0%,-100%)!important;">
-                            <div class="border border-2 border-dark rounded-5 position-absolute translate-middle" style="top:{{ $place['pos_Y_perc'] }}%; left:{{ $place['pos_X_perc'] }}%; width:10px; height:10px; background-color:red;"></div>
+            
+            @foreach ($places as $place)
+            <div id="placeCard_{{ $place['id'] }}" placeid="{{ $place['id'] }}" class="placeCard position-relative">
+                <input type="hidden" value="{{ $place['name'] }}"> <!-- for filtering -->
+                <div id="placeLoadingScreen_{{ $place['id'] }}" class="position-absolute w-100 h-100 start-0" style="background-color: rgba(255, 255, 255, 0.5); z-index: -1;"></div>
+                <div class="border border-2 border-dark m-2 p-2 ">
+                    <!-- <div class="col-3">
+                        {{ $place['name'] }}
+                    </div> -->
+                    <div class="w-100">
+                        <div class="row">
+                        <div class="col-6 pe-0">
+                            <img src="/public/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                        </div>
+                        <div class="col-6 ps-0 position-relative">
+                            <img src="/public/img/map.png" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                            <div class="position-relative h-100" style="transform: translate(0%,-100%)!important;">
+                                <div class="border border-2 border-dark rounded-5 position-absolute translate-middle" style="top:{{ $place['pos_Y_perc'] }}%; left:{{ $place['pos_X_perc'] }}%; width:10px; height:10px; background-color:red;"></div>
+                            </div>
+                        </div>
                         </div>
                     </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div id="detachButton_{{ $place['id'] }}" class="col-12">
-                        <a href="javascript:void(0)" onclick="detachPlace('{{ $place['id'] }}')" class="btn btn-warning border-dark rounded-0 w-100">
-                            >>>
-                            <span lang="en">Detach</span>
-                            <span lang="lv">Izņemt</span>
-                            <span id="detachButtonCategory_{{ $place['id'] }}" style="font-size: 14px;">({{ $place['name'] }})</span>
-                        </a>
-                    </div>
-                    <div id="attachButton_{{ $place['id'] }}" class="col-12">
-                        <a href="javascript:void(0)" onclick="attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-primary border-dark rounded-0 w-100">
-                            <<<
-                            <span lang="en">Attach</span>
-                            <span lang="lv">Pievienot</span>
-                        </a>
-                    </div>
-                    <div class="col-12">
-                        <button onclick="openDeletePlaceWindow({{ $place['id'] }})" class="btn btn-danger border-dark rounded-0 w-100">
-                            <span lang="en">Delete</span>
-                            <span lang="lv">Dzest</span>
-                        </button>
+                    <div class="row">
+                        <div id="detachButton_{{ $place['id'] }}" class="col-12">
+                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); detachPlace('{{ $place['id'] }}')" class="btn btn-warning border-dark rounded-0 w-100">
+                                >>>
+                                <span lang="en">Detach</span>
+                                <span lang="lv">Izņemt</span>
+                                <span id="detachButtonCategory_{{ $place['id'] }}" style="font-size: 14px;">({{ $place['name'] }})</span>
+                            </a>
+                        </div>
+                        <div id="attachButton_{{ $place['id'] }}" class="col-12">
+                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-primary border-dark rounded-0 w-100">
+                                <<<
+                                <span lang="en">Attach</span>
+                                <span lang="lv">Pievienot</span>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <button onclick="openDeletePlaceWindow({{ $place['id'] }})" class="btn btn-danger border-dark rounded-0 w-100">
+                                <span lang="en">Delete</span>
+                                <span lang="lv">Dzest</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @endforeach
+            @endforeach
         </div>
     </div>
     @else
@@ -329,6 +331,7 @@
                 document.getElementById('placeCard_' + id).firstElementChild.value = '';
                 handleAttachmentButtons();
                 filterPlaces(temp, 'current');
+                deactivatePlaceLoadingScreen(id);
             }
         })
     }
@@ -350,6 +353,7 @@
                 handleAttachmentButtons();
                 document.getElementById('detachButtonCategory_' + id).innerHTML = '(' + category + ')';
                 filterPlaces(category, 'free'); //result['category']
+                deactivatePlaceLoadingScreen(id);
             }
         })
     }
@@ -372,6 +376,14 @@
                 updatePlaceCount();
             }
         })
+    }
+    function activatePlaceLoadingScreen(id)
+    {
+        document.getElementById('placeLoadingScreen_' + id).style.zIndex = "1";
+    }
+    function deactivatePlaceLoadingScreen(id)
+    {
+        document.getElementById('placeLoadingScreen_' + id).style.zIndex = "-1";
     }
 </script>
 @endsection

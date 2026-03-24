@@ -210,6 +210,13 @@ class DataController extends Controller
     }
     public function attachPlace($id, $category){
         places::where('id', '=', $id)->update(['category_id' => categories::where('name', '=', $category)->first()->id]);
+        return response()->json(['success' => true, 'category' => $category]);
+    }
+    public function deletePlaceFromCard($id){
+        places::where('id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
+        results::where('place_id', '=', $id)->delete();
+        places::where('id', '=', $id)->delete();
+        
         return response()->json(['success' => true]);
     }
 }

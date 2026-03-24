@@ -19,6 +19,7 @@
 @endif
 
 <div class="row justify-content-center">
+    @if(Auth::user()->admin)
     <div class="col-3">
         @if(Auth::user()->admin)
             <a href="/addNewCategory" class="btn btn-primary border-dark rounded-0 m-1">
@@ -26,24 +27,25 @@
                 <span lang="lv">Izveidot jaunu temu</span>
             </a>
         @endif
+        <div class="overflow-auto" style="height: 680px;">
         @foreach ($categories as $category)
             <div class="row align-content-start border border-2 border-dark m-2 p-2">
                 <div class="col">
                     <div class="m-0 d-flex justify-content-between">
                         @if(Auth::user()->admin)
-                            <div>
-                                <button onclick="openDeleteWindow({{ $category['id'] }})" class="btn btn-danger border-dark rounded-0">
+                            <div class="col-4 row m-0">
+                                <button onclick="openDeleteWindow({{ $category['id'] }})" class="col-6 btn btn-danger border-dark rounded-0">
                                     <span lang="en">Delete</span>
                                     <span lang="lv">Dzest</span>
                                 </button>
-                                <a href="/{{ $category['id'] }}/editcategory" class="btn btn-primary border-dark rounded-0">
+                                <a href="/{{ $category['id'] }}/editcategory" class="col-6 btn btn-primary border-dark rounded-0">
                                     <span lang="en">Edit</span>
                                     <span lang="lv">Rediģet</span>
                                 </a>
                                 <!-- <a href="/{{ $category['id'] }}/deletecategory" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</a> -->
                             </div>
                         @endif
-                        <button id='categoryButton-{{ $category["name"] }}' categoryname='{{ $category["name"] }}' onclick='filterPlaces("{{ $category["name"] }}", "current")' class="categoryButton m-0 btn btn-secondary border-dark rounded-0 text-start col-8">
+                        <button id='categoryButton-{{ $category["name"] }}' categoryname='{{ $category["name"] }}' onclick='filterPlaces("{{ $category["name"] }}", "keep")' class="categoryButton col-8 m-0 btn btn-secondary border-dark rounded-0 text-start text-nowrap">
                             <span lang="en">Category name: </span>
                             <span lang="lv">Temas nosaukums: </span>
                             <b>{{ $category['name'] }}</b>
@@ -52,6 +54,7 @@
                 </div>
             </div>
         @endforeach
+        </div>
     </div>
     <div class="col-2 border border-2 border-dark position-relative">
         <hr class="mt-5 mb-0">
@@ -79,39 +82,72 @@
                 <span lang="lv">Visi</span>
             </button>
         </div>
+        <div class="overflow-auto" style="height: 680px;">
         @foreach ($places as $place)
         <div id="placeCard_{{ $place['id'] }}" placeid="{{ $place['id'] }}" class="placeCard">
             <input type="hidden" value="{{ $place['name'] }}"> <!-- for filtering -->
-            <div class="border border-2 border-dark m-2 p-2 row ">
+            <div class="border border-2 border-dark m-2 p-2 ">
                 <!-- <div class="col-3">
                     {{ $place['name'] }}
                 </div> -->
-                <div class="col-6">
-                    <img src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark">
+                <div class="w-100">
+                    <div class="row">
+                    <div class="col-6 pe-0">
+                        <img src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                    </div>
+                    <div class="col-6 ps-0 position-relative">
+                        <img src="/img/map.png" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                        <div class="position-relative h-100" style="transform: translate(0%,-100%)!important;">
+                            <div class="border border-2 border-dark rounded-5 position-absolute translate-middle" style="top:{{ $place['pos_Y_perc'] }}%; left:{{ $place['pos_X_perc'] }}%; width:10px; height:10px; background-color:red;"></div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-                <div id="detachButton_{{ $place['id'] }}" class="col-6">
-                    <a href="javascript:void(0)" onclick="detachPlace('{{ $place['id'] }}')" class="btn btn-danger border-dark rounded-0">
-                        <span lang="en">Detach</span>
-                        <span lang="lv">Izņemt</span>
-                        <span style="font-size: 14px;">({{ $place['name'] }})</span>
-                    </a>
-                </div>
-                <div id="attachButton_{{ $place['id'] }}" class="col-6">
-                    <a href="javascript:void(0)" onclick="attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-primary border-dark rounded-0">
-                        <span lang="en">Attach</span>
-                        <span lang="lv">Pievienot</span>    
-                    </a>
+                <div class="row">
+                    <div id="detachButton_{{ $place['id'] }}" class="col-12">
+                        <a href="javascript:void(0)" onclick="detachPlace('{{ $place['id'] }}')" class="btn btn-warning border-dark rounded-0 w-100">
+                            >>>
+                            <span lang="en">Detach</span>
+                            <span lang="lv">Izņemt</span>
+                            <span id="detachButtonCategory_{{ $place['id'] }}" style="font-size: 14px;">({{ $place['name'] }})</span>
+                        </a>
+                    </div>
+                    <div id="attachButton_{{ $place['id'] }}" class="col-12">
+                        <a href="javascript:void(0)" onclick="attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-primary border-dark rounded-0 w-100">
+                            <<<
+                            <span lang="en">Attach</span>
+                            <span lang="lv">Pievienot</span>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <button onclick="openDeletePlaceWindow({{ $place['id'] }})" class="btn btn-danger border-dark rounded-0 w-100">
+                            <span lang="en">Delete</span>
+                            <span lang="lv">Dzest</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
         @endforeach
+        </div>
     </div>
+    @else
+    <div class="col-6 text-center">
+        <br>
+        <br>
+        <br>
+        <h3>
+            <span lang="en">Your account doesn't have permission to access admin panel.</span>
+            <span lang="lv">Jums nav tiesibu, lai piekļut administracijas lapai.</span>
+        </h3>
+    </div>
+    @endif
 </div>
 
 <div id="deleteConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
     <h4 id="deleteHeader">
-        <span lang="en">Are you sure you want to delete that?</span>
-        <span lang="lv">Vai tiešām vēlaties to dzēst?</span>
+        <span lang="en">Are you sure you want to delete this category?</span>
+        <span lang="lv">Vai tiešām vēlaties dzēst to temu?</span>
     </h4>
     <p>
         <span lang="en">(it will delete all connected places and records)</span>
@@ -127,14 +163,35 @@
     </button>
 </div>
 
+<div id="deletePlaceConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+    <h4 id="deletePlaceHeader">
+        <span lang="en">Are you sure you want to delete this place?</span>
+        <span lang="lv">Vai tiešām vēlaties dzest to lokaciju?</span>
+    </h4>
+    <p>
+        <span lang="en">(it will delete all connected records)</span>
+        <span lang="lv">(tas izdzēsīs visus pievienotus rezultatus)</span>
+    </p>
+    <buttom id="deletePlaceButton" class="btn btn-danger border-dark rounded-0">
+        <span lang="en">Delete</span>
+        <span lang="lv">Dzest</span>
+    </buttom>
+    <button onclick="hideDeletePlaceWindow()" class="btn btn-primary border-dark rounded-0">
+        <span lang="en">Cancel</span>
+        <span lang="lv">Atcelt</span>
+    </button>
+</div>
+
 <script>
     let placeCards = document.getElementsByClassName('placeCard');
     let categoryButtons = document.getElementsByClassName('categoryButton');
     let placeFilterButtons = document.getElementsByClassName('placeFilterButton');
 
     let selectedCategory;
+    let lastFilterMode;
 
     hideDeleteWindow();
+    hideDeletePlaceWindow();
     filterPlaces(categoryButtons[0].attributes.categoryname.value, "current");
     handleAttachmentButtons();
 
@@ -147,9 +204,21 @@
     {
         deleteConfirmation.style.display = "none";
     }
-
-    function filterPlaces(name, mode) // all/current/free
+    function openDeletePlaceWindow(id)
     {
+        deletePlaceButton.addEventListener("click", deletePlace);
+        deletePlaceButton.idForDelete = id;
+        deletePlaceConfirmation.style.display = "initial";
+    }
+    function hideDeletePlaceWindow()
+    {
+        deletePlaceConfirmation.style.display = "none";
+    }
+
+    function filterPlaces(name, mode) // mode: all/current/free | keep
+    {
+        if (mode == "keep")
+            mode = lastFilterMode;
         if (mode == "current")
         {
             for (let i = 0; i < placeCards.length; i++) {
@@ -180,6 +249,7 @@
         highlightPlaceFilterButton(mode);
 
         selectedCategory = name;
+        lastFilterMode = mode;
     }
     function updatePlaceCount()
     {
@@ -276,10 +346,30 @@
             
             success:function(result)
             {
-                let temp = document.getElementById('placeCard_' + id).firstElementChild.value;
                 document.getElementById('placeCard_' + id).firstElementChild.value = category;
                 handleAttachmentButtons();
-                filterPlaces('Historical places', 'free');
+                document.getElementById('detachButtonCategory_' + id).innerHTML = '(' + category + ')';
+                filterPlaces(category, 'free'); //result['category']
+            }
+        })
+    }
+    function deletePlace()
+    {
+        $.ajaxSetup({
+		    headers:
+		    {
+		        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		    }
+		});
+        $.ajax({
+            url:'/deletePlaceFromCard/' + deletePlaceButton.idForDelete,
+            type:'DELETE',
+            
+            success:function(result)
+            {
+                document.getElementById('placeCard_' + deletePlaceButton.idForDelete).remove();
+                hideDeletePlaceWindow();
+                updatePlaceCount();
             }
         })
     }

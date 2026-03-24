@@ -151,7 +151,10 @@
                 <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
                 @endforeach
             </select><br>
-            <label for="form-category">Choose category</label>
+            <label for="form-category">
+                <span lang="en">Choose category</span>
+                <span lang="lv">Izvelies temu</span>
+            </label>
             <select name="category" id="form-category" class="form-control">
                 <option value=NULL>-</option>
                 @foreach ($categories as $category)
@@ -181,6 +184,10 @@
                 <span lang="en">Submit new place</span>
                 <span lang="lv">Izveidot jaunu lokaciju</span>
         </button>
+        <a href="/categorylist" type="buttton" class="btn btn-secondary">
+                <span lang="en">Return to category list</span>
+                <span lang="lv">Atgriezties pie temas saraksta</span>
+        </a>
         </form>
     </div>
 </div>

@@ -95,10 +95,10 @@
                     <div class="w-100">
                         <div class="row">
                         <div class="col-6 pe-0">
-                            <img src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                            <img src="/public/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
                         </div>
                         <div class="col-6 ps-0 position-relative">
-                            <img src="/img/map.png" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                            <img src="/public/img/map.png" alt="image not found" class="img-fluid border border-2 border-dark h-100">
                             <div class="position-relative h-100" style="transform: translate(0%,-100%)!important;">
                                 <div class="border border-2 border-dark rounded-5 position-absolute translate-middle" style="top:{{ $place['pos_Y_perc'] }}%; left:{{ $place['pos_X_perc'] }}%; width:10px; height:10px; background-color:red;"></div>
                             </div>

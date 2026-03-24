@@ -133,7 +133,7 @@
                 </div>
             </div>
             <div class="col">
-                <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                <img id="placeImage" src="public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                 <label for="imageFile">
                     <span lang="en">Upload your image</span>
                     <span lang="lv">Augšupielādējiet savu attēlu</span>
@@ -213,7 +213,7 @@
     var dragging = false;
 
     addEventListener("resize", hangleResizing);
-    document.getElementById("mapHolder").style.backgroundImage = "url('img/map.png')";
+    document.getElementById("mapHolder").style.backgroundImage = "url('public/img/map.png')";
     calcMapHolderSize();
     resetMapSize();
     calcMapSize();

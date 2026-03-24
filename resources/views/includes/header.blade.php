@@ -30,8 +30,8 @@
                 </a></li>
             @endif
             <select id="langSelector" onchange="switchLanguage()" class="form-select form-select-sm" style="width:auto; background: none; padding:10px;">
-                <option value="en" selected>EN</option>
-                <option value="lv">LV</option>
+                <option value="en">EN</option>
+                <option value="lv" selected>LV</option>
             </select>
         </ul>
     </header>

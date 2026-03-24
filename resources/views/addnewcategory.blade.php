@@ -7,6 +7,16 @@
 </div>
 @endif
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="px-4 py-5 my-5 text-center">
     <div class="col-lg-6 mx-auto" style='max-width: 300px;'>
         <form action="/addCategory" method="post">
@@ -21,6 +31,10 @@
                 <span lang="en">Submit new category</span>
                 <span lang="lv">Izveidot jaunu kategoriju</span>
             </button>
+            <a href="/categorylist" class="btn btn-secondary">
+                <span lang="en">Cancel</span>
+                <span lang="lv">Atcelt</span>
+            </a>
         </form>
     </div>
 </div>

@@ -142,26 +142,30 @@
             </div>
         </div>
         <div class="col-lg-6 mx-auto">
-            <label for="form-country">
+            <!-- <label for="form-country">
                     <span lang="en">Choose country</span>
                     <span lang="lv">Izvelies valsti</span>
-            </label>
-            <select name="country" id="form-country" class="form-control">
+            </label> -->
+            <select name="country" id="form-country" class="form-control" style="display:none;">
                 @foreach ($countries as $country)
                 <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
                 @endforeach
             </select><br>
-            <label for="form-category">Choose category</label>
+            <label for="form-category">
+                <span lang="en">Choose category</span>
+                <span lang="lv">Izvelies temu</span>
+            </label>
             <select name="category" id="form-category" class="form-control">
+                <option value=NULL>-</option>
                 @foreach ($categories as $category)
                 <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
                 @endforeach
             </select><br>
-            <label for="form-difficulty">
+            <!-- <label for="form-difficulty">
                 <span lang="en">Choose difficulty</span>
                 <span lang="lv">Izvelies grutibu</span>
-            </label>
-            <select name="difficulty" id="form-difficulty" class="form-control">
+            </label> -->
+            <select name="difficulty" id="form-difficulty" class="form-control" style="display:none;">
                 <option value="easy">
                     <span lang="en">easy</span>
                     <span lang="lv">viegli</span>
@@ -180,6 +184,10 @@
                 <span lang="en">Submit new place</span>
                 <span lang="lv">Izveidot jaunu lokaciju</span>
         </button>
+        <a href="/categorylist" type="buttton" class="btn btn-secondary">
+                <span lang="en">Return to category list</span>
+                <span lang="lv">Atgriezties pie temas saraksta</span>
+        </a>
         </form>
     </div>
 </div>

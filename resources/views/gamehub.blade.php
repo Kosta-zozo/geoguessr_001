@@ -59,20 +59,38 @@
 <div id="beginConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3 text-center">
     <h4 id="beginHeader">
         <span lang="en">You selected</span>
-        <span lang="lv">Vai tiešām vēlaties dzēst to temu?</span>
+        <span lang="lv">Jus izvelejuši</span>
         (<b id="beginCategoryLabel">Category</b>)
     </h4>
     <div id="beginConfirmationDiff_easy" class="border border-2 border-dark bg-primary text-light p-3">
-        <h5>You'll start game at (EASY) difficulty</h5>
-        <p class="mb-0">Default difficulty. Zoom and location image are accessible with no restrictions.</p>
+        <h5>
+            <span lang="en">You'll start game at (EASY) difficulty</span>
+            <span lang="lv">Jūs sāksiet spēli ar (VIEGLI) grūtības pakāpi</span>
+        </h5>
+        <p class="mb-0">
+            <span lang="en">Default difficulty. Zoom and location image are accessible with no restrictions.</span>
+            <span lang="lv">Noklusējuma grūtības pakāpe. Tālummaiņa un atrašanās vietas attēls ir pieejams bez ierobežojumiem.</span>
+        </p>
     </div>
     <div id="beginConfirmationDiff_medium" class="border border-2 border-dark bg-warning p-3">
-        <h5>You'll start game at (MEDIUM) difficulty</h5>
-        <p class="mb-0">This difficulty disables ability to zoom map.</p>
+        <h5>
+            <span lang="en">You'll start game at (MEDIUM) difficulty</span>
+            <span lang="lv">Jūs sāksiet spēli ar (VIDEJI) grūtības pakāpi</span>
+        </h5>
+        <p class="mb-0">
+            <span lang="en">This difficulty disables ability to zoom map.</span>
+            <span lang="lv">Šī grūtības pakāpe atspējo kartes tālummaiņas iespēju.</span>
+        </p>
     </div>
     <div id="beginConfirmationDiff_hard" class="border border-2 border-dark bg-danger text-light p-3">
-        <h5>You'll start game at (HARD) difficulty</h5>
-        <p class="mb-0">This difficulty disables ability to zoom map. Location image will be visible only for few seconds.</p>
+        <h5>
+            <span lang="en">You'll start game at (HARD) difficulty</span>
+            <span lang="lv">Jūs sāksiet spēli ar (GRUTI) grūtības pakāpi</span>
+        </h5>
+        <p class="mb-0">
+            <span lang="en">This difficulty disables ability to zoom map. Location image will be visible only for few seconds.</span>
+            <span lang="lv">Šī grūtības pakāpe atspējo kartes tālummaiņas iespēju. Atrašanās vietas attēls būs redzams tikai dažas sekundes.</span>
+        </p>
     </div>
     <br>
     <a id="beginButtom" href="/VALUE/deletecategory" class="btn btn-success border-dark rounded-0">

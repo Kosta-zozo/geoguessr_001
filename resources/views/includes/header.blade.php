@@ -8,7 +8,7 @@
         </a>
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="/home" class="nav-link @if (Request::is('home') || Request::is('/')) active @endif" aria-current="page">
+                <a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/home" class="nav-link @if (Request::is('home') || Request::is('/')) active @endif" aria-current="page">
                     <span lang="en">Home</span>
                     <span lang="lv">Sakums</span>
                 </a>
@@ -19,12 +19,12 @@
                     <span lang="lv">Ielogoties</span>
                 </a></li>
             @else
-                <li class="nav-item"><a href="/gameHub" class="nav-link @if (Request::is('gameHub') || Request::is('game') || Request::is('submitResult') || Request::is('gameStartSerie') || Request::is('gameContinueSerie')) active @endif">
+                <li class="nav-item"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/gameHub" class="nav-link @if (Request::is('*/gameStartSerie') || Request::is('gameHub') || Request::is('game') || Request::is('submitResult') || Request::is('gameStartSerie') || Request::is('gameContinueSerie')) active @endif">
                     <span lang="en">Game</span>
                     <span lang="lv">Spele</span>
                 </a></li>
-                <li class="nav-item"><a href="/categorylist" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">{{ Auth::user()->name }}</a></li>
-                <li class="nav-item"><a href="/logout" class="nav-link">
+                <li class="nav-item"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/categorylist" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">{{ Auth::user()->name }}</a></li>
+                <li class="nav-item"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/logout" class="nav-link">
                     <span lang="en">Logout</span>
                     <span lang="lv">Izlogoties</span>
                 </a></li>
@@ -38,7 +38,6 @@
 </div>
 
 <script>
-
     if (sessionStorage.getItem("language") == null) 
         sessionStorage.setItem("language", langSelector.value);
     document.documentElement.setAttribute('lang', sessionStorage.getItem("language"));
@@ -47,5 +46,13 @@
     function switchLanguage(){
         document.documentElement.setAttribute('lang', langSelector.value);
         sessionStorage.setItem("language", langSelector.value);
+    }
+
+    function getExitMessage()
+    {
+        if(sessionStorage.getItem("language") == "lv")
+            return "Vai tiešam gribat partraukt speli?";
+        else
+            return "Are you sure, you want to stop the game?";
     }
 </script>

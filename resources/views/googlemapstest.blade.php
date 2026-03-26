@@ -63,7 +63,7 @@
     }
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7qdsJlyun_kIlxzdqGkZh1hOGSWfUJfY&callback=myMap&loading=async"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=myMap&loading=async"></script>
 
 </body>
 </html>

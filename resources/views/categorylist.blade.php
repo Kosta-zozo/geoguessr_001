@@ -9,6 +9,9 @@
         height: 350px;
         position: relative;
     }
+    .highlight:hover {
+        filter: brightness(110%); 
+    }
 </style>
 
 <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -104,7 +107,7 @@
                     <div class="w-100">
                         <div class="row">
                         <div class="col-6 pe-0">
-                            <img src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
+                            <img onclick="openImagePreview('{{ $place['image_name'] }}');" src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100 highlight" style="cursor: pointer;">
                         </div>
                         <div class="col-6 ps-0 position-relative">
                             <div class="position-relative h-100 bg-secondary border border-dark text-light text-truncate">
@@ -220,6 +223,21 @@
     <div id="map"></div>
     <img id="mapPreviewImage" src="/img/map.png" alt="image not found" class="img-fluid border border-1 border-dark position-absolute h-25" style="z-index:400; transform:translateY(-100%); pointer-events: none; border-radius: 0px 25px 0px 0px;">
 </div>
+<div id="imagePreview" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+    <div class="row">
+        <h4 class="col-6">
+            <span lang="en">Location preview</span>
+            <span lang="lv">Lokacijas priekšskats</span>
+        </h4>
+        <div class="col-6" style="min-height:50px">
+            <button onclick="hideImagePreview()" class="btn btn-secondary border-dark rounded-0 position-absolute end-0 me-3">
+                <span lang="en">Close</span>
+                <span lang="lv">Aizvert</span>
+            </button>
+        </div>
+    </div>
+    <img id="imagePreviewImage" alt="image not found" class="border border-1 border-dark">
+</div>
 
 <script>
     // ///<<< MAP VERSION 2 >>>\\\
@@ -259,6 +277,7 @@
     hideDeleteWindow();
     hideDeletePlaceWindow();
     hideMapPreview();
+    hideImagePreview();
     filterPlaces(categoryButtons[0].attributes.categoryname.value, "current");
     handleAttachmentButtons();
 
@@ -291,6 +310,15 @@
     function hideMapPreview()
     {
         mapPreview.style.display = "none";
+    }
+    function openImagePreview(imagename)
+    {
+        imagePreviewImage.src = "/img/" + imagename;
+        imagePreview.style.display = "initial";
+    }
+    function hideImagePreview()
+    {
+        imagePreview.style.display = "none";
     }
 
     function filterPlaces(name, mode) // mode: all/current/free | keep

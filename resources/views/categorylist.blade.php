@@ -2,6 +2,15 @@
 
 @section('content')
 
+<style>
+    #map {
+        border: 1px solid black;
+        width: 450px;
+        height: 350px;
+        position: relative;
+    }
+</style>
+
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 
 @if ($errors->any())
@@ -98,9 +107,21 @@
                             <img src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100">
                         </div>
                         <div class="col-6 ps-0 position-relative">
-                            <img src="/img/map.png" alt="image not found" class="img-fluid border border-2 border-dark h-100">
-                            <div class="position-relative h-100" style="transform: translate(0%,-100%)!important;">
-                                <div class="border border-2 border-dark rounded-5 position-absolute translate-middle" style="top:{{ $place['pos_Y_perc'] }}%; left:{{ $place['pos_X_perc'] }}%; width:10px; height:10px; background-color:red;"></div>
+                            <div class="position-relative h-100 bg-secondary border border-dark text-light text-truncate">
+                                <p class="m-1">
+                                    <span lang="en">Lat: </span>
+                                    <span lang="lv">Plat: </span>
+                                    <b>{{ $place['lat'] }}</b>
+                                </p>
+                                <p class="m-1">
+                                    <span lang="en">Lng: </span>
+                                    <span lang="lv">Gar: </span>
+                                    <b>{{ $place['lng'] }}</b>
+                                </p>
+                                <button onclick="openMapPreview({{ $place['lat'] }}, {{ $place['lng'] }}, '{{ $place['image_name'] }}')" class="btn btn-info border-dark rounded-0 w-100">
+                                    <span lang="en">Map</span>
+                                    <span lang="lv">Mape</span>
+                                </button>
                             </div>
                         </div>
                         </div>
@@ -183,8 +204,51 @@
         <span lang="lv">Atcelt</span>
     </button>
 </div>
+<div id="mapPreview" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+    <div class="row">
+        <h4 class="col-6">
+            <span lang="en">Location preview</span>
+            <span lang="lv">Lokacijas priekšskats</span>
+        </h4>
+        <div class="col-6" style="min-height:50px">
+            <button onclick="hideMapPreview()" class="btn btn-secondary border-dark rounded-0 position-absolute end-0 me-3">
+                <span lang="en">Close</span>
+                <span lang="lv">Aizvert</span>
+            </button>
+        </div>
+    </div>
+    <div id="map"></div>
+    <img id="mapPreviewImage" src="/img/map.png" alt="image not found" class="img-fluid border border-1 border-dark position-absolute h-25" style="z-index:400; transform:translateY(-100%); pointer-events: none; border-radius: 0px 25px 0px 0px;">
+</div>
 
 <script>
+    // ///<<< MAP VERSION 2 >>>\\\
+    
+    var map = L.map('map').setView([51.505, -0.09], 2);
+    var marker;
+
+    var mapEnabled = true;
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    function drawMarker(lat, lng, changedMarker = false, clearLast = true){
+        var myIcon = L.icon({
+            iconUrl: '/greenMarker.png',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50]
+        });
+
+        if (marker && clearLast) marker.remove();
+        if (!changedMarker)
+            marker = L.marker([lat, lng]).addTo(map);
+        else
+            marker = L.marker([lat, lng], {icon: myIcon}).addTo(map);
+    }
+
+    // \\\<<< MAP VERSION 2 >>>///
+
     let placeCards = document.getElementsByClassName('placeCard');
     let categoryButtons = document.getElementsByClassName('categoryButton');
     let placeFilterButtons = document.getElementsByClassName('placeFilterButton');
@@ -194,6 +258,7 @@
 
     hideDeleteWindow();
     hideDeletePlaceWindow();
+    hideMapPreview();
     filterPlaces(categoryButtons[0].attributes.categoryname.value, "current");
     handleAttachmentButtons();
 
@@ -215,6 +280,17 @@
     function hideDeletePlaceWindow()
     {
         deletePlaceConfirmation.style.display = "none";
+    }
+    function openMapPreview(lat, lng, imagename)
+    {
+        mapPreviewImage.src = "/img/" + imagename;
+        drawMarker(lat, lng);
+        map.setView(marker.getLatLng(),5);
+        mapPreview.style.display = "initial";
+    }
+    function hideMapPreview()
+    {
+        mapPreview.style.display = "none";
     }
 
     function filterPlaces(name, mode) // mode: all/current/free | keep

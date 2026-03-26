@@ -51,7 +51,7 @@ class DataController extends Controller
         $data['places'] = (new places())->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
-                                          ->orderBy('results.result', 'asc')
+                                          ->orderBy('results.result', 'desc')
                                           ->get();
         $usedIdArray = [];
         $resultArray = [];
@@ -70,7 +70,7 @@ class DataController extends Controller
         $data['places'] = (new places())->where('category_id','=',$category)->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
-                                          ->orderBy('results.result', 'asc')
+                                          ->orderBy('results.result', 'desc')
                                           ->get();
         $usedIdArray = [];
         $resultArray = [];
@@ -81,6 +81,7 @@ class DataController extends Controller
         'place_id' => $data['place_id'],
         'user_id' => $data['user_id'],
         'result' => $data['result'],
+        'distance' => $data['distance'],
         'wasted_time' => $data['wasted_time'],
         'created_date' => $data['created_date']
         ]);
@@ -93,7 +94,7 @@ class DataController extends Controller
             $data['places'] = (new places())->where('category_id','=',$data['category'])->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
-                                          ->orderBy('results.result', 'asc')
+                                          ->orderBy('results.result', 'desc')
                                           ->get();
 
         $serieCount = $data['serieCount'] - 1;
@@ -146,8 +147,8 @@ class DataController extends Controller
 
         places::insert([
         'image_name' => $imageName,
-        'pos_X_perc' => $data['posx'],
-        'pos_Y_perc' => $data['posy'],
+        'lat' => $data['posx'],
+        'lng' => $data['posy'],
         'country_id' => $data['country'],
         'category_id' => $data['category'] == 'NULL' ? null : $data['category'],
         'difficulty' => $data['difficulty']

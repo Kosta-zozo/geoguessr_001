@@ -3,92 +3,15 @@
 @section ('content')
 
 <style>
-    #mapHolder {
+    #map {
         border: 1px solid black;
         height: 350px;
         position: relative;
         cursor: pointer;
         pointer-events: auto;
     }
-    #mapCanvas {
-        /* border:1px solid #d3d3d3; */
-        left: 12px;
-        top: 0;
-        /* width: calc(100% - 24px);
-        height: 100%; */
-        position: absolute;
-        pointer-events: none;
-    }
     #placeImage {
         border: 1px solid black;
-    }
-    #buttonHolder {
-        height: 350px;
-        width: calc(100% - 24px);
-        position: absolute;
-        top: 0;
-        pointer-events: none;"
-    }
-    #leftScrollButton {
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 30px;
-        padding: 5px;
-        border-radius: 6px 0 0 6px;
-        pointer-events: auto;
-    }
-    #rightScrollButton {
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 30px;
-        padding: 5px;
-        border-radius: 0 6px 6px 0;
-        pointer-events: auto;
-    }
-    #upScrollButton {
-        position: absolute;
-        top: 0;
-        left: 30px;
-        height: 30px;
-        width: calc(100% - 60px);
-        padding: 0;
-        border-radius: 0;
-        pointer-events: auto;
-    }
-    #downScrollButton {
-        position: absolute;
-        bottom: 0;
-        left: 30px;
-        height: 30px;
-        width: calc(100% - 60px);
-        padding: 0;
-        border-radius: 0;
-        pointer-events: auto;
-    }
-    #zoomInButton {
-        position: absolute;
-        bottom: 65px;
-        right: 35px;
-        height: 25px;
-        width: 100px;
-        padding: 0;
-        pointer-events: auto;
-    }
-    #zoomOutButton {
-        position: absolute;
-        bottom: 35px;
-        right: 35px;
-        height: 25px;
-        width: 100px;
-        padding: 0;
-        pointer-events: auto;
-    }
-    #finishButton {
-        display: none;
     }
     #countdownline {
         position: absolute;
@@ -117,8 +40,6 @@
             </div>
         </div>
         <div class="col-6 border rounded-3">
-                <!-- <button onclick="nextGame()" class="btn btn-primary">Next game</button>
-                <button onclick="selectNewRandomGame()" class="btn btn-primary">Random game</button> -->
             <h5 id="timer">Timer</h5>
             <h3 id="message">
                 <span lang="en">Choose the point on the map</span>
@@ -127,28 +48,7 @@
             <div class="container">
                 <div class="row align-items-start">
                     <div class="col-6" style="position: relative;">
-                        <!-- <img id="mapImage" src="img/map.png" alt="image of a map" width="100%" class="rounded-3" style="height: 350px;"> -->
-                        <div id="mapHolder" class="rounded-3"></div>
-                        <canvas id="mapCanvas" width="200" height="100">
-                            <span lang="en">Your browser does not support the HTML canvas tag.</span>
-                            <span lang="lv">Šis parlukprogramma ir slikta, izmanto citu.</span>
-                        </canvas>
-                        @if($difficulty == 'easy')
-                            <div id="buttonHolder" class="rounded-3">
-                                <button id="leftScrollButton" onmouseover="leftScrollActivate()" onmouseout="leftScrollDeactivate()" class="btn btn-outline-secondary">←</button>
-                                <button id="rightScrollButton" onmouseover="rightScrollActivate()" onmouseout="rightScrollDeactivate()" class="btn btn-outline-secondary">→</button>
-                                <button id="upScrollButton" onmouseover="upScrollActivate()" onmouseout="upScrollDeactivate()" class="btn btn-outline-secondary">↑</button>
-                                <button id="downScrollButton" onmouseover="downScrollActivate()" onmouseout="downScrollDeactivate()" class="btn btn-outline-secondary">↓</button>
-                                <button id="zoomInButton" onmousedown="zoomInActivate()" onmouseup="zoomInDeactivate()" onmouseout="zoomInDeactivate()" class="btn btn-outline-primary">
-                                    <span lang="en">Zoom in</span>
-                                    <span lang="lv">Pietuvinat</span>
-                                </button>
-                                <button id="zoomOutButton" onmousedown="zoomOutActivate()" onmouseup="zoomOutDeactivate()" onmouseout="zoomOutDeactivate()" class="btn btn-outline-primary">
-                                    <span lang="en">Zoom out</span>
-                                    <span lang="lv">Attalinat</span>
-                                </button>
-                            </div>
-                        @endif
+                        <div id="map" class="rounded-3"></div>
                     </div>
                     <div class="col-6"  style="position: relative;">
                         <img id="placeImage" src="/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
@@ -162,32 +62,34 @@
                 <input type="hidden" id="result_place_id" name="place_id" value="1">
                 <input type="hidden" id="result_user_id" name="user_id" value="1">
                 <input type="hidden" id="result_result" name="result" value="0.4">
+                <input type="hidden" id="result_distance" name="distance" value="0.4">
                 <input type="hidden" id="result_wasted_time" name="wasted_time" value="00:01:11">
                 <input type="hidden" id="result_created_date" name="created_date" value="2000-01-01">
-                <input type="hidden" id="result_mapInputXPerc" name="mapInputXPerc">
-                <input type="hidden" id="result_mapInputYPerc" name="mapInputYPerc">
                 <input type="hidden" id="result_serieCount" name="serieCount" value="0">
                 <input type="hidden" id="result_usedIdArray" name="usedIdArray">
                 <input type="hidden" id="result_resultArray" name="resultArray">
-                @if ($gameSerie) <input type="hidden" id="result_category" name="category" value="{{ $category }}"> @endif
-                @if ($gameSerie) <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}"> @endif
-                <button id="confirmButton" onclick="confirmInput()" class="btn btn-success">
+                <input type="hidden" id="result_category" name="category" value="{{ $category }}">
+                <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}">
+                <button type="submit" id="continueButton" class="btn btn-success">
+                    <span lang="en">Continue</span>
+                    <span lang="lv">Turpinat</span>
+                </button>
+                <button type="button" id="confirmButton" onclick="confirmInput()" class="btn btn-success">
                     <span lang="en">Confirm</span>
                     <span lang="lv">Apstiprinat</span>
                 </button>
             </form>
-            <a id="finishButton" href="/game" class="btn btn-success">
-                <span lang="en">Start a new game</span>
-                <span lang="lv">Uzsakt jaunu speli</span>
-            </a>
             <hr>
             <h4>
                 <span lang="en">You clicked on:</span>
                 <span lang="lv">Jus piespiedat:</span>
             </h4>
             <p id="coordinates">
-                <span lang="en">Coordinates</span>
-                <span lang="lv">Koordinati</span>
+                Latitude:
+                <span id="latDisplay"> - </span>
+                <br>
+                Longitude:
+                <span id="lngDisplay"> - </span>
             </p>
             <h4>
                 <span lang="en">Result:</span>
@@ -202,10 +104,74 @@
 </div>
 
 <script>
+    // ///<<< MAP VERSION 2 >>>\\\
+    
+    var map = L.map('map').setView([51.505, -0.09], 2);
+    var marker;
+
+    var mapEnabled = true;
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    map.on('click', onMapClick);
+
+    function onMapClick(e) {
+        if (!mapEnabled) return;
+
+        drawMarker(e.latlng.lat, e.latlng.lng);
+        displayCoordinates(e.latlng);
+
+        // DATA PROCESSING
+        inputLat = e.latlng.lat;
+        inputLng = e.latlng.lng;
+        inputReceived = true;
+        showConfirmButton();
+    }
+
+    function drawMarker(lat, lng, changedMarker = false, clearLast = true){
+        var myIcon = L.icon({
+            iconUrl: '/greenMarker.png',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50]
+        });
+
+        if (marker && clearLast) marker.remove();
+        if (!changedMarker)
+            marker = L.marker([lat, lng]).addTo(map);
+        else
+            marker = L.marker([lat, lng], {icon: myIcon}).addTo(map);
+    }
+
+    function drawLine(startLatLng, finishLatLng, focus = false){
+        var latlngs = [
+            startLatLng,
+            finishLatLng
+        ];
+
+        var polyline = L.polyline(latlngs, {color: 'black'}).addTo(map);
+
+        if (focus) map.fitBounds(polyline.getBounds());
+    }
+
+    function displayCoordinates(latLng){
+        latDisplay.innerHTML = latLng.lat;
+        lngDisplay.innerHTML = latLng.lng;
+    }
+
+    function disableZoom(){
+        map.zoomControl.disable()
+        map.scrollWheelZoom.disable()
+
+    }
+
+    // \\\<<< MAP VERSION 2 >>>///
+
     // DATA EXTRACTION
     const images = [
     @foreach ($data["places"] as $place)
-        [{{ $place["pos_X_perc"] }}, {{ $place["pos_Y_perc"] }}, "{{ $place["image_name"] }}", "{{ $place["id"] }}"], 
+        [{{ $place["lat"] }}, {{ $place["lng"] }}, "{{ $place["image_name"] }}", "{{ $place["id"] }}"], 
     @endforeach
     ];
     const records = [
@@ -213,7 +179,6 @@
         [{{ $record["place_id"] }}, "{{ $record["name"] }}", "{{ $record["result"] }}"], 
     @endforeach
     ];
-    @if ($gameSerie)
     const usedIdArray = [
     @foreach ($usedIdArray as $id)
         "{{ $id }}",
@@ -228,13 +193,7 @@
         ],
     @endforeach
     ];
-    @endif
     
-    @if($difficulty != 'hard')
-        countdownline.remove();
-    @endif
-
-
     var startTime = new Date();
     var currentImageArrayId = 0;
     var inputReceived = false;
@@ -242,365 +201,108 @@
     var resultsShownGlobal = true;
 
     var pageIsLoaded = false;
-    
-    var rect = document.getElementById("mapHolder").getBoundingClientRect();
-    var inputX = 0;
-    var inputY = 0;
-    onmousemove = function(e){inputX = e.clientX; inputY =  e.clientY;}
-    var scrollAmount = 5;
-    var zoomAmount = .04;
-    var mapPosX = 0;
-    var mapPosY = 0;
-    var zoom = 1;
-    var zoomIn = false;
-    var zoomOut = false;
-    var leftScroll = false;
-    var rightScroll = false;
-    var upScroll = false;
-    var downScroll = false;
-    var dragging = false;
 
-    addEventListener("resize", hangleResizing);
-    document.getElementById("mapHolder").style.backgroundImage = "url('/img/map.png')";
-    calcMapHolderSize();
-    resetMapSize();
-    calcMapSize();
     updateRecordList();
 
-    resizeMapCanvas()
     hideConfirmButton();
+    continueButton.style.display = "none";
 
     addEventListener("load", function() {
         startTime = new Date();
         pageIsLoaded= true;
     });
 
-    @if ($resultView)
-        mapInputXPerc = {{ $data["mapInputXPerc"] }};
-        mapInputYPerc = {{ $data["mapInputYPerc"] }};
-        inputReceived = true;
-        
-        
-        restoreCanvas();
-        selectGameByImageId({{ $data['place_id'] }});
-        inputReceived = true;
-        confirmInput();
-        restoreCanvas();
-    @else
-        @if ($gameSerie)
-            selectNewRandomGame();
-        @else
-            selectRandomGame();
-        @endif
+    @if($difficulty != 'hard')
+        countdownline.remove();
+    @endif
+    @if($difficulty == 'hard' || $difficulty == 'medium')
+        disableZoom()
     @endif
 
-    requestAnimationFrame(Repeat);
-    
-    function hangleResizing() {
-        rect = document.getElementById("mapHolder").getBoundingClientRect();
-        calcMapHolderSize();
-        calcMapSize();
-        applyMapSize();
-        correctMapPos();
-        applyMapPos();
-
-        restoreCanvas();
-    }
-
-    // TOGGLES
-    function zoomInActivate() {
-        zoomIn = true;
-    }
-    function zoomInDeactivate() {
-        zoomIn = false;
-    }
-    function zoomOutActivate() {
-        zoomOut = true;
-    }
-    function zoomOutDeactivate() {
-        zoomOut = false;
-    }
-    function leftScrollActivate() {
-        leftScroll = true;
-    }
-    function leftScrollDeactivate() {
-        leftScroll = false;
-    }
-    function rightScrollActivate() {
-        rightScroll = true;
-    }
-    function rightScrollDeactivate() {
-        rightScroll = false;
-    }
-    function upScrollActivate() {
-        upScroll = true;
-    }
-    function upScrollDeactivate() {
-        upScroll = false;
-    }
-    function downScrollActivate() {
-        downScroll = true;
-    }
-    function downScrollDeactivate() {
-        downScroll = false;
-    }
+    selectNewRandomGame();
 
     // REPEATER
+    requestAnimationFrame(Repeat);
     function Repeat() {
-        @if($difficulty == 'easy')
-            // SCROLL
-            if (leftScroll){
-                mapPosX += scrollAmount;
-                correctMapPosLeft();
-                applyMapPosX(mapPosX);
-                restoreCanvas();
-            }
-            else if (rightScroll){
-                mapPosX -= scrollAmount;
-                correctMapPosRight();
-                applyMapPosX(mapPosX);
-                restoreCanvas();
-            }
-            else if (upScroll){
-                mapPosY += scrollAmount;
-                correctMapPosUp();
-                applyMapPosY(mapPosY);
-                restoreCanvas();
-            }
-            else if (downScroll){
-                mapPosY -= scrollAmount;
-                correctMapPosDown();
-                applyMapPosY(mapPosY);
-                restoreCanvas();
-            }
-            // ZOOM
-            if (zoomIn || zoomOut){
-                calcMapCenterPosPerc();
-                if (zoomIn) {
-                    zoom += zoomAmount;
-                    if (zoom > 10) zoom = 10;
-                }
-                else if (zoomOut) {
-                    zoom -= zoomAmount;
-                    if (zoom < 1) zoom = 1;
-                }
-                calcMapSize();
-                applyMapSize();
-
-                mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * .5));
-                mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * .5));
-
-                if (zoomOut) {
-                    correctMapPos();
-                }
-
-                applyMapPos();
-                restoreCanvas();
-            }
-            // DRAG
-            if (dragging) {
-                dragAmountX = savedDragAmountX - (dragStartX - Math.floor(inputX - rect.left));
-                mapPosX += dragAmountX;
-                savedDragAmountX = dragStartX - Math.floor(inputX - rect.left);
-                dragAmountX = 0;
-
-                dragAmountY = savedDragAmountY - (dragStartY - Math.floor(inputY - rect.left));
-                mapPosY += dragAmountY;
-                savedDragAmountY = dragStartY - Math.floor(inputY - rect.left);
-                dragAmountY = 0;
-
-                correctMapPos();
-                applyMapPosX(mapPosX);
-                applyMapPosY(mapPosY);
-                restoreCanvas();
-            }
-        @endif
         // TIMER
-        timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
-        @if($difficulty == 'hard')
-            if (document.getElementById('countdownline') !== null && pageIsLoaded)
-            {
-                if (timer.innerHTML >= 5)
+        if (!inputConfirmed)
+        {
+            timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
+                
+            @if($difficulty == 'hard')
+                if (document.getElementById('countdownline') !== null && pageIsLoaded)
                 {
-                    placeImage.src = "/img/restricted.png";
-                    countdownline.remove();
+                    if (timer.innerHTML >= 5)
+                    {
+                        placeImage.src = "/img/restricted.png";
+                        countdownline.remove();
+                    }
+                    else
+                    {
+                        countdownline.style.width = "calc(" + ((5 - (new Date() - startTime) / 100 / 10).toFixed(2) / 5 * 100) + "% - 24px)";
+                    } 
                 }
-                else
-                {
-                    // countdown.innerHTML = (5 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
-                    countdownline.style.width = "calc(" + ((5 - (new Date() - startTime) / 100 / 10).toFixed(2) / 5 * 100) + "% - 24px)";
-                } 
-            }
-        @endif
+            @endif
+        }
         requestAnimationFrame(Repeat);
     }
 
-    @if($difficulty == 'easy')
-        // ZOOM
-        document.getElementById("mapHolder").addEventListener("wheel", event => {
-            zoomPosXPerc = Math.floor(event.clientX - rect.left) / mapHolderWidth;
-            zoomPosYPerc = Math.floor(event.clientY - rect.top) / mapHolderHeight;
-            calcMapPosPercFrom(zoomPosXPerc, zoomPosYPerc);
-            zoom -= event.deltaY / 500;
-            if (zoom > 10) zoom = 10;
-            else if (zoom < 1) zoom = 1;
-            calcMapSize();
-            applyMapSize();
-
-            mapPosX = -Math.abs((mapCenterPosXPerc * mapWidth) - (mapHolderWidth * (zoomPosXPerc)));
-            mapPosY = -Math.abs((mapCenterPosYPerc * mapHeight) - (mapHolderHeight * (zoomPosYPerc)));
-
-            correctMapPos();
-
-            applyMapPos();
-            restoreCanvas();
-
-            return false;
-        });
-        @endif
-
-    // SCROLL DISABLE
-    document.getElementById("mapHolder").addEventListener("mouseenter", event => {
-        document.getElementById("body").style = "overflow: hidden;";
-    });
-
-    document.getElementById("mapHolder").addEventListener("mouseleave", event => {
-        document.getElementById("body").style = "overflow: auto;";
-    });
-
-    // DRAG
-    document.getElementById("mapHolder").addEventListener("mousedown", event => {
-        dragging = true;
-        dragStartX = Math.floor(event.clientX - rect.left);
-        dragStartY = Math.floor(event.clientY - rect.left);
-        savedDragAmountX = dragStartX - Math.floor(inputX - rect.left);
-        savedDragAmountY = dragStartY - Math.floor(inputY - rect.left);
-    });
-    document.getElementById("mapHolder").addEventListener("mouseup", event => {
-        dragging = false;
-    });
-    document.getElementById("mapHolder").addEventListener("mouseleave", event => {
-        dragging = false;
-    });
-
-    function restoreCanvas() {
-        resizeMapCanvas()
-        if (inputReceived) {
-            mapInputX = mapInputXPerc * mapWidth;
-            mapInputY = mapInputYPerc * mapHeight;
-
-            mapHolderInputX = mapInputX + mapPosX;
-            mapHolderInputY = mapInputY + mapPosY;
-
-            drawCircle(mapHolderInputX, mapHolderInputY);
-        }
-        if (inputConfirmed) {
-            calcCorrectCoordinates();
-            drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
-            drawCircle(correctMapHolderX, correctMapHolderY, "green");
-        }
-    }
-
     // GAME SELECTOR
-    function nextGame() {
-        currentImageArrayId++;
-        if (currentImageArrayId == images.length) currentImageArrayId = 0;
-        selectGame(currentImageArrayId);
-    }
     function selectNewRandomGame() {
         selectGame(newRandomImageArrayId());
     }
     function selectRandomGame() {
         selectGame(randomImageArrayId());
     }
-    function selectGameByImageId(id) {
-        selectGame(getImageArrayIdFromImageId(id));
-    }
+    // function selectGameByImageId(id) {
+    //     selectGame(getImageArrayIdFromImageId(id));
+    // }
     function selectGame(imageArrayId){
         currentImageArrayId = imageArrayId;
         document.getElementById("placeImage").src = "/img/" + images[imageArrayId][2];
         inputReceived = false;
         inputConfirmed = false;
 
-        clearCanvas();
         hideConfirmButton();
-        resetMapSize();
-        resetMapPos();
-        enableMap();
 
         updateRecordList();
-        document.getElementById('coordinates').innerHTML = 
-        '<span lang="en">Coordinates</span>'+
-        '<span lang="lv">Koordinati</span>';
-        document.getElementById('result').innerHTML = 
-        '<span lang="en">Result</span>'+
-        '<span lang="lv">Rezultats</span>';
-        document.getElementById('message').innerHTML = 
-        '<span lang="en">Choose the point on the map</span>'+
-        '<span lang="lv">Izvelies punktu mapē</span>';
-    }
-
-    // INPUT
-    document.getElementById('mapHolder').onclick = function(e) {
-        // e = Mouse click event.
-        mapHolderInputX = e.offsetX; //x position within the element.
-        mapHolderInputY = e.offsetY;  //y position within the element.
-        mapHolderInputXPerc = Math.floor(mapHolderInputX / mapHolderWidth);
-        mapHolderInputYPerc = Math.floor(mapHolderInputY / mapHolderHeight);
-        mapInputX = Math.abs(mapPosX) + mapHolderInputX;
-        mapInputY = Math.abs(mapPosY) + mapHolderInputY;
-        mapInputXPerc = mapInputX / mapWidth;
-        mapInputYPerc = mapInputY / mapHeight;
-        inputReceived = true;
-        
-        showConfirmButton();
-
-        resizeMapCanvas()
-        clearCanvas();
-        drawCircle(mapHolderInputX, mapHolderInputY);
-
-        // console.log(mapInputXPerc + " - " + mapInputYPerc);
     }
 
     function confirmInput() {
-        calcCorrectCoordinates();
 
         // confirmed
         inputConfirmed = true;
+        mapEnabled = false;
 
-        // show input data
-        document.getElementById('coordinates').innerHTML = 
-            "Left: " + Math.trunc(mapInputXPerc * 10000) / 100 + "% (" + Math.trunc(mapInputX * 100) / 100 +
-            "px) ; Top: " + Math.trunc(mapInputYPerc * 10000) / 100 + "% (" + Math.trunc(mapInputY * 100) / 100 + "px)";
+        correctLat = images[currentImageArrayId][0];
+        correctLng = images[currentImageArrayId][1];
+
         // show results
-        document.getElementById('result').innerHTML = "You were " + Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100 + "% (" + Math.trunc(calcHypotenuse(Math.abs(correctX - mapInputX), Math.abs(correctY - mapInputY)) * 100) / 100 + "px) close";
-        // show message
-        document.getElementById('message').innerHTML = "You can view your results and go to next game";
+        document.getElementById('result').innerHTML = "You were " + map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)) + "m close";
+        // // show message
+        document.getElementById('message').innerHTML = 
+            '<span lang="en">You can view your results and go to next game</span>'+
+            '<span lang="lv">Jus varat parskatit savus rezultatus un turpinat</span>';
+
 
         currentDate = new Date();
         finishTime = new Date();
         document.getElementById('result_place_id').value = images[currentImageArrayId][3];
         document.getElementById('result_user_id').value = {{ Auth::user()->id }};
-        document.getElementById('result_result').value = Math.trunc(calcHypotenuse(Math.abs(correctXPerc - mapInputXPerc), Math.abs(correctYPerc - mapInputYPerc)) * 10000) / 100;
+        document.getElementById('result_result').value = distanceToPoints(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)));
+        document.getElementById('result_distance').value = map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng));
         document.getElementById('result_wasted_time').value = secondsToTime((finishTime - startTime) / 1000);
         document.getElementById('result_created_date').value = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
-        document.getElementById('result_mapInputXPerc').value = mapInputXPerc;
-        document.getElementById('result_mapInputYPerc').value = mapInputYPerc;
-
-        drawLine(correctMapHolderX, correctMapHolderY, mapHolderInputX, mapHolderInputY);
-        drawCircle(correctMapHolderX, correctMapHolderY, "green");
-        
-        hideConfirmButton();
-        disableMap();
-
-        document.getElementById('finishButton').style.display = "initial";
-
-        @if ($gameSerie)
         result_serieCount.value = {{ $serieCount }};
         result_usedIdArray.value = usedIdArray.length != 0 ? usedIdArray : "none";
         result_resultArray.value = resultArray.length != 0 ? resultArray : "none";
         result_form.action = '/gameContinueSerie';
-        @endif
+
+        drawMarker(correctLat, correctLng, true, false);
+        drawLine(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng), true);
+        
+        hideConfirmButton();
+        continueButton.style.display = "initial";
     }
 
     // RECORDS
@@ -641,7 +343,7 @@
                 }
             }
             for (let i = 0; i < recordArray.length; i++) {
-                recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
+                recordListHtml += "<li>" + recordArray[i][0] + " - " + Math.round(recordArray[i][1]) + " points </li>";
             }
             for (let i = 0; i < (10 - recordArray.length); i++) {
                 recordListHtml += "<li> - </li>";
@@ -659,93 +361,13 @@
                 }
             }
             for (let i = 0; i < recordArray.length; i++) {
-                recordListHtml += "<li>" + recordArray[i][0] + " - " + recordArray[i][1] + "% </li>";
+                recordListHtml += "<li>" + recordArray[i][0] + " - " + Math.round(recordArray[i][1]) + " points </li>";
             }
             for (let i = 0; i < (10 - recordArray.length); i++) {
                 recordListHtml += "<li> - </li>";
             }
         }
         document.getElementById('recordList').innerHTML = recordListHtml;
-    }
-
-    // MAP POSITION AND SIZE
-    function resetMapPos() {
-        mapPosX = 0;
-        mapPosY = 0;
-        applyMapPos();
-    }
-    function applyMapPos() {
-        applyMapPosX();
-        applyMapPosY();
-    }
-    function applyMapPosX() {
-        document.getElementById("mapHolder").style.backgroundPositionX = mapPosX + "px";
-    }
-    function applyMapPosY() {
-        document.getElementById("mapHolder").style.backgroundPositionY = mapPosY + "px";
-    }
-    function correctMapPos() {
-        correctMapPosLeft();
-        correctMapPosRight();
-        correctMapPosUp();
-        correctMapPosDown();
-    }
-    function correctMapPosLeft() {
-        if (mapPosX > 0) mapPosX = 0;
-    }
-    function correctMapPosRight() {
-        if (mapPosX < (mapWidth - mapHolderWidth) * -1) mapPosX = (mapWidth - mapHolderWidth) * -1;
-    }
-    function correctMapPosUp() {
-        if (mapPosY > 0) mapPosY = 0;
-    }
-    function correctMapPosDown() {
-        if (mapPosY < (mapHeight - mapHolderHeight) * -1) mapPosY = (mapHeight - mapHolderHeight) * -1;
-    }
-    function resetMapSize() {
-        zoom = 1;
-        calcMapSize()
-        document.getElementById("mapHolder").style.backgroundSize = "100% 100%";
-    }
-    function applyMapSize() {
-        document.getElementById("mapHolder").style.backgroundSize = mapWidth + "px " + mapHeight + "px";
-    }
-    function enableMap() {
-        document.getElementById("mapHolder").style.pointerEvents = "auto";
-    }
-    function disableMap() {
-        document.getElementById("mapHolder").style.pointerEvents = "none";
-    }
-
-    // CANVAS
-    function resizeMapCanvas() {
-        calcMapHolderSize();
-        mapCanvas = document.getElementById("mapCanvas");
-        mapCanvas.width = mapHolderWidth;
-        mapCanvas.height = mapHolderHeight;
-    }
-    function drawLine(startX, startY, endX, endY) {
-        var c = document.getElementById("mapCanvas");
-        var ctx = c.getContext("2d");
-        ctx.moveTo(startX,startY);
-        ctx.lineTo(endX,endY);
-        ctx.lineWidth = 2;
-        ctx.stroke();    
-    }
-    function drawCircle(centerX, centerY, color="red") {
-        var c = document.getElementById("mapCanvas");
-        var ctx = c.getContext("2d");
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = color;
-        ctx.lineWidth = 1;
-        ctx.fill();
-        ctx.stroke();
-    }
-    function clearCanvas() {
-        canvas = document.getElementById("mapCanvas");
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     // CONFIRM BUTTON
@@ -784,37 +406,6 @@
         });
         return valid;
     }
-    function calcMapSize() {
-        mapWidth = mapHolderWidth * zoom;
-        mapHeight = mapHolderHeight * zoom;
-    }
-    function calcMapPosPercFrom(inputXPerc, inputYPerc) {
-        mapCenterPosXPerc = (Math.abs(mapPosX) + (mapHolderWidth * inputXPerc)) / mapWidth;
-        mapCenterPosYPerc = (Math.abs(mapPosY) + (mapHolderHeight * inputYPerc)) / mapHeight;
-    }
-    function calcMapCenterPosPerc() {
-        calcMapPosPercFrom(.5, .5);
-    }
-    function calcMapHolderSize() {
-        mapHolderWidth = document.getElementById("mapHolder").clientWidth;
-        mapHolderHeight = document.getElementById("mapHolder").clientHeight;
-    }
-    function calcCorrectCoordinates() {
-        // correct input data
-        correctXPerc = images[currentImageArrayId][0] / 100;
-        correctYPerc = images[currentImageArrayId][1] / 100;
-
-        // percentage to px
-        correctX = correctXPerc * mapWidth;
-        correctY = correctYPerc * mapHeight;
-
-        // percentage to mapHolder px
-        correctMapHolderX = mapWidth * correctXPerc + mapPosX;
-        correctMapHolderY = mapHeight * correctYPerc + mapPosY;
-    }
-    function calcHypotenuse(a, b) {
-        return Math.sqrt(a * a + b * b);
-    }
     function secondsToTime(seconds) {
         if (seconds < 60)
             return seconds;
@@ -822,6 +413,10 @@
             return "00:" + Math.floor(seconds / 60) + ":" + ((seconds % 60).toFixed(1));
         else
             return Math.floor(Math.floor(seconds / 60) / 60) + ":" + (Math.floor(seconds / 60) % 60) + ":" + ((seconds % 60).toFised(1));
+    }
+
+    function distanceToPoints(distance){
+        return (1 - (distance / 8500000)) * 2000;
     }
 </script>
 

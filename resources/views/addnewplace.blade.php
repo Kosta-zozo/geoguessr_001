@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="col">
-                <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                <img id="placeImage" src="public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                 <label for="imageFile">
                     <span lang="en">Upload your image</span>
                     <span lang="lv">Augšupielādējiet savu attēlu</span>
@@ -140,7 +140,7 @@
 
     function drawMarker(lat, lng, changedMarker = false, clearLast = true){
         var myIcon = L.icon({
-            iconUrl: '/greenMarker.png',
+            iconUrl: '/public/greenMarker.png',
             iconSize: [50, 50],
             iconAnchor: [25, 50]
         });

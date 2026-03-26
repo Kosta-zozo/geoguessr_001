@@ -139,13 +139,19 @@
                             </a>
                         </div>
                         <div id="attachButton_{{ $place['id'] }}" class="col-12">
-                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-primary border-dark rounded-0 w-100">
+                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-success border-dark rounded-0 w-100">
                                 <<<
                                 <span lang="en">Attach</span>
                                 <span lang="lv">Pievienot</span>
                             </a>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6 pe-0">
+                            <a href="/{{ $place['id'] }}/editplace" class="btn btn-primary border-dark rounded-0 w-100">
+                                <span lang="en">Edit</span>
+                                <span lang="lv">Rediģet</span>
+                            </a>
+                        </div>
+                        <div class="col-6 ps-0">
                             <button onclick="openDeletePlaceWindow({{ $place['id'] }})" class="btn btn-danger border-dark rounded-0 w-100">
                                 <span lang="en">Delete</span>
                                 <span lang="lv">Dzest</span>

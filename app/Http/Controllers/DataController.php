@@ -137,8 +137,8 @@ class DataController extends Controller
     
         $validated = $data->validate([
             'image' => 'required',
-            'posx' => 'required|gt:0|lt:100',
-            'posy' => 'required|gt:0|lt:100',
+            'posx' => 'required|gt:-90|lt:90',
+            'posy' => 'required|gt:-180|lt:180',
             'country' => 'required',
             'category' => 'required',
             'difficulty' => 'required',
@@ -212,6 +212,7 @@ class DataController extends Controller
         results::join('places', 'places.id', '=', 'results.place_id')
             ->where('category_id', '=', $id)
             ->delete();
+        places::where('category_id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
         places::where('category_id', '=', $id)->delete();
         categories::where('id', '=', $id)->delete();
         return redirect()->to('categorylist');

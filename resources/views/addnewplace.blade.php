@@ -56,11 +56,13 @@
             </div>
             <div class="col">
                 <img id="placeImage" src="img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
-                <label for="imageFile">
+                <br>
+                <br>
+                <label for="imageFile" class="btn btn-secondary">
                     <span lang="en">Upload your image</span>
                     <span lang="lv">Augšupielādējiet savu attēlu</span>
                 </label>
-                <input id="imageFile" name="image" type="file" class="form-control"><br>
+                <input id="imageFile" name="image" type="file" style="display:none;"><br>
             </div>
         </div>
         <div class="col-lg-6 mx-auto">

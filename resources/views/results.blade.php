@@ -14,7 +14,7 @@
                 </p>
                 <p>
                     <span lang="en">Time spent: </span>
-                    <span lang="en">Pateretais laiks: </span>
+                    <span lang="lv">Pateretais laiks: </span>
                     {{ $result[1] }}
                 </p>
             </li>

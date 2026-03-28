@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\places;
 use App\Models\results;
+use App\Models\serie_results;
 use App\Models\categories;
 use App\Models\countries;
 use App\Models\User;
@@ -112,7 +113,18 @@ class DataController extends Controller
         }
         $resultArray[] = [$data['result'], $data['wasted_time']];
         if ($serieCount <= 0)
-            return view('results', ['resultArray' => $resultArray]);
+            {
+                $finalresult = 0;
+                foreach ($resultArray as $result)
+                {
+                    $finalresult += $result[0];
+                }
+                serie_results::insert([
+                    'user_id' => Auth::user()->id,
+                    'result' => $finalresult
+                ]);
+                return view('results', ['resultArray' => $resultArray]);
+            }
         else
             return view('game', ['data' => $data, 'resultView' => false, 'gameSerie' => true, 'serieCount' => $serieCount, 'usedIdArray' => $usedIdArray, 'difficulty' => $data['difficulty'], 'category' => $data['category'], 'resultArray' => $resultArray]);
     }
@@ -239,5 +251,13 @@ class DataController extends Controller
         places::where('id', '=', $id)->delete();
         
         return response()->json(['success' => true]);
+    }
+
+    public function leaderboard(){
+        $data['results'] = (new serie_results())->distinct()->join('users', 'users.id', '=', 'serie_results.user_id')
+                                          ->orderBy('serie_results.result', 'desc')
+                                          ->get();
+
+        return view('leaderboard', ['data' => $data]);
     }
 }

@@ -19,6 +19,12 @@
                     <span lang="lv">Sakums</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/leaderboard" class="nav-link @if (Request::is('leaderboard')) active @endif" aria-current="page">
+                    <span lang="en">Leaderboard</span>
+                    <span lang="lv">Līderu saraksts</span>
+                </a>
+            </li>
             @if(Auth::user())
                 <li class="nav-item me-2"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/gameHub" class="nav-link @if (Request::is('*/gameStartSerie') || Request::is('gameHub') || Request::is('game') || Request::is('submitResult') || Request::is('gameStartSerie') || Request::is('gameContinueSerie')) active @endif">
                     <span lang="en">Game</span>

@@ -29,33 +29,34 @@
 <div class="px-4 py-5 my-5 text-center">
     <div class="col-lg-6 mx-auto">
         <h3>
-            <span lang="en">Add a new place</span>
-            <span lang="lv">Izveidot jaunu lokaciju</span>
+            <span lang="en">Edit place</span>
+            <span lang="lv">Rediģet lokaciju</span>
         </h3>
         <div class="row align-items-start">
             <div class="col" style="position: relative;">
                 <div id="map" class="rounded-3"></div>
                 </canvas>
-                <form action="/addPlace" method="post" enctype="multipart/form-data">@csrf
+                <form action="/editPlace" method="post" enctype="multipart/form-data">@csrf
+                <input type="hidden" name="id" value="{{ $place['id'] }}">
                 <div class="row align-items-start">
                     <div class="col">
                         <label for="posx">
                             <span lang="en">Enter latitude</span>
                             <span lang="lv">Ievadi ģeogrāfisko platumu</span>
                         </label>
-                        <input id="posx" name="posx" type="number" class="form-control" step="any" min="-90" max="90" onchange="synchronizeInput()"><br>
+                        <input id="posx" name="posx" type="number" class="form-control" step="any" min="-90" max="90" onchange="synchronizeInput()" value="{{ $place['lat'] }}"><br>
                     </div>
                     <div class="col">
                         <label for="posy">
                             <span lang="en">Enter longitude </span>
                             <span lang="lv">Ievadi ģeogrāfisko garumu</span>
                         </label>
-                        <input id="posy" name="posy" type="number" class="form-control" step="any" min="-180" max="180" onchange="synchronizeInput()"><br>
+                        <input id="posy" name="posy" type="number" class="form-control" step="any" min="-180" max="180" onchange="synchronizeInput()" value="{{ $place['lng'] }}"><br>
                     </div>
                 </div>
             </div>
             <div class="col">
-                <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                <img id="placeImage" src="/img/{{ $place['image_name'] }}" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                 <br>
                 <br>
                 <label for="imageFile" class="btn btn-secondary">
@@ -82,7 +83,7 @@
             <select name="category" id="form-category" class="form-control">
                 <option value=NULL>-</option>
                 @foreach ($categories as $category)
-                <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                <option value="{{ $category['id'] }}" @if($category['id'] == $place['category_id']) selected @endif>{{ $category['name'] }}</option>
                 @endforeach
             </select><br>
             <!-- <label for="form-difficulty">
@@ -105,8 +106,8 @@
             </select><br>
         </div>
         <button type="submit" class="btn btn-primary">
-                <span lang="en">Submit new place</span>
-                <span lang="lv">Izveidot jaunu lokaciju</span>
+                <span lang="en">Save</span>
+                <span lang="lv">Saglabat</span>
         </button>
         <a href="/categorylist" type="buttton" class="btn btn-secondary">
                 <span lang="en">Return to category list</span>
@@ -142,7 +143,7 @@
 
     function drawMarker(lat, lng, changedMarker = false, clearLast = true){
         var myIcon = L.icon({
-            iconUrl: '/public/greenMarker.png',
+            iconUrl: '/greenMarker.png',
             iconSize: [50, 50],
             iconAnchor: [25, 50]
         });
@@ -154,6 +155,8 @@
             marker = L.marker([lat, lng], {icon: myIcon}).addTo(map);
     }
     // \\\<<< MAP VERSION 2 >>>///
+
+    synchronizeInput();
 
     // INPUT
     function synchronizeInput() {

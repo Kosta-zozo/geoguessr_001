@@ -50,6 +50,8 @@ Route::get('/addNewPlace', 'App\Http\Controllers\DataController@addNewPlace')->m
 Route::post('/addPlace', 'App\Http\Controllers\DataController@addPlace')->middleware('auth');
 Route::get('/placelist', 'App\Http\Controllers\DataController@placelist')->middleware('auth');
 Route::get('/{id}/deleteplace', 'App\Http\Controllers\DataController@deleteplace')->middleware('auth');
+Route::get('/{id}/editplace', 'App\Http\Controllers\DataController@openEditorPlace')->middleware('auth');
+Route::post('/editPlace', 'App\Http\Controllers\DataController@editPlace')->middleware('auth');
 
 Route::get('addNewCategory', function () {
     return view('addnewcategory');

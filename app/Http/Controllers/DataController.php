@@ -126,6 +126,7 @@ class DataController extends Controller
             ->get()
             ->each(function($row){ $row->delete(); });
     }
+
     public function addNewPlace() {
         $countries = (new countries())->get();
         $categories = (new categories())->get();
@@ -136,8 +137,8 @@ class DataController extends Controller
     
         $validated = $data->validate([
             'image' => 'required',
-            'posx' => 'required|gt:0|lt:100',
-            'posy' => 'required|gt:0|lt:100',
+            'posx' => 'required|gt:-90|lt:90',
+            'posy' => 'required|gt:-180|lt:180',
             'country' => 'required',
             'category' => 'required',
             'difficulty' => 'required',
@@ -172,6 +173,24 @@ class DataController extends Controller
 
         return redirect()->to('placelist');
     }
+    public function openEditorPlace($id) {
+        $countries = (new countries())->get();
+        $categories = (new categories())->get();
+        return view('/editplace', ['id' => $id, 'place' => (places::where('id', '=', $id)->first()), 'countries' => $countries, 'categories' => $categories]);
+    }
+    public function editPlace(request $data) {
+        if ($data['image'])
+        {
+            $path = Storage::disk('public_uploads')->put('img', $data['image']);
+            $imageName = basename($path);
+
+            Storage::disk('public_uploads')->delete('img/'.(places::where('id', '=', $data['id'])->first())->image_name);
+
+            places::where('id', '=', $data['id'])->update(['image_name' => $imageName]);    
+        }
+        places::where('id', '=', $data['id'])->update(['lat' => $data['posx'], 'lng' => $data['posy'], 'category_id' => $data['category'] == 'NULL' ? null : $data['category']]);
+        return redirect()->to('/categorylist');
+    }
 
     public function addCategory(request $data) {
         $validated = $data->validate([
@@ -193,6 +212,7 @@ class DataController extends Controller
         results::join('places', 'places.id', '=', 'results.place_id')
             ->where('category_id', '=', $id)
             ->delete();
+        places::where('category_id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
         places::where('category_id', '=', $id)->delete();
         categories::where('id', '=', $id)->delete();
         return redirect()->to('categorylist');

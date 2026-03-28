@@ -278,7 +278,18 @@
         correctLng = images[currentImageArrayId][1];
 
         // show results
-        document.getElementById('result').innerHTML = "You were " + map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)) + "m close";
+        document.getElementById('result').innerHTML =
+            '<span lang="en">You got </span>'+
+            '<span lang="lv">Jus dabojat </span>'+
+            Math.round(distanceToPoints(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)))) +
+            '<span lang="en"> points</span>'+
+            '<span lang="lv"> punktu</span>'+
+            '<br>'+
+            '<span lang="en">You were </span>'+
+            '<span lang="lv">Jus bijat </span>'+
+            Math.round(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng))) / 1000 +
+            '<span lang="en">km close</span>'+
+            '<span lang="lv">km tuvu</span>';
         // // show message
         document.getElementById('message').innerHTML = 
             '<span lang="en">You can view your results and go to next game</span>'+

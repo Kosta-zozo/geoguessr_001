@@ -1,3 +1,9 @@
+<style>
+    .active{
+        background-color: #212529 !important;
+    }
+</style>
+
 <div class="container">
     <header class="d-flex flex-wrap justify-content-center py-3 border-bottom">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
@@ -13,20 +19,33 @@
                     <span lang="lv">Sakums</span>
                 </a>
             </li>
-            @if(!Auth::user())
-                <li class="nav-item"><a href="/loginform" class="nav-link @if (Request::is('loginform') || Request::is('registerform')) active @endif">
-                    <span lang="en">Login</span>
-                    <span lang="lv">Ielogoties</span>
-                </a></li>
-            @else
-                <li class="nav-item"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/gameHub" class="nav-link @if (Request::is('*/gameStartSerie') || Request::is('gameHub') || Request::is('game') || Request::is('submitResult') || Request::is('gameStartSerie') || Request::is('gameContinueSerie')) active @endif">
+            @if(Auth::user())
+                <li class="nav-item me-2"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/gameHub" class="nav-link @if (Request::is('*/gameStartSerie') || Request::is('gameHub') || Request::is('game') || Request::is('submitResult') || Request::is('gameStartSerie') || Request::is('gameContinueSerie')) active @endif">
                     <span lang="en">Game</span>
                     <span lang="lv">Spele</span>
                 </a></li>
-                <li class="nav-item"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/categorylist" class="nav-link fst-italic @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">{{ Auth::user()->name }}</a></li>
-                <li class="nav-item"><a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/logout" class="nav-link">
-                    <span lang="en">Logout</span>
-                    <span lang="lv">Izlogoties</span>
+                <div class="dropdown me-5">
+                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">
+                        {{ Auth::user()->name }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @if(Auth::user()->admin)
+                        <a @if (Request::is('*/gameStartSerie') || Request::is('gameContinueSerie')) onclick="return confirm(getExitMessage());" @endif href="/categorylist" class="dropdown-item @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">
+                            <span lang="en">Admin panel</span>
+                            <span lang="lv">Administracijas panelis</span>
+                        </a>
+                        <hr class="dropdown-divider">
+                        @endif
+                        <a onclick="return confirm(getLogoutMessage());" href="/logout" class="dropdown-item">
+                            <span lang="en">Logout</span>
+                            <span lang="lv">Izlogoties</span>
+                        </a>
+                    </div>
+                </div>
+            @else
+                <li class="nav-item"><a href="/loginform" class="nav-link @if (Request::is('loginform') || Request::is('registerform')) active @endif">
+                    <span lang="en">Login</span>
+                    <span lang="lv">Ielogoties</span>
                 </a></li>
             @endif
             <select id="langSelector" onchange="switchLanguage()" class="form-select form-select-sm" style="width:auto; background: none; padding:10px;">
@@ -54,5 +73,12 @@
             return "Vai tiešam gribat partraukt speli?";
         else
             return "Are you sure, you want to stop the game?";
+    }
+    function getLogoutMessage()
+    {
+        if(sessionStorage.getItem("language") == "lv")
+            return "Vai tiešam gribat izlogoties?";
+        else
+            return "Are you sure, you want to logout?";
     }
 </script>

@@ -107,7 +107,7 @@
                     <div class="w-100">
                         <div class="row">
                         <div class="col-6 pe-0">
-                            <img onclick="openImagePreview('{{ $place['image_name'] }}');" src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100 highlight" style="cursor: pointer;">
+                            <img onclick="openImagePreview('{{ $place['image_name'] }}');" src="/public/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100 highlight" style="cursor: pointer;">
                         </div>
                         <div class="col-6 ps-0 position-relative">
                             <div class="position-relative h-100 bg-secondary border border-dark text-light text-truncate">
@@ -227,7 +227,7 @@
         </div>
     </div>
     <div id="map"></div>
-    <img id="mapPreviewImage" src="/img/map.png" alt="image not found" class="img-fluid border border-1 border-dark position-absolute h-25" style="z-index:400; transform:translateY(-100%); pointer-events: none; border-radius: 0px 25px 0px 0px;">
+    <img id="mapPreviewImage" src="/public/img/map.png" alt="image not found" class="img-fluid border border-1 border-dark position-absolute h-25" style="z-index:400; transform:translateY(-100%); pointer-events: none; border-radius: 0px 25px 0px 0px;">
 </div>
 <div id="imagePreview" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
     <div class="row">
@@ -259,7 +259,7 @@
 
     function drawMarker(lat, lng, changedMarker = false, clearLast = true){
         var myIcon = L.icon({
-            iconUrl: '/greenMarker.png',
+            iconUrl: '/public/greenMarker.png',
             iconSize: [50, 50],
             iconAnchor: [25, 50]
         });
@@ -308,7 +308,7 @@
     }
     function openMapPreview(lat, lng, imagename)
     {
-        mapPreviewImage.src = "/img/" + imagename;
+        mapPreviewImage.src = "/public/img/" + imagename;
         drawMarker(lat, lng);
         map.setView(marker.getLatLng(),5);
         mapPreview.style.display = "initial";

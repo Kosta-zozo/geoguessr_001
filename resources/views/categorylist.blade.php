@@ -319,7 +319,7 @@
     }
     function openImagePreview(imagename)
     {
-        imagePreviewImage.src = "/img/" + imagename;
+        imagePreviewImage.src = "/public/img/" + imagename;
         imagePreview.style.display = "initial";
     }
     function hideImagePreview()

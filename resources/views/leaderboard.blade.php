@@ -3,10 +3,17 @@
 <div class="px-4 py-5 my-5 text-center">
     <div class="col-lg-3 mx-auto">
         <div class="border rounded-3 mx-5">
+            @if(Auth::check())
             <button onclick="switchRecordListMode()" class="btn btn-outline-dark"><b id="recordListLabel">
                 <span lang="en">Global best records:</span>
                 <span lang="lv">Globalie labakie rezultati:</span>
             </b></button>
+            @else
+            <h3>
+                <span lang="en">Global best records:</span>
+                <span lang="lv">Globalie labakie rezultati:</span>
+            </h3>
+            @endif
             <ol id="recordList"></ol>
         </div>
     </div>
@@ -61,6 +68,7 @@
                 recordListHtml += "<li> - </li>";
             }
         }
+        @if(Auth::check())
         else {
             j = 0;
             for (let i = 0; i < records.length; i++) {
@@ -79,6 +87,7 @@
                 recordListHtml += "<li> - </li>";
             }
         }
+        @endif
         document.getElementById('recordList').innerHTML = recordListHtml;
     }
 </script>

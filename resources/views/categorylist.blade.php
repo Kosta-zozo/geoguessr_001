@@ -12,6 +12,46 @@
     .highlight:hover {
         filter: brightness(110%); 
     }
+
+    .color-collection {
+        background-color: #f2f2f2;
+        background-color: #d6e5f0;
+        background-color: #75A2BF;
+        background-color: #5E8CAD;
+        background-color: #46769B;
+        background-color: #2F5F8A;
+        background-color: #174978;
+        background-color: #003366;
+    }
+    .ll-bg {
+        background-color: #d6e5f0;
+    }
+    .ll-bg-double {
+        /* background-color: #d0dee9; */
+        background: linear-gradient(90deg,#d0dee9 0%, #d0dee9 50%, #d6e5f0 50%, #d6e5f0 100%);
+    }
+    .ll-bg-selected-cat {
+        background-color: #46769B;
+        border-width: 0 4px 0 0;
+        border-color: #003366;
+    }
+    .ll-bg-selected-fil {
+        background-color: #46769B;
+        border-width: 0 0 6px 0;
+        border-color: #003366;
+    }
+    .ll-bg-edit {
+        background-color: #46769B;
+        border-width: 0;
+    }
+    .ll-bg-light {
+        border-width: 0;
+        background-color: #f2f2f2;
+    }
+    .ll-bg-delete {
+        border-width: 0;
+        background-color: #BA3F3F;
+    }
 </style>
 
 <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -31,35 +71,56 @@
 @endif
 
 <div class="row justify-content-center">
+<div class="col-6 row justify-content-center shadow p-0">
     @if(Auth::user()->admin)
-    <div class="col-3">
+    <div class="col-4 ll-bg">
         @if(Auth::user()->admin)
-            <a href="/addNewCategory" class="btn btn-primary border-dark rounded-0 m-1">
-                <span lang="en">Create a new category</span>
-                <span lang="lv">Izveidot jaunu temu</span>
+            <a href="/addNewCategory" class="btn btn-primary rounded-0 m-1 ll-bg-edit">
+                <span lang="en">Create a new category +</span>
+                <span lang="lv">Izveidot jaunu temu +</span>
             </a>
+            <h4>
+                <span lang="en">Category List: </span>
+                <span lang="lv">Temas saraksts: </span>
+            </h4>
         @endif
         <div class="overflow-auto" style="height: 680px;">
         @foreach ($categories as $category)
-            <div class="row align-content-start border border-2 border-dark m-2 p-2">
+            <div class="row align-content-start">
                 <div class="col">
                     <div class="m-0 d-flex justify-content-between">
-                        @if(Auth::user()->admin)
-                            <div class="col-4 row m-0">
-                                <button onclick="openDeleteWindow({{ $category['id'] }})" class="col-6 btn btn-danger border-dark rounded-0">
-                                    <span lang="en">Delete</span>
-                                    <span lang="lv">Dzest</span>
-                                </button>
-                                <a href="/{{ $category['id'] }}/editcategory" class="col-6 btn btn-primary border-dark rounded-0">
+                        <div class="dropdown col-5 m-0">
+                            <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-primary rounded-0 dropdown-toggle ll-bg-edit w-100 h-100">
+                                <span lang="en">Actions</span>
+                                <span lang="lv">Darbibas</span>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a href="/{{ $category['id'] }}/editcategory" class="dropdown-item">
                                     <span lang="en">Edit</span>
                                     <span lang="lv">Rediģet</span>
+                                    &#9998;
                                 </a>
-                                <!-- <a href="/{{ $category['id'] }}/deletecategory" class="btn btn-danger border-dark rounded-0 justify-content-end">Delete</a> -->
+                                <hr class="dropdown-divider">
+                                <button onclick="openDeleteWindow({{ $category['id'] }})" class="dropdown-item">
+                                    <span lang="en">Delete</span>
+                                    <span lang="lv">Dzest</span>
+                                    &#10005;
+                                </button>
                             </div>
-                        @endif
-                        <button id='categoryButton-{{ $category["name"] }}' categoryname='{{ $category["name"] }}' onclick='filterPlaces("{{ $category["name"] }}", "keep")' class="categoryButton col-8 m-0 btn btn-secondary border-dark rounded-0 text-start text-nowrap">
-                            <span lang="en">Category name: </span>
-                            <span lang="lv">Temas nosaukums: </span>
+                        </div>
+                        <!-- <div class="col-6 row m-0">
+                            <button onclick="openDeleteWindow({{ $category['id'] }})" class="col-6 btn btn-danger rounded-0 ll-bg-delete">
+                                <span lang="en">Delete</span>
+                                <span lang="lv">Dzest</span>
+                            </button>
+                            <a href="/{{ $category['id'] }}/editcategory" class="col-6 btn btn-primary rounded-0 ll-bg-edit">
+                                <span lang="en">Edit</span>
+                                <span lang="lv">Rediģet</span>
+                            </a>
+                        </div> -->
+                        <button id='categoryButton-{{ $category["name"] }}' categoryname='{{ $category["name"] }}' onclick='filterPlaces("{{ $category["name"] }}", "keep")' class="categoryButton col-7 m-0 btn btn-secondary rounded-0 text-start text-nowrap">
+                            <!-- <span lang="en">Category name: </span>
+                            <span lang="lv">Temas nosaukums: </span> -->
                             <b>{{ $category['name'] }}</b>
                         </button>
                     </div>
@@ -68,49 +129,48 @@
         @endforeach
         </div>
     </div>
-    <div class="col-2 border border-2 border-dark position-relative">
+    <div class="col-8 position-relative ll-bg-double">
         <hr class="mt-5 mb-0">
         <h3 id="placeListLabel" class="text-center m-2">Category name</h3>
-        <a href="/addNewPlace" class="btn btn-primary border-dark rounded-0 m-1 position-absolute top-0 end-0">
+        <a href="/addNewPlace" class="btn btn-primary rounded-0 m-1 position-absolute top-0 end-0 ll-bg-edit">
             <span lang="en">Create new place</span>
             <span lang="lv">Izveidot jaunu lokaciju</span>
         </a>
-        <p class="border border-dark rounded-0 m-1 py-1 px-2 position-absolute top-0 start-0">
+        <p class="m-1 py-1 px-2 position-absolute top-0 start-0">
             <span lang="en">Count: </span>
             <span lang="lv">Skaits: </span>
             <span id="placeCount"></span>
         </p>
         <div class="row">
-            <button id="placeFilterButton_current" onclick="filterPlaces(placeListLabel.innerHTML, 'current')" class="placeFilterButton col btn btn-primary border-dark rounded-0">
+            <button id="placeFilterButton_current" onclick="filterPlaces(placeListLabel.innerHTML, 'current')" class="placeFilterButton col btn btn-secondary rounded-0">
                 <span lang="en">Current</span>
                 <span lang="lv">Tekošie</span>
             </button>
-            <button id="placeFilterButton_free" onclick="filterPlaces(placeListLabel.innerHTML, 'free')" class="placeFilterButton col btn btn-primary border-dark rounded-0">
+            <button id="placeFilterButton_free" onclick="filterPlaces(placeListLabel.innerHTML, 'free')" class="placeFilterButton col btn btn-secondary rounded-0">
                 <span lang="en">Free</span>
                 <span lang="lv">Pieejamie</span>
             </button>
-            <button id="placeFilterButton_all" onclick="filterPlaces(placeListLabel.innerHTML, 'all')" class="placeFilterButton col btn btn-primary border-dark rounded-0">
+            <button id="placeFilterButton_all" onclick="filterPlaces(placeListLabel.innerHTML, 'all')" class="placeFilterButton col btn btn-secondary rounded-0">
                 <span lang="en">All</span>
                 <span lang="lv">Visi</span>
             </button>
         </div>
-        <div class="overflow-auto" style="height: 680px;">
-            
+        <div class="overflow-auto row" style="height: 680px;">
             @foreach ($places as $place)
-            <div id="placeCard_{{ $place['id'] }}" placeid="{{ $place['id'] }}" class="placeCard position-relative">
+            <div id="placeCard_{{ $place['id'] }}" placeid="{{ $place['id'] }}" class="placeCard col-6 position-relative">
                 <input type="hidden" value="{{ $place['name'] }}"> <!-- for filtering -->
                 <div id="placeLoadingScreen_{{ $place['id'] }}" class="position-absolute w-100 h-100 start-0" style="background-color: rgba(255, 255, 255, 0.5); z-index: -1;"></div>
-                <div class="border border-2 border-dark m-2 p-2 ">
+                <div class="m-2 p-2">
                     <!-- <div class="col-3">
                         {{ $place['name'] }}
                     </div> -->
                     <div class="w-100">
                         <div class="row">
                         <div class="col-6 pe-0">
-                            <img onclick="openImagePreview('{{ $place['image_name'] }}');" src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid border border-2 border-dark h-100 highlight" style="cursor: pointer;">
+                            <img onclick="openImagePreview('{{ $place['image_name'] }}');" src="/img/{{ $place['image_name'] }}" alt="image not found" class="img-fluid h-100 highlight" style="cursor: pointer;">
                         </div>
                         <div class="col-6 ps-0 position-relative">
-                            <div class="position-relative h-100 bg-secondary border border-dark text-light text-truncate">
+                            <div class="position-relative h-100 bg-secondary text-light text-truncate">
                                 <p class="m-1">
                                     <span lang="en">Lat: </span>
                                     <span lang="lv">Plat: </span>
@@ -121,7 +181,7 @@
                                     <span lang="lv">Gar: </span>
                                     <b>{{ $place['lng'] }}</b>
                                 </p>
-                                <button onclick="openMapPreview({{ $place['lat'] }}, {{ $place['lng'] }}, '{{ $place['image_name'] }}')" class="btn btn-info border-dark rounded-0 w-100">
+                                <button onclick="openMapPreview({{ $place['lat'] }}, {{ $place['lng'] }}, '{{ $place['image_name'] }}')" class="btn btn-info rounded-0 w-100">
                                     <span lang="en">Map</span>
                                     <span lang="lv">Mape</span>
                                 </button>
@@ -131,7 +191,7 @@
                     </div>
                     <div class="row">
                         <div id="detachButton_{{ $place['id'] }}" class="col-12">
-                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); detachPlace('{{ $place['id'] }}')" class="btn btn-warning border-dark rounded-0 w-100">
+                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); detachPlace('{{ $place['id'] }}')" class="btn btn-warning rounded-0 w-100">
                                 >>>
                                 <span lang="en">Detach</span>
                                 <span lang="lv">Izņemt</span>
@@ -139,20 +199,20 @@
                             </a>
                         </div>
                         <div id="attachButton_{{ $place['id'] }}" class="col-12">
-                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-success border-dark rounded-0 w-100">
+                            <a href="javascript:void(0)" onclick="activatePlaceLoadingScreen({{ $place['id'] }}); attachPlace('{{ $place['id'] }}', selectedCategory)" class="btn btn-success rounded-0 w-100">
                                 <<<
                                 <span lang="en">Attach</span>
                                 <span lang="lv">Pievienot</span>
                             </a>
                         </div>
                         <div class="col-6 pe-0">
-                            <a href="/{{ $place['id'] }}/editplace" class="btn btn-primary border-dark rounded-0 w-100">
+                            <a href="/{{ $place['id'] }}/editplace" class="btn btn-primary rounded-0 w-100 ll-bg-edit">
                                 <span lang="en">Edit</span>
                                 <span lang="lv">Rediģet</span>
                             </a>
                         </div>
                         <div class="col-6 ps-0">
-                            <button onclick="openDeletePlaceWindow({{ $place['id'] }})" class="btn btn-danger border-dark rounded-0 w-100">
+                            <button onclick="openDeletePlaceWindow({{ $place['id'] }})" class="btn btn-danger rounded-0 w-100 ll-bg-delete">
                                 <span lang="en">Delete</span>
                                 <span lang="lv">Dzest</span>
                             </button>
@@ -174,6 +234,7 @@
         </h3>
     </div>
     @endif
+</div>
 </div>
 
 <div id="deleteConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
@@ -383,10 +444,12 @@
             {
                 categoryButtons[i].classList.remove('btn-secondary');
                 categoryButtons[i].classList.add('btn-primary');
+                categoryButtons[i].classList.add('ll-bg-selected-cat');
             }
             else
             {
                 categoryButtons[i].classList.remove('btn-primary');
+                categoryButtons[i].classList.remove('ll-bg-selected-cat');
                 categoryButtons[i].classList.add('btn-secondary');
             }
         }
@@ -398,10 +461,12 @@
             {
                 placeFilterButtons[i].classList.remove('btn-secondary');
                 placeFilterButtons[i].classList.add('btn-primary');
+                placeFilterButtons[i].classList.add('ll-bg-selected-fil');
             }
             else
             {
                 placeFilterButtons[i].classList.remove('btn-primary');
+                placeFilterButtons[i].classList.remove('ll-bg-selected-fil');
                 placeFilterButtons[i].classList.add('btn-secondary');
             }
         }

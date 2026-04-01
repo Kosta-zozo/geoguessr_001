@@ -7,6 +7,10 @@
     {
         display: none !important;
     }
+
+    #body {
+        background-color: #f2f2f2;
+    }
 </style>
 
 <head>

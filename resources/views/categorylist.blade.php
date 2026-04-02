@@ -140,6 +140,7 @@
             <span lang="en">Count: </span>
             <span lang="lv">Skaits: </span>
             <span id="placeCount"></span>
+            <span onclick="alert(getCountMessage())" style="cursor: pointer;">&#8505;</span>
         </p>
         <div class="row">
             <button id="placeFilterButton_current" onclick="filterPlaces(placeListLabel.innerHTML, 'current')" class="placeFilterButton col btn btn-secondary rounded-0">
@@ -559,6 +560,14 @@
     function deactivatePlaceLoadingScreen(id)
     {
         document.getElementById('placeLoadingScreen_' + id).style.zIndex = "-1";
+    }
+
+    function getCountMessage()
+    {
+        if(sessionStorage.getItem("language") == "lv")
+            return "Lai ši tema butu pieejama spelei, tajā jabut vismaz 5 lokacijas.";
+        else
+            return "For this category to be playable, it should hold atleast 5 locations.";
     }
 </script>
 @endsection

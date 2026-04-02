@@ -4,26 +4,58 @@
 
 <style>
     #map {
-        border: 1px solid black;
+        /* border: 1px solid black;
         height: 350px;
-        position: relative;
+        position: relative; */
+        height: calc(100% - 57px);
         cursor: pointer;
         pointer-events: auto;
     }
     #placeImage {
-        border: 1px solid black;
+        /* border: 1px solid black; */
     }
     #countdownline {
         position: absolute;
-        background-color: red;
-        border: 2px black solid;
-        border-radius: 5px 0px 0px 0px;
+        background-color: #BA3F3F;
         width: calc(100% - 24px);
         height: 10px;
         top: 0;
     }
+    #leaflet-menu {
+        position: fixed;
+        height: 800px;
+        width: 300px;
+        left: 0;
+        top: 50%;
+        z-index: 400;
+        translate: 0 -50%;
+        /* background-color: #d6e5f0; */
+        /* background-image: linear-gradient(to bottom, #75A2BF, #d6e5f0); */
+        background: linear-gradient(180deg, #75A2BF 0%, #d6e5f0 30%, #d6e5f0 95%, #46769B 100%);
+    }
+    #timer-holder {
+        position: fixed;
+        width: 100px;
+        padding: 10px;
+        text-align: center;
+        left: 50%;
+        top: 10%;
+        z-index: 400;
+        translate: -50% 0;
+        background-color: #d6e5f0;
+    }
+    .ll-bg-confirm {
+        background-color: #46769B;
+        border-width: 0;
+        width: 100%;
+        height: 50px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        translate: -50% 0;
+    }
 </style>
-<div class="px-4 py-3 my-2 text-center">
+<!-- <div class="px-4 py-3 my-2 text-center">
     <h1 class="display-5 fw-bold text-body-emphasis my-2">
         <span lang="en">Geolocation guesser</span>
         <span lang="lv">Geolokacijas minetajs</span>
@@ -101,12 +133,68 @@
             </p>
         </div>
     </div>
+</div> -->
+<div id="map"></div>
+<div id="leaflet-menu" class="p-3 shadow">
+    <h3 id="message" style="color:white;">
+        <span lang="en">Choose the point on the map</span>
+        <span lang="lv">Izvelies punktu mapē</span>
+    </h3>
+    <div class="position-relative"  style="">
+        <img id="placeImage" src="/img/placeholder.jpg" alt="place num.1" class="" width="100%" style="height: 300px;">
+        <div id="countdownline"></div>
+    </div>
+    <form id="result_form" action="/submitResult" method="post">
+        @csrf
+        <input type="hidden" id="result_place_id" name="place_id" value="1">
+        <input type="hidden" id="result_user_id" name="user_id" value="1">
+        <input type="hidden" id="result_result" name="result" value="0.4">
+        <input type="hidden" id="result_distance" name="distance" value="0.4">
+        <input type="hidden" id="result_wasted_time" name="wasted_time" value="00:01:11">
+        <input type="hidden" id="result_created_date" name="created_date" value="2000-01-01">
+        <input type="hidden" id="result_serieCount" name="serieCount" value="0">
+        <input type="hidden" id="result_usedIdArray" name="usedIdArray">
+        <input type="hidden" id="result_resultArray" name="resultArray">
+        <input type="hidden" id="result_category" name="category" value="{{ $category }}">
+        <input type="hidden" id="result_difficulty" name="difficulty" value="{{ $difficulty }}">
+        <button type="submit" id="continueButton" class="ll-bg-confirm btn btn-primary rounded-0">
+            <span lang="en">Continue</span>
+            <span lang="lv">Turpinat</span>
+        </button>
+        <button type="button" id="confirmButton" onclick="confirmInput()" class="ll-bg-confirm btn btn-primary rounded-0">
+            <span lang="en">Confirm</span>
+            <span lang="lv">Apstiprinat</span>
+        </button>
+    </form>
+    <br>
+    <h4>
+        <span lang="en">Current position:</span>
+        <span lang="lv">Tekoša pozicija:</span>
+    </h4>
+    <p id="coordinates">
+        Latitude:
+        <span id="latDisplay"> - </span>
+        <br>
+        Longitude:
+        <span id="lngDisplay"> - </span>
+    </p>
+    <h4>
+        <span lang="en">Result:</span>
+        <span lang="lv">Rezultats:</span>
+    </h4>
+    <p id="result">
+        <span lang="en">Result</span>
+        <span lang="lv">Rezultats</span>
+    </p>
+</div>
+<div id="timer-holder" class="shadow opacity-75">
+    <h5 id="timer" class="mb-0">Timer</h5>
 </div>
 
 <script>
     // ///<<< MAP VERSION 2 >>>\\\
     
-    var map = L.map('map').setView([51.505, -0.09], 2);
+    var map = L.map('map').setView([51.505, -0.09], 3);
     var marker;
 
     var mapEnabled = true;
@@ -161,7 +249,7 @@
     }
 
     function disableZoom(){
-        map.zoomControl.disable()
+        // map.zoomControl.disable()
         map.scrollWheelZoom.disable()
 
     }
@@ -202,7 +290,7 @@
 
     var pageIsLoaded = false;
 
-    updateRecordList();
+    // updateRecordList();
 
     hideConfirmButton();
     continueButton.style.display = "none";
@@ -212,6 +300,7 @@
         pageIsLoaded= true;
     });
 
+    map.zoomControl.remove();
     @if($difficulty != 'hard')
         countdownline.remove();
     @endif
@@ -227,12 +316,12 @@
         // TIMER
         if (!inputConfirmed)
         {
-            timer.innerHTML = secondsToTime(Math.trunc((new Date() - startTime) / 100) / 10);
+            timer.innerHTML = secondsToTime(60 - Math.trunc((new Date() - startTime) / 100) / 10);
                 
             @if($difficulty == 'hard')
                 if (document.getElementById('countdownline') !== null && pageIsLoaded)
                 {
-                    if (timer.innerHTML >= 5)
+                    if (timer.innerHTML <= 55)
                     {
                         placeImage.src = "/img/restricted.png";
                         countdownline.remove();
@@ -265,7 +354,7 @@
 
         hideConfirmButton();
 
-        updateRecordList();
+        // updateRecordList();
     }
 
     function confirmInput() {
@@ -285,11 +374,15 @@
             '<span lang="en"> points</span>'+
             '<span lang="lv"> punktu</span>'+
             '<br>'+
-            '<span lang="en">You were </span>'+
-            '<span lang="lv">Jus bijat </span>'+
+            // '<span lang="en">You were </span>'+
+            // '<span lang="lv">Jus bijat </span>'+
+            '<span lang="en">To the destination is </span>'+
+            '<span lang="lv">Lidz galapunktai ir </span>'+
             Math.round(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng))) / 1000 +
-            '<span lang="en">km close</span>'+
-            '<span lang="lv">km tuvu</span>';
+            // '<span lang="en">km close</span>'+
+            // '<span lang="lv">km tuvu</span>';
+            '<span lang="en">km</span>'+
+            '<span lang="lv">km</span>';
         // // show message
         document.getElementById('message').innerHTML = 
             '<span lang="en">You can view your results and go to next game</span>'+

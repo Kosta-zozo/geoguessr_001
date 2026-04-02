@@ -19,7 +19,7 @@
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap"></use>
             </svg>
-            <span class="fs-4">Geolocation guesser</span>
+            <span class="fs-4 text-light">Geolocation guesser</span>
         </a>
         <ul class="nav nav-pills">
             <li class="nav-item">

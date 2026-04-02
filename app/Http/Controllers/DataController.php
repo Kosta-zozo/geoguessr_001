@@ -166,7 +166,8 @@ class DataController extends Controller
         'category_id' => $data['category'] == 'NULL' ? null : $data['category'],
         'difficulty' => $data['difficulty']
         ]);
-        return redirect()->to('/addNewPlace')->with('message','New place added successfully!');
+        return redirect()->to('/categorylist')->with('message','Jauna lokacija ir izveidota!');
+        // return redirect()->to('/categorylist')->with('message','New place added successfully!');
     }
     public function placelist() {
         $places = places::join('countries', 'countries.id', '=', 'places.country_id')

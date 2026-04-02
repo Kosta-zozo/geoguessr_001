@@ -144,12 +144,12 @@
         </p>
         <div class="row">
             <button id="placeFilterButton_current" onclick="filterPlaces(placeListLabel.innerHTML, 'current')" class="placeFilterButton col btn btn-secondary rounded-0">
-                <span lang="en">Current</span>
-                <span lang="lv">Tekošie</span>
+                <span lang="en">Connected</span>
+                <span lang="lv">Izmantotie</span>
             </button>
             <button id="placeFilterButton_free" onclick="filterPlaces(placeListLabel.innerHTML, 'free')" class="placeFilterButton col btn btn-secondary rounded-0">
-                <span lang="en">Free</span>
-                <span lang="lv">Pieejamie</span>
+                <span lang="en">Available</span>
+                <span lang="lv">Neizmantotie</span>
             </button>
             <button id="placeFilterButton_all" onclick="filterPlaces(placeListLabel.innerHTML, 'all')" class="placeFilterButton col btn btn-secondary rounded-0">
                 <span lang="en">All</span>
@@ -159,7 +159,13 @@
         <div class="overflow-auto row" style="height: 680px;">
             @foreach ($places as $place)
             <div id="placeCard_{{ $place['id'] }}" placeid="{{ $place['id'] }}" class="placeCard col-6 position-relative">
-                <input type="hidden" value="{{ $place['name'] }}"> <!-- for filtering -->
+                <!-- Connections -->
+                @foreach ($connections as $connection)
+                    @if ($connection['place_id'] == $place['id'])
+                        <input type="hidden" class="placeCardConnection_{{ $place['id'] }}" placeid="{{ $place['id'] }}"  categoryname="{{ $connection['name'] }}">
+                    @endif
+                @endforeach
+                <!-- <input type="hidden" value=""> for filtering -->
                 <div id="placeLoadingScreen_{{ $place['id'] }}" class="position-absolute w-100 h-100 start-0" style="background-color: rgba(255, 255, 255, 0.5); z-index: -1;"></div>
                 <div class="m-2 p-2">
                     <!-- <div class="col-3">
@@ -347,7 +353,7 @@
     hideMapPreview();
     hideImagePreview();
     filterPlaces(categoryButtons[0].attributes.categoryname.value, "current");
-    handleAttachmentButtons();
+    // handleAttachmentButtons();
 
     function openDeleteWindow(id)
     {
@@ -393,28 +399,53 @@
     {
         if (mode == "keep")
             mode = lastFilterMode;
-        if (mode == "current")
+        if (mode == "current" || mode == "free")
         {
             for (let i = 0; i < placeCards.length; i++) {
-                if (placeCards[i].firstElementChild.value == name)
-                    placeCards[i].style.display = 'initial';
-                else
-                    placeCards[i].style.display = 'none';
+                let placeCardConnections = document.getElementsByClassName('placeCardConnection_' + placeCards[i].attributes.placeid.value);
+                placeCards[i].style.display = mode == "current" ? 'none' : 'initial';
+                document.getElementById('detachButton_' + placeCards[i].attributes.placeid.value).style.display = 'none';
+                document.getElementById('attachButton_' + placeCards[i].attributes.placeid.value).style.display = 'initial';
+
+                if (placeCardConnections.length == 0) continue;
+                
+                for (let j = 0; j < placeCardConnections.length; j++)
+                {
+                    if (placeCardConnections[j].attributes.categoryname.value == name)
+                    {
+                        placeCards[i].style.display = mode == "current" ? 'initial' : 'none';
+
+                        document.getElementById('detachButton_' + placeCards[i].attributes.placeid.value).style.display = 'initial';
+                        document.getElementById('attachButton_' + placeCards[i].attributes.placeid.value).style.display = 'none';
+
+                        break;
+                    }
+                }
             }
         }
         else if (mode == "all")
         {
+            // for (let i = 0; i < placeCards.length; i++) {
+            //     placeCards[i].style.display = 'initial';
+            // }
             for (let i = 0; i < placeCards.length; i++) {
+                let placeCardConnections = document.getElementsByClassName('placeCardConnection_' + placeCards[i].attributes.placeid.value);
                 placeCards[i].style.display = 'initial';
-            }
-        }
-        else
-        {
-            for (let i = 0; i < placeCards.length; i++) {
-                if (placeCards[i].firstElementChild.value == '')
-                    placeCards[i].style.display = 'initial';
-                else
-                    placeCards[i].style.display = 'none';
+                document.getElementById('detachButton_' + placeCards[i].attributes.placeid.value).style.display = 'none';
+                document.getElementById('attachButton_' + placeCards[i].attributes.placeid.value).style.display = 'initial';
+
+                if (placeCardConnections.length == 0) continue;
+                
+                for (let j = 0; j < placeCardConnections.length; j++)
+                {
+                    if (placeCardConnections[j].attributes.categoryname.value == name)
+                    {
+                        document.getElementById('detachButton_' + placeCards[i].attributes.placeid.value).style.display = 'initial';
+                        document.getElementById('attachButton_' + placeCards[i].attributes.placeid.value).style.display = 'none';
+
+                        break;
+                    }
+                }
             }
         }
         setPlaceListLabel(name);
@@ -505,7 +536,7 @@
             {
                 let temp = document.getElementById('placeCard_' + id).firstElementChild.value;
                 document.getElementById('placeCard_' + id).firstElementChild.value = '';
-                handleAttachmentButtons();
+                // handleAttachmentButtons();
                 filterPlaces(temp, 'current');
                 deactivatePlaceLoadingScreen(id);
             }
@@ -526,7 +557,7 @@
             success:function(result)
             {
                 document.getElementById('placeCard_' + id).firstElementChild.value = category;
-                handleAttachmentButtons();
+                // handleAttachmentButtons();
                 document.getElementById('detachButtonCategory_' + id).innerHTML = '(' + category + ')';
                 filterPlaces(category, 'free'); //result['category']
                 deactivatePlaceLoadingScreen(id);

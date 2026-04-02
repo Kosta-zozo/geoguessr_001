@@ -8,6 +8,7 @@ use App\Models\places;
 use App\Models\results;
 use App\Models\serie_results;
 use App\Models\categories;
+use App\Models\category_place_connections;
 use App\Models\countries;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -216,7 +217,12 @@ class DataController extends Controller
         return redirect()->to('/categorylist')->with('message','New category added successfully!');
     }
     public function categorylist() {
-        return view('/categorylist', ['categories' => (new categories())->get(), 'places' => (new places())->leftJoin('categories', 'categories.id', '=', 'category_id')->select('places.*', 'categories.name')->get()]);
+        $places = (new places())->get();
+            // dd($places);
+        $connections = (new category_place_connections())
+            ->leftJoin('categories', 'categories.id', '=', 'category_place_connections.category_id')
+            ->select('category_place_connections.place_id', 'categories.name')->get();
+        return view('/categorylist', ['categories' => (new categories())->get(), 'places' => $places, 'connections' => $connections]);
     }
     public function deletecategory($id) {
         if (!Auth::user()->admin)

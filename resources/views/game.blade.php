@@ -83,7 +83,7 @@
                         <div id="map" class="rounded-3"></div>
                     </div>
                     <div class="col-6"  style="position: relative;">
-                        <img id="placeImage" src="/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                        <img id="placeImage" src="/public/img/placeholder.jpg" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                         <div id="countdownline"></div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@
 
     function drawMarker(lat, lng, changedMarker = false, clearLast = true){
         var myIcon = L.icon({
-            iconUrl: '/greenMarker.png',
+            iconUrl: '/public/greenMarker.png',
             iconSize: [50, 50],
             iconAnchor: [25, 50]
         });
@@ -323,7 +323,7 @@
                 {
                     if (timer.innerHTML <= 55)
                     {
-                        placeImage.src = "/img/restricted.png";
+                        placeImage.src = "/public/img/restricted.png";
                         countdownline.remove();
                     }
                     else
@@ -348,7 +348,7 @@
     // }
     function selectGame(imageArrayId){
         currentImageArrayId = imageArrayId;
-        document.getElementById("placeImage").src = "/img/" + images[imageArrayId][2];
+        document.getElementById("placeImage").src = "/public/img/" + images[imageArrayId][2];
         inputReceived = false;
         inputConfirmed = false;
 

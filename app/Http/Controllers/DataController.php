@@ -8,6 +8,7 @@ use App\Models\places;
 use App\Models\results;
 use App\Models\serie_results;
 use App\Models\categories;
+use App\Models\category_place_connections;
 use App\Models\countries;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -166,7 +167,8 @@ class DataController extends Controller
         'category_id' => $data['category'] == 'NULL' ? null : $data['category'],
         'difficulty' => $data['difficulty']
         ]);
-        return redirect()->to('/addNewPlace')->with('message','New place added successfully!');
+        return redirect()->to('/categorylist')->with('message','Jauna lokacija ir izveidota!');
+        // return redirect()->to('/categorylist')->with('message','New place added successfully!');
     }
     public function placelist() {
         $places = places::join('countries', 'countries.id', '=', 'places.country_id')
@@ -215,7 +217,12 @@ class DataController extends Controller
         return redirect()->to('/categorylist')->with('message','New category added successfully!');
     }
     public function categorylist() {
-        return view('/categorylist', ['categories' => (new categories())->get(), 'places' => (new places())->leftJoin('categories', 'categories.id', '=', 'category_id')->select('places.*', 'categories.name')->get()]);
+        $places = (new places())->get();
+            // dd($places);
+        $connections = (new category_place_connections())
+            ->leftJoin('categories', 'categories.id', '=', 'category_place_connections.category_id')
+            ->select('category_place_connections.place_id', 'categories.name')->get();
+        return view('/categorylist', ['categories' => (new categories())->get(), 'places' => $places, 'connections' => $connections]);
     }
     public function deletecategory($id) {
         if (!Auth::user()->admin)

@@ -7,8 +7,16 @@
         .first {
             padding-left: 25px;
         }
-        button {
-            width: 100%;
+        .button1 {
+            width: 20%;
+            height: 30px;
+        }
+        .button2 {
+            width: 20%;
+            height: 30px;
+        }
+        .button3 {
+            width: 55%;
             height: 30px;
         }
         .nametag {
@@ -60,7 +68,13 @@
 </head>
 <body>
     <!-- <button onclick="if (confirm('Уверен?')) main()"> -->
-    <button onclick="main()">
+    <button onclick="toggleArren()" class="button1">
+        Аррены
+    </button>
+    <button onclick="toggleTargarien()" class="button2">
+        Таргариены
+    </button>
+    <button onclick="main()" class="button3">
         Размешать
     </button>
     <br><br>
@@ -75,8 +89,8 @@
         <img src="public/images/TargarienB/4-Dayeneris_Targarien.png" alt="image not found" power="7">
     </div>
     <hr> -->
-    <div class="deck">
-        <input class="nametag purple" value="Костя">
+    <div id="targarienDeck" class="deck">
+        <input id="targarienNametag" class="nametag purple" value="Костя">
         <img src="public/gotr/TargarienA/0-Illirio_Mopatis.png" alt="image not found" class="first" power="1">
         <img src="public/gotr/TargarienA/1-Daeneris_Targarien.png" alt="image not found" power="2">
         <img src="public/gotr/TargarienA/1-Vizeris_Targarien.png" alt="image not found" power="3">
@@ -86,8 +100,8 @@
         <img src="public/gotr/TargarienA/4-Khal_Grogo.png" alt="image not found" power="7">
     </div>
     <hr>
-    <div class="deck">
-        <input class="nametag blue" value="Андрей">
+    <div id="arrenDeck" class="deck">
+        <input id="arrenNametag" class="nametag blue" value="Андрей">
         <img src="public/gotr/Arren/0-Robert_Arren.png" alt="image not found" class="first" power="1">
         <img src="public/gotr/Arren/1-Anya_Yeinvud.png" alt="image not found" power="2">
         <img src="public/gotr/Arren/1-Godrik_Borrel.png" alt="image not found" power="3">
@@ -204,5 +218,32 @@
             if (i == temp.length - 1) temp.pop();
             else temp[i] = temp[i + 1];
         }
+    }
+
+    function toggleTargarien() {
+        if (targarienDeck.style.display == '')
+        {
+            targarienDeck.style.display = 'none';
+            targarienNametag.classList.remove("nametag");
+        }
+        else
+        {
+            targarienDeck.style.display = '';
+            targarienNametag.classList.add("nametag");
+        }
+        nameArray = document.getElementsByClassName('nametag');
+    }
+    function toggleArren() {
+        if (arrenDeck.style.display == '')
+        {
+            arrenDeck.style.display = 'none';
+            arrenNametag.classList.remove("nametag");
+        }
+        else
+        {
+            arrenDeck.style.display = '';
+            arrenNametag.classList.add("nametag");
+        }
+        nameArray = document.getElementsByClassName('nametag');
     }
 </script>

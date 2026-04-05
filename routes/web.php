@@ -67,3 +67,7 @@ Route::delete('/attachPlace/{id}/{category}', 'App\Http\Controllers\DataControll
 Route::delete('/deletePlaceFromCard/{id}', 'App\Http\Controllers\DataController@deletePlaceFromCard')->middleware('auth');
 
 Route::get('/leaderboard', 'App\Http\Controllers\DataController@leaderboard');
+
+Route::get('/gotr', function () {
+    return view('gotr');
+});

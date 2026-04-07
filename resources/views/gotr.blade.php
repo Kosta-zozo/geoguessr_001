@@ -7,8 +7,16 @@
         .first {
             padding-left: 25px;
         }
-        button {
-            width: 100%;
+        .button1 {
+            width: 20%;
+            height: 30px;
+        }
+        .button2 {
+            width: 20%;
+            height: 30px;
+        }
+        .button3 {
+            width: 55%;
             height: 30px;
         }
         .nametag {
@@ -222,4 +230,20 @@
         {
             targarienDeck.style.display = '';
             targarienNametag.classList.add("nametag");
+        }
+        nameArray = document.getElementsByClassName('nametag');
+    }
+    function toggleArren() {
+        if (arrenDeck.style.display == '')
+        {
+            arrenDeck.style.display = 'none';
+            arrenNametag.classList.remove("nametag");
+        }
+        else
+        {
+            arrenDeck.style.display = '';
+            arrenNametag.classList.add("nametag");
+        }
+        nameArray = document.getElementsByClassName('nametag');
+    }
 </script>

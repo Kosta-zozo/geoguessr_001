@@ -62,9 +62,10 @@ Route::get('/{id}/deletecategory', 'App\Http\Controllers\DataController@deleteca
 Route::get('/{id}/editcategory', 'App\Http\Controllers\DataController@openEditorCategory')->middleware('auth');
 Route::post('/editCategory', 'App\Http\Controllers\DataController@editCategory')->middleware('auth');
 
-Route::delete('/detachPlace/{id}', 'App\Http\Controllers\DataController@detachPlace')->middleware('auth');
+Route::delete('/detachPlace/{id}/{category}', 'App\Http\Controllers\DataController@detachPlace')->middleware('auth');
 Route::delete('/attachPlace/{id}/{category}', 'App\Http\Controllers\DataController@attachPlace')->middleware('auth');
 Route::delete('/deletePlaceFromCard/{id}', 'App\Http\Controllers\DataController@deletePlaceFromCard')->middleware('auth');
+Route::delete('/editCategoryDifficulty/{id}/{diff}/{checked}', 'App\Http\Controllers\DataController@editCategoryDifficulty')->middleware('auth');
 
 Route::get('/leaderboard', 'App\Http\Controllers\DataController@leaderboard');
 

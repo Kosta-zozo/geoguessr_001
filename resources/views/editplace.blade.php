@@ -76,11 +76,11 @@
                 <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
                 @endforeach
             </select><br>
-            <label for="form-category">
+            <label for="form-category" style="display:none;">
                 <span lang="en">Choose category</span>
                 <span lang="lv">Izvelies temu</span>
             </label>
-            <select name="category" id="form-category" class="form-control">
+            <select name="category" id="form-category" class="form-control" style="display:none;">
                 <option value=NULL>-</option>
                 @foreach ($categories as $category)
                 <option value="{{ $category['id'] }}" @if($category['id'] == $place['category_id']) selected @endif>{{ $category['name'] }}</option>

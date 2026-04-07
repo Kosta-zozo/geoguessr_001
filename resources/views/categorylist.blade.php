@@ -4,7 +4,7 @@
 
 <style>
     #map {
-        border: 1px solid black;
+        /* border: 1px solid black; */
         width: 450px;
         height: 350px;
         position: relative;
@@ -73,7 +73,7 @@
 <div class="row justify-content-center">
 <div class="col-6 row justify-content-center shadow p-0">
     @if(Auth::user()->admin)
-    <div class="col-4 ll-bg">
+    <div class="col-4 ll-bg" style="position: relative;">
         @if(Auth::user()->admin)
             <a href="/addNewCategory" class="btn btn-primary rounded-0 m-1 ll-bg-edit">
                 <span lang="en">Create a new category +</span>
@@ -82,14 +82,16 @@
             <h4>
                 <span lang="en">Category List: </span>
                 <span lang="lv">Temas saraksts: </span>
+                <span onclick="alert(getDiffMessage())" style="cursor: pointer;">&#8505;</span>
             </h4>
+            <img id="categoryImagePreview" src="img/placeholder.jpg" alt="image not found" style="position: absolute; top:5px; right:12px; width: 70px; height:70px;">
         @endif
         <div class="overflow-auto" style="height: 680px;">
         @foreach ($categories as $category)
             <div class="row align-content-start">
                 <div class="col">
                     <div class="m-0 d-flex justify-content-between">
-                        <div class="dropdown col-5 m-0">
+                        <div class="dropdown col-4 m-0">
                             <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-primary rounded-0 dropdown-toggle ll-bg-edit w-100 h-100">
                                 <span lang="en">Actions</span>
                                 <span lang="lv">Darbibas</span>
@@ -118,9 +120,12 @@
                                 <span lang="lv">Rediģet</span>
                             </a>
                         </div> -->
-                        <button id='categoryButton-{{ $category["name"] }}' categoryname='{{ $category["name"] }}' onclick='filterPlaces("{{ $category["name"] }}", "keep")' class="categoryButton col-7 m-0 btn btn-secondary rounded-0 text-start text-nowrap">
+                        <button id='categoryButton-{{ $category["name"] }}' categoryname='{{ $category["name"] }}' onclick='filterPlaces("{{ $category["name"] }}", "keep"); changeCategoryImagePreview("{{ $category["image_name"] }}")' class="categoryButton col-8 m-0 btn btn-secondary rounded-0 text-start text-nowrap">
                             <!-- <span lang="en">Category name: </span>
                             <span lang="lv">Temas nosaukums: </span> -->
+                            <input id="easyCategoryDiff_{{ $category['id'] }}" type="checkbox" onclick="editCategoryDifficulty({{ $category['id'] }}, 'easy')" class="rounded-0" style="accent-color: green;" @if($category['easy']) checked @endif>
+                            <input id="mediumCategoryDiff_{{ $category['id'] }}" type="checkbox" onclick="editCategoryDifficulty({{ $category['id'] }}, 'medium')" class="rounded-0" style="accent-color: orange;" @if($category['medium']) checked @endif>
+                            <input id="hardCategoryDiff_{{ $category['id'] }}" type="checkbox" onclick="editCategoryDifficulty({{ $category['id'] }}, 'hard')" class="rounded-0" style="accent-color: #BA3F3F;" @if($category['hard']) checked @endif>
                             <b>{{ $category['name'] }}</b>
                         </button>
                     </div>
@@ -202,7 +207,6 @@
                                 >>>
                                 <span lang="en">Detach</span>
                                 <span lang="lv">Izņemt</span>
-                                <span id="detachButtonCategory_{{ $place['id'] }}" style="font-size: 14px;">({{ $place['name'] }})</span>
                             </a>
                         </div>
                         <div id="attachButton_{{ $place['id'] }}" class="col-12">
@@ -244,7 +248,7 @@
 </div>
 </div>
 
-<div id="deleteConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+<div id="deleteConfirmation" class="position-fixed top-50 start-50 translate-middle bg-light shadow-lg p-3">
     <h4 id="deleteHeader">
         <span lang="en">Are you sure you want to delete this category?</span>
         <span lang="lv">Vai tiešām vēlaties dzēst to temu?</span>
@@ -253,17 +257,17 @@
         <span lang="en">(it will delete all connected places and records)</span>
         <span lang="lv">(tas izdzēsīs visas pievienotās vietas un rezultatus)</span>
     </p>
-    <a id="deleteButton" href="/VALUE/deletecategory" class="btn btn-danger border-dark rounded-0">
+    <a id="deleteButton" href="/VALUE/deletecategory" class="btn btn-danger rounded-0">
         <span lang="en">Delete</span>
         <span lang="lv">Dzest</span>
     </a>
-    <button onclick="hideDeleteWindow()" class="btn btn-primary border-dark rounded-0">
+    <button onclick="hideDeleteWindow()" class="btn btn-primary rounded-0">
         <span lang="en">Cancel</span>
         <span lang="lv">Atcelt</span>
     </button>
 </div>
 
-<div id="deletePlaceConfirmation" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+<div id="deletePlaceConfirmation" class="position-fixed top-50 start-50 translate-middle bg-light shadow-lg p-3">
     <h4 id="deletePlaceHeader">
         <span lang="en">Are you sure you want to delete this place?</span>
         <span lang="lv">Vai tiešām vēlaties dzest to lokaciju?</span>
@@ -272,45 +276,45 @@
         <span lang="en">(it will delete all connected records)</span>
         <span lang="lv">(tas izdzēsīs visus pievienotus rezultatus)</span>
     </p>
-    <buttom id="deletePlaceButton" class="btn btn-danger border-dark rounded-0">
+    <buttom id="deletePlaceButton" class="btn btn-danger rounded-0">
         <span lang="en">Delete</span>
         <span lang="lv">Dzest</span>
     </buttom>
-    <button onclick="hideDeletePlaceWindow()" class="btn btn-primary border-dark rounded-0">
+    <button onclick="hideDeletePlaceWindow()" class="btn btn-primary rounded-0">
         <span lang="en">Cancel</span>
         <span lang="lv">Atcelt</span>
     </button>
 </div>
-<div id="mapPreview" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+<div id="mapPreview" class="position-fixed top-50 start-50 translate-middle bg-light shadow-lg p-3">
     <div class="row">
         <h4 class="col-6">
             <span lang="en">Location preview</span>
             <span lang="lv">Lokacijas priekšskats</span>
         </h4>
         <div class="col-6" style="min-height:50px">
-            <button onclick="hideMapPreview()" class="btn btn-secondary border-dark rounded-0 position-absolute end-0 me-3">
+            <button onclick="hideMapPreview()" class="btn btn-secondary rounded-0 position-absolute end-0 me-3">
                 <span lang="en">Close</span>
                 <span lang="lv">Aizvert</span>
             </button>
         </div>
     </div>
     <div id="map"></div>
-    <img id="mapPreviewImage" src="/img/map.png" alt="image not found" class="img-fluid border border-1 border-dark position-absolute h-25" style="z-index:400; transform:translateY(-100%); pointer-events: none; border-radius: 0px 25px 0px 0px;">
+    <img id="mapPreviewImage" src="/img/map.png" alt="image not found" class="img-fluid position-absolute h-25" style="z-index:400; transform:translateY(-100%); pointer-events: none; border-radius: 0px 25px 0px 0px;">
 </div>
-<div id="imagePreview" class="position-fixed top-50 start-50 translate-middle border border-2 border-dark bg-light shadow-lg p-3">
+<div id="imagePreview" class="position-fixed top-50 start-50 translate-middle bg-light shadow-lg p-3">
     <div class="row">
         <h4 class="col-6">
             <span lang="en">Location preview</span>
             <span lang="lv">Lokacijas priekšskats</span>
         </h4>
         <div class="col-6" style="min-height:50px">
-            <button onclick="hideImagePreview()" class="btn btn-secondary border-dark rounded-0 position-absolute end-0 me-3">
+            <button onclick="hideImagePreview()" class="btn btn-secondary rounded-0 position-absolute end-0 me-3">
                 <span lang="en">Close</span>
                 <span lang="lv">Aizvert</span>
             </button>
         </div>
     </div>
-    <img id="imagePreviewImage" alt="image not found" class="border border-1 border-dark">
+    <img id="imagePreviewImage" alt="image not found" class="">
 </div>
 
 <script>
@@ -353,6 +357,7 @@
     hideMapPreview();
     hideImagePreview();
     filterPlaces(categoryButtons[0].attributes.categoryname.value, "current");
+    changeCategoryImagePreview("{{ $categories[0]["image_name"] }}");
     // handleAttachmentButtons();
 
     function openDeleteWindow(id)
@@ -425,9 +430,6 @@
         }
         else if (mode == "all")
         {
-            // for (let i = 0; i < placeCards.length; i++) {
-            //     placeCards[i].style.display = 'initial';
-            // }
             for (let i = 0; i < placeCards.length; i++) {
                 let placeCardConnections = document.getElementsByClassName('placeCardConnection_' + placeCards[i].attributes.placeid.value);
                 placeCards[i].style.display = 'initial';
@@ -529,15 +531,21 @@
 		    }
 		});
         $.ajax({
-            url:'/detachPlace/' + id,
+            url:'/detachPlace/' + id + '/' + selectedCategory,
             type:'DELETE',
             
             success:function(result)
             {
-                let temp = document.getElementById('placeCard_' + id).firstElementChild.value;
-                document.getElementById('placeCard_' + id).firstElementChild.value = '';
-                // handleAttachmentButtons();
-                filterPlaces(temp, 'current');
+                let placeCardConnections = document.getElementsByClassName('placeCardConnection_' + id);
+                for (let j = 0; j < placeCardConnections.length; j++)
+                {
+                    if (placeCardConnections[j].attributes.categoryname.value == selectedCategory)
+                    {
+                        placeCardConnections[j].remove();
+                        break;
+                    }
+                }
+                filterPlaces(selectedCategory, 'keep');
                 deactivatePlaceLoadingScreen(id);
             }
         })
@@ -556,10 +564,13 @@
             
             success:function(result)
             {
-                document.getElementById('placeCard_' + id).firstElementChild.value = category;
-                // handleAttachmentButtons();
-                document.getElementById('detachButtonCategory_' + id).innerHTML = '(' + category + ')';
-                filterPlaces(category, 'free'); //result['category']
+                const newConnection = document.createElement("input");
+                newConnection.classList.add("placeCardConnection_" + id);
+                newConnection.setAttribute("placeid", id);
+                newConnection.setAttribute("categoryname", selectedCategory);
+                newConnection.type = "hidden";
+                document.getElementById('placeCard_' + id).appendChild(newConnection);
+                filterPlaces(category, 'keep'); //result['category']
                 deactivatePlaceLoadingScreen(id);
             }
         })
@@ -584,6 +595,32 @@
             }
         })
     }
+    function editCategoryDifficulty(id, diff)
+    {
+        console.log(id);
+        console.log(diff);
+        console.log(document.getElementById(diff + "CategoryDiff_" + id).checked);
+        $.ajaxSetup({
+		    headers:
+		    {
+		        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		    }
+		});
+        $.ajax({
+            url:'/editCategoryDifficulty/' + id + '/' + diff + '/' + document.getElementById(diff + "CategoryDiff_" + id).checked,
+            type:'DELETE',
+            
+            success:function(result)
+            {
+                console.log("success");
+            }
+        })
+    }
+    function changeCategoryImagePreview(imagename)
+    {
+        categoryImagePreview.src = "/img/" + (imagename ? imagename : "placeholder.jpg");
+    }
+
     function activatePlaceLoadingScreen(id)
     {
         document.getElementById('placeLoadingScreen_' + id).style.zIndex = "1";
@@ -599,6 +636,13 @@
             return "Lai ši tema butu pieejama spelei, tajā jabut vismaz 5 lokacijas.";
         else
             return "For this category to be playable, it should hold atleast 5 locations.";
+    }
+    function getDiffMessage()
+    {
+        if(sessionStorage.getItem("language") == "lv")
+            return "3 izvēles rūtiņas norāda, kādās grūtības pakāpēs šī tema būs pieejama. (viegli/videji/gruti)";
+        else
+            return "3 checkboxes are showing in which difficulties this category will be available. (easy/medium/hard)";
     }
 </script>
 @endsection

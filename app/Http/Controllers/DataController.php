@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Auth;
 class DataController extends Controller
 {
     public function gameHub() {
-        $categories = categories::join('places', 'category_id', '=', 'categories.id')
+        $categories = categories::join('category_place_connections', 'category_id', '=', 'categories.id')
             ->groupBy('category_id')
             ->havingRaw('COUNT(category_id) >= 5')
-            ->select('category_id', 'categories.name')
+            ->select('category_id', 'categories.*')
             ->get();
         return view('gamehub', ['categories' => $categories]);
     }
@@ -69,7 +69,7 @@ class DataController extends Controller
     //     return $this->gameStartSerieDiff('hard');
     // }
     public function gameStartSerieDiff($category, $difficulty) {
-        $data['places'] = (new places())->where('category_id','=',$category)->get();
+        $data['places'] = (new places())->join('category_place_connections', 'place_id', '=', 'places.id')->where('category_id','=',$category)->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
                                           ->orderBy('results.result', 'desc')
@@ -93,7 +93,7 @@ class DataController extends Controller
         if ($data['category'] == 'random')
             $data['places'] = (new places())->get();
         else
-            $data['places'] = (new places())->where('category_id','=',$data['category'])->get();
+            $data['places'] = (new places())->join('category_place_connections', 'place_id', '=', 'places.id')->where('category_id','=',$data["category"])->get();
         $data['results'] = (new results())->distinct()->join('users', 'users.id', '=', 'results.user_id') // ->distinct() for unique values
                                         //   ->select('Uzdevumi.*', 'Personazi.Vards AS Personazs')
                                           ->orderBy('results.result', 'desc')
@@ -153,7 +153,6 @@ class DataController extends Controller
             'posx' => 'required|gt:-90|lt:90',
             'posy' => 'required|gt:-180|lt:180',
             'country' => 'required',
-            'category' => 'required',
             'difficulty' => 'required',
         ]);
         $path = Storage::disk('public_uploads')->put('img', $data['image']);
@@ -164,7 +163,6 @@ class DataController extends Controller
         'lat' => $data['posx'],
         'lng' => $data['posy'],
         'country_id' => $data['country'],
-        'category_id' => $data['category'] == 'NULL' ? null : $data['category'],
         'difficulty' => $data['difficulty']
         ]);
         return redirect()->to('/categorylist')->with('message','Jauna lokacija ir izveidota!');
@@ -183,6 +181,7 @@ class DataController extends Controller
 
         places::where('id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
         results::where('place_id', '=', $id)->delete();
+        category_place_connections::where('place_id', '=', $id)->delete();
         places::where('id', '=', $id)->delete();
 
         return redirect()->to('placelist');
@@ -202,16 +201,21 @@ class DataController extends Controller
 
             places::where('id', '=', $data['id'])->update(['image_name' => $imageName]);    
         }
-        places::where('id', '=', $data['id'])->update(['lat' => $data['posx'], 'lng' => $data['posy'], 'category_id' => $data['category'] == 'NULL' ? null : $data['category']]);
+        places::where('id', '=', $data['id'])->update(['lat' => $data['posx'], 'lng' => $data['posy']]);
         return redirect()->to('/categorylist');
     }
 
     public function addCategory(request $data) {
         $validated = $data->validate([
+            'image' => 'required',
             'name' => 'required'
         ]);
 
+        $path = Storage::disk('public_uploads')->put('img', $data['image']);
+        $imageName = basename($path);
+        
         categories::insert([
+        'image_name' => $imageName,
         'name' => $data['name']
         ]);
         return redirect()->to('/categorylist')->with('message','New category added successfully!');
@@ -228,33 +232,50 @@ class DataController extends Controller
         if (!Auth::user()->admin)
             return redirect()->to('categorylist')->withErrors('You have no permission to delete this data!');
 
-        results::join('places', 'places.id', '=', 'results.place_id')
-            ->where('category_id', '=', $id)
-            ->delete();
-        places::where('category_id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
-        places::where('category_id', '=', $id)->delete();
+        categories::where('id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
+        category_place_connections::where('category_id', '=', $id)->delete();
         categories::where('id', '=', $id)->delete();
         return redirect()->to('categorylist');
     }
     public function openEditorCategory($id) {
-        return view('/editcategory', ['id' => $id, 'name' => (categories::where('id', '=', $id)->first())->name]);
+        return view('/editcategory', ['id' => $id, 'name' => (categories::where('id', '=', $id)->first())->name, 'image_name' => (categories::where('id', '=', $id)->first())->image_name]);
     }
     public function editCategory(request $data) {
+        if ($data['image'])
+        {
+            $path = Storage::disk('public_uploads')->put('img', $data['image']);
+            $imageName = basename($path);
+
+            Storage::disk('public_uploads')->delete('img/'.(categories::where('id', '=', $data['id'])->first())->image_name);
+
+            categories::where('id', '=', $data['id'])->update(['image_name' => $imageName]);    
+        }
         categories::where('id', '=', $data['id'])->update(['name' => $data['name']]);
         return redirect()->to('/categorylist');
     }
+    public function editCategoryDifficulty($id, $diff, $checked) {
 
-    public function detachPlace($id){
-        places::where('id', '=', $id)->update(['category_id' => null]);
+        categories::where('id', '=', $id)->update([$diff => $checked == 'true' ? '1' : '0']);
+        return response()->json(['success' => true]);
+    }
+
+    public function detachPlace($id, $category){
+        // places::where('id', '=', $id)->update(['category_id' => null]);
+        category_place_connections::where('place_id', '=', $id)->where('category_id', '=', (categories::where('name', '=', $category)->first()->id))->delete();
         return response()->json(['success' => true]);
     }
     public function attachPlace($id, $category){
-        places::where('id', '=', $id)->update(['category_id' => categories::where('name', '=', $category)->first()->id]);
+        // places::where('id', '=', $id)->update(['category_id' => categories::where('name', '=', $category)->first()->id]);
+        category_place_connections::insert([
+        'place_id' => $id,
+        'category_id' => (categories::where('name', '=', $category)->first()->id)
+        ]);
         return response()->json(['success' => true, 'category' => $category]);
     }
     public function deletePlaceFromCard($id){
         places::where('id', '=', $id)->get()->each(function($row){ Storage::disk('public_uploads')->delete('img/'.$row->image_name); });;
         results::where('place_id', '=', $id)->delete();
+        category_place_connections::where('place_id', '=', $id)->delete();
         places::where('id', '=', $id)->delete();
         
         return response()->json(['success' => true]);

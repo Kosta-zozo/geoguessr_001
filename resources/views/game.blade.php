@@ -31,7 +31,7 @@
         translate: 0 -50%;
         /* background-color: #d6e5f0; */
         /* background-image: linear-gradient(to bottom, #75A2BF, #d6e5f0); */
-        background: linear-gradient(180deg, #75A2BF 0%, #d6e5f0 30%, #d6e5f0 95%, #46769B 100%);
+        background: linear-gradient(180deg, @if ($difficulty == 'easy') #75A2BF @elseif ($difficulty == 'medium') #D8863A @else #BA3F3F @endif 0%, #d6e5f0 30%, #d6e5f0 95%, #46769B 100%);
     }
     #timer-holder {
         position: fixed;
@@ -259,7 +259,7 @@
     // DATA EXTRACTION
     const images = [
     @foreach ($data["places"] as $place)
-        [{{ $place["lat"] }}, {{ $place["lng"] }}, "{{ $place["image_name"] }}", "{{ $place["id"] }}"], 
+        [{{ $place["lat"] }}, {{ $place["lng"] }}, "{{ $place["image_name"] }}", "{{ $place["place_id"] }}"], 
     @endforeach
     ];
     const records = [

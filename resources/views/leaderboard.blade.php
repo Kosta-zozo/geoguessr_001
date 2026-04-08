@@ -70,8 +70,6 @@
                         </div>
                     @endif
                     <br>
-                    <!-- <br> -->
-                    <!-- <h3>Lideru saraksts</h3> -->
                     <ol id="recordList" class="shadow"></ol>
                 </div>
             </div>

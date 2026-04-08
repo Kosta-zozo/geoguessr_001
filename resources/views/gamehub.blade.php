@@ -53,8 +53,8 @@
             @foreach($categories as $category)
                 @if($category['easy'])
                     <button onclick="openBeginConfirmation('{{$category['category_id']}}','{{$category['name']}}','easy')" type="button" class="gameCard btn btn-primary btn-lg px-4 gap-3 rounded-0 shadow">
-                        <span lang="en">Start game serie of 5 ({{$category['name']}})</span>
-                        <span lang="lv">Uzsakt speles seriju no 5 raundiem ({{$category['name']}})</span>
+                        <span lang="en">Start game serie of 5 (<b>{{$category['name']}}</b>)</span>
+                        <span lang="lv">Uzsakt speles seriju no 5 raundiem (<b>{{$category['name']}}</b>)</span>
                         <hr>
                         <img src="img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
                     </button>
@@ -66,8 +66,8 @@
             @foreach($categories as $category)
                 @if($category['medium'])
                     <button onclick="openBeginConfirmation('{{$category['category_id']}}','{{$category['name']}}','medium')" type="button" class="gameCard btn btn-warning btn-lg px-4 gap-3 rounded-0 shadow">
-                        <span lang="en">Start game serie of 5 ({{$category['name']}})</span>
-                        <span lang="lv">Uzsakt speles seriju no 5 raundiem ({{$category['name']}})</span>
+                        <span lang="en">Start game serie of 5 (<b>{{$category['name']}}</b>)</span>
+                        <span lang="lv">Uzsakt speles seriju no 5 raundiem (<b>{{$category['name']}}</b>)</span>
                         <hr>
                         <img src="img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
                     </button>
@@ -79,8 +79,8 @@
             @foreach($categories as $category)
                 @if($category['hard'])
                     <button onclick="openBeginConfirmation('{{$category['category_id']}}','{{$category['name']}}','hard')" type="button" class="gameCard btn btn-danger btn-lg px-4 gap-3 rounded-0 shadow">
-                        <span lang="en">Start game serie of 5 ({{$category['name']}})</span>
-                        <span lang="lv">Uzsakt speles seriju no 5 raundiem ({{$category['name']}})</span>
+                        <span lang="en">Start game serie of 5 (<b>{{$category['name']}}</b>)</span>
+                        <span lang="lv">Uzsakt speles seriju no 5 raundiem (<b>{{$category['name']}}</b>)</span>
                         <hr>
                         <img src="img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
                     </button>

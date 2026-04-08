@@ -122,8 +122,11 @@ class DataController extends Controller
                 }
                 serie_results::insert([
                     'user_id' => Auth::user()->id,
-                    'result' => $finalresult
+                    'result' => $finalresult,
+                    'category_id' => $data['category'],
+                    'difficulty' => $data['difficulty'],
                 ]);
+                $this->cutSerieTail($data['user_id'], $data['category'], $data['difficulty']);
                 return view('results', ['resultArray' => $resultArray]);
             }
         else
@@ -134,6 +137,17 @@ class DataController extends Controller
         results::where('place_id', '=', $placeId)
             ->where('user_id', '=', $userId)
             ->orderBy('result', 'asc')
+            ->take($count)
+            ->skip(10)
+            ->get()
+            ->each(function($row){ $row->delete(); });
+    }
+    public function cutSerieTail(int $userId, int $categoryId, string $diff) {
+        $count = serie_results::count();
+        serie_results::where('category_id', '=', $categoryId)
+            ->where('user_id', '=', $userId)
+            ->where('difficulty', '=', $diff)
+            ->orderBy('result', 'desc')
             ->take($count)
             ->skip(10)
             ->get()
@@ -285,7 +299,7 @@ class DataController extends Controller
         $data['results'] = (new serie_results())->distinct()->join('users', 'users.id', '=', 'serie_results.user_id')
                                           ->orderBy('serie_results.result', 'desc')
                                           ->get();
-
-        return view('leaderboard', ['data' => $data]);
+        $categories = (new categories())->get();
+        return view('leaderboard', ['data' => $data, 'categories' => $categories]);
     }
 }

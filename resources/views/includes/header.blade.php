@@ -40,7 +40,7 @@
                     <span lang="lv">Spele</span>
                 </a></li>
                 <div class="dropdown me-5">
-                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-outline-dark p-3 border-0 rounded-0 dropdown-toggle @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif">
+                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-outline-dark p-3 border-0 rounded-0 dropdown-toggle @if (Request::is('adminPanel') || Request::is('addNewPlace') || Request::is('placelist') || Request::is('categorylist')) || Request::is('addNewCategory')) active @endif" style="color:white;">
                         {{ Auth::user()->name }}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -58,14 +58,16 @@
                     </div>
                 </div>
             @else
-                <li class="nav-item"><a href="/loginform" class="nav-link @if (Request::is('loginform') || Request::is('registerform')) active @endif">
+                <li class="nav-item me-5"><a href="/loginform" class="nav-link btn btn-outline-dark p-3 border-0 rounded-0 @if (Request::is('loginform') || Request::is('registerform')) active @endif">
                     <span lang="en">Login</span>
                     <span lang="lv">Ielogoties</span>
                 </a></li>
             @endif
-            <select id="langSelector" onchange="switchLanguage()" class="form-select form-select-sm me-5" style="width:auto; background: none; padding:5px; margin:auto;">
-                <option value="en">EN</option>
-                <option value="lv" selected>LV</option>
+            <select id="langSelector" onchange="switchLanguage()" class="form-select form-select-sm me-5" style="width:auto; background: none; padding:5px; margin:auto; color:white;">
+                <span style="color:black;">
+                    <option value="en">EN</option>
+                    <option value="lv" selected>LV</option>
+                </span>
             </select>
         </ul>
     </header>

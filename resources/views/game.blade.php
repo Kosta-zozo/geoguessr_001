@@ -31,7 +31,7 @@
         translate: 0 -50%;
         /* background-color: #d6e5f0; */
         /* background-image: linear-gradient(to bottom, #75A2BF, #d6e5f0); */
-        background: linear-gradient(180deg, #75A2BF 0%, #d6e5f0 30%, #d6e5f0 95%, #46769B 100%);
+        background: linear-gradient(180deg, @if ($difficulty == 'easy') #75A2BF @elseif ($difficulty == 'medium') #D8863A @else #BA3F3F @endif 0%, #d6e5f0 30%, #d6e5f0 95%, #46769B 100%);
     }
     #timer-holder {
         position: fixed;
@@ -43,6 +43,10 @@
         z-index: 400;
         translate: -50% 0;
         background-color: #d6e5f0;
+    }
+    .low-timer {
+        color: red;
+        font-size: 30px;
     }
     .ll-bg-confirm {
         background-color: #46769B;
@@ -259,7 +263,7 @@
     // DATA EXTRACTION
     const images = [
     @foreach ($data["places"] as $place)
-        [{{ $place["lat"] }}, {{ $place["lng"] }}, "{{ $place["image_name"] }}", "{{ $place["id"] }}"], 
+        [{{ $place["lat"] }}, {{ $place["lng"] }}, "{{ $place["image_name"] }}", "{{ $place["place_id"] }}"], 
     @endforeach
     ];
     const records = [
@@ -316,7 +320,18 @@
         // TIMER
         if (!inputConfirmed)
         {
-            timer.innerHTML = secondsToTime(60 - Math.trunc((new Date() - startTime) / 100) / 10);
+            if (60 - Math.trunc((new Date() - startTime) / 1000) > 10)
+                timer.innerHTML = 60 - Math.trunc((new Date() - startTime) / 1000);
+            else
+            {
+                timer.classList.add('low-timer');
+                timer.innerHTML = (60 - Math.trunc((new Date() - startTime) / 100) / 10).toFixed(1);
+            }
+            if (60 - Math.trunc((new Date() - startTime) / 1000) <= 0)
+            {
+                confirmInput(false);
+                timer.innerHTML = 0;
+            }
                 
             @if($difficulty == 'hard')
                 if (document.getElementById('countdownline') !== null && pageIsLoaded)
@@ -357,7 +372,7 @@
         // updateRecordList();
     }
 
-    function confirmInput() {
+    function confirmInput(valid = true) {
 
         // confirmed
         inputConfirmed = true;
@@ -370,9 +385,10 @@
         document.getElementById('result').innerHTML =
             '<span lang="en">You got </span>'+
             '<span lang="lv">Jus dabojat </span>'+
-            Math.round(distanceToPoints(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)))) +
+            ( valid ? Math.round(distanceToPoints(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)))) : 0 ) +
             '<span lang="en"> points</span>'+
             '<span lang="lv"> punktu</span>'+
+            (valid ?
             '<br>'+
             // '<span lang="en">You were </span>'+
             // '<span lang="lv">Jus bijat </span>'+
@@ -382,7 +398,8 @@
             // '<span lang="en">km close</span>'+
             // '<span lang="lv">km tuvu</span>';
             '<span lang="en">km</span>'+
-            '<span lang="lv">km</span>';
+            '<span lang="lv">km</span>'
+            : " ");
         // // show message
         document.getElementById('message').innerHTML = 
             '<span lang="en">You can view your results and go to next game</span>'+
@@ -393,8 +410,16 @@
         finishTime = new Date();
         document.getElementById('result_place_id').value = images[currentImageArrayId][3];
         document.getElementById('result_user_id').value = {{ Auth::user()->id }};
-        document.getElementById('result_result').value = distanceToPoints(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)));
-        document.getElementById('result_distance').value = map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng));
+        if (valid)
+        {
+            document.getElementById('result_result').value = distanceToPoints(map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng)));
+            document.getElementById('result_distance').value = map.distance(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng));
+        }
+        else
+        {
+            document.getElementById('result_distance').value = null;
+            document.getElementById('result_result').value = 0;
+        }
         document.getElementById('result_wasted_time').value = secondsToTime((finishTime - startTime) / 1000);
         document.getElementById('result_created_date').value = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
         result_serieCount.value = {{ $serieCount }};
@@ -402,8 +427,11 @@
         result_resultArray.value = resultArray.length != 0 ? resultArray : "none";
         result_form.action = '/gameContinueSerie';
 
-        drawMarker(correctLat, correctLng, true, false);
-        drawLine(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng), true);
+        if (valid)
+        {
+            drawMarker(correctLat, correctLng, true, false);
+            drawLine(L.latLng(inputLat, inputLng), L.latLng(correctLat, correctLng), true);
+        }
         
         hideConfirmButton();
         continueButton.style.display = "initial";
@@ -520,6 +548,7 @@
     }
 
     function distanceToPoints(distance){
+        if ((1 - (distance / 8500000)) * 2000 < 0) return 0;
         return (1 - (distance / 8500000)) * 2000;
     }
 </script>

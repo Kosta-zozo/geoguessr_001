@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="col">
-                <img id="placeImage" src="/img/{{ $place['image_name'] }}" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
+                <img id="placeImage" src="/public/img/{{ $place['image_name'] }}" alt="place num.1" class="rounded-3" width="100%" style="height: 350px;">
                 <br>
                 <br>
                 <label for="imageFile" class="btn btn-secondary">

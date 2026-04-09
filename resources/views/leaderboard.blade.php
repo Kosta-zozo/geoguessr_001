@@ -146,7 +146,6 @@
         for (let i = 0; i < (10 - recordArray.length); i++) {
             recordListHtml += "<li> - </li>";
         }
-        @endif
         document.getElementById('recordList').innerHTML = recordListHtml;
 
         document.getElementById("filterCategoryButton_" + currentFilterCategory).classList.remove("selected-end"); // cancel previews category selection styles

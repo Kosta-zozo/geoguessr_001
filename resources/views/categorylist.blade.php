@@ -618,7 +618,7 @@
     }
     function changeCategoryImagePreview(imagename)
     {
-        categoryImagePreview.src = "/img/" + (imagename ? imagename : "placeholder.jpg");
+        categoryImagePreview.src = "/public/img/" + (imagename ? imagename : "placeholder.jpg");
     }
 
     function activatePlaceLoadingScreen(id)

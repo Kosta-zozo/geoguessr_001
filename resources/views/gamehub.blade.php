@@ -56,7 +56,7 @@
                         <span lang="en">Start game serie of 5 (<b>{{$category['name']}}</b>)</span>
                         <span lang="lv">Uzsakt speles seriju no 5 raundiem (<b>{{$category['name']}}</b>)</span>
                         <hr>
-                        <img src="img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
+                        <img src="/public/img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
                     </button>
                 @endif
             @endforeach
@@ -69,7 +69,7 @@
                         <span lang="en">Start game serie of 5 (<b>{{$category['name']}}</b>)</span>
                         <span lang="lv">Uzsakt speles seriju no 5 raundiem (<b>{{$category['name']}}</b>)</span>
                         <hr>
-                        <img src="img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
+                        <img src="/public/img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
                     </button>
                 @endif
             @endforeach
@@ -82,7 +82,7 @@
                         <span lang="en">Start game serie of 5 (<b>{{$category['name']}}</b>)</span>
                         <span lang="lv">Uzsakt speles seriju no 5 raundiem (<b>{{$category['name']}}</b>)</span>
                         <hr>
-                        <img src="img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
+                        <img src="/public/img/@if($category['image_name']){{$category['image_name']}}@else{{'placeholder.jpg'}}@endif" alt="image not found">
                     </button>
                 @endif
             @endforeach

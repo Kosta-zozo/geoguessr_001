@@ -14,7 +14,7 @@
             </a>
         </div>
         <br>
-        <img src="/leaflet_image_000.webp" alt="image not found">
+        <img src="/public/leaflet_image_000.webp" alt="image not found">
     </div>
 </div>
 @endsection

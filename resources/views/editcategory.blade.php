@@ -23,7 +23,7 @@
                 <span lang="lv">Augšupielādējiet savu attēlu</span>
             </label>
             <input id="imageFile" name="image" type="file" style="display:none;">
-            <img id="placeImage" src="/img/{{ $image_name }}" alt="place num.1" width="100%" style="height: 350px;">
+            <img id="placeImage" src="/public/img/{{ $image_name }}" alt="attels nav pieejams" width="100%" style="height: 350px;">
             <br>
             <br>
             <button type="submit" class="btn btn-primary">
